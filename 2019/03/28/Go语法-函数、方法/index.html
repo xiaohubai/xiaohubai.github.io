@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Go语法-函数、方法 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="golang">
+    <meta name="description" content="函数 函数声明包括函数名、形式参数列表、返回值列表（可省略）以及函数体  123func name(parameter-list) (result-list) &amp;#123;    body&amp;#125;   当两个或多个连续的函数命名参数是同一类型，则除了最后一个类型之外，其他都可以省略。   在Go语言中，函数是指不属于任何结构体、类型的方法，也就是说，函数是没有接收者的；而方法是有接收者的，我们">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语法-函数、方法">
+<meta property="og:url" content="http://yoursite.com/2019/03/28/Go语法-函数、方法/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="函数 函数声明包括函数名、形式参数列表、返回值列表（可省略）以及函数体  123func name(parameter-list) (result-list) &amp;#123;    body&amp;#125;   当两个或多个连续的函数命名参数是同一类型，则除了最后一个类型之外，其他都可以省略。   在Go语言中，函数是指不属于任何结构体、类型的方法，也就是说，函数是没有接收者的；而方法是有接收者的，我们">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:14:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go语法-函数、方法">
+<meta name="twitter:description" content="函数 函数声明包括函数名、形式参数列表、返回值列表（可省略）以及函数体  123func name(parameter-list) (result-list) &amp;#123;    body&amp;#125;   当两个或多个连续的函数命名参数是同一类型，则除了最后一个类型之外，其他都可以省略。   在Go语言中，函数是指不属于任何结构体、类型的方法，也就是说，函数是没有接收者的；而方法是有接收者的，我们">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Go语法-函数、方法</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Go语法-函数、方法</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-27T16:14:07.000Z" itemprop="datePublished" class="page-time">
+  2019-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#函数"><span class="post-toc-number">1.</span> <span class="post-toc-text">函数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#多返回值"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">多返回值</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#错误处理"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">错误处理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#错误处理策略五种"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">错误处理策略五种</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件结尾错误（EOF）"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">文件结尾错误（EOF）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#函数值"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">函数值</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#匿名函数"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">匿名函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可变参数"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">可变参数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Deferred函数"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">Deferred函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Panic异常"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">Panic异常</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Recover捕获异常"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">Recover捕获异常</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#方法"><span class="post-toc-number">2.</span> <span class="post-toc-text">方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基于指针对象的方法"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">基于指针对象的方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#封装"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">封装</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Go语法-函数、方法"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Go语法-函数、方法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-28 00:14:07" datetime="2019-03-27T16:14:07.000Z"  itemprop="datePublished">2019-03-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><ul>
+<li>函数声明包括函数名、形式参数列表、返回值列表（可省略）以及函数体</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func name(parameter-list) (result-list) &#123;</span><br><span class="line">    body</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>当两个或多个连续的函数命名参数是同一类型，则除了最后一个类型之外，其他都可以省略。</p>
+</blockquote>
+<blockquote>
+<p>在Go语言中，函数是指不属于任何结构体、类型的方法，也就是说，函数是没有接收者的；而方法是有接收者的，我们说的方法要么是属于一个结构体的，要么属于一个新定义的类型的。（无所属）</p>
+</blockquote>
+<blockquote>
+<p>实参通过值的方式传递，因此函数的形参是实参的拷贝。对形参进行修改不会影响实参。但是，如果实参包括引用类型，如指针，slice(切片)、map、function、channel等类型，实参可能会由于函数的简介引用被修改。</p>
+</blockquote>
+<h2 id="多返回值"><a href="#多返回值" class="headerlink" title="多返回值"></a>多返回值</h2><blockquote>
+<p>Go 的返回值可以被命名，并且像变量那样使用。没有参数的 return 语句返回结果的当前值。</p>
+</blockquote>
+<blockquote>
+<p>返回值的多参是有意义的，所有的返回值都应该包含错误信息。</p>
+</blockquote>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><blockquote>
+<p>在Go中有一部分函数总是能成功的运行，但是大部分不能保证成功运行。对于那些将运行失败看作是预期结果的函数，它们会返回一个额外的返回值，通常是最后一个，来传递错误信息。</p>
+</blockquote>
+<blockquote>
+<p>可以是一个布尔值 ok, 也可能是复杂的错误信息，error类型：error类型可能是nil或者non-nil。nil意味着函数运行成功，non-nil表示失败。</p>
+</blockquote>
+<h3 id="错误处理策略五种"><a href="#错误处理策略五种" class="headerlink" title="错误处理策略五种"></a>错误处理策略五种</h3><ul>
+<li><p>当错误产生时，函数已经做了一些事情，而这些有助于我们错误的处理，函数会构造一个错误信息返回给调用者。</p>
+</li>
+<li><p>如果错误的发生是偶然性的，或由不可预知的问题导致的。一个明智的选择是重新尝试失败的操作。在重试时，我们需要限制重试的时间间隔或重试的次数，防止无限制的重试。</p>
+</li>
+<li><p>输出错误信息并结束程序，但只应在main中执行。对库函数而言，应仅向上传播错误。</p>
+</li>
+<li><p>可以直接忽略掉错误</p>
+</li>
+<li><p>只需要输出错误信息就足够了，不需要中断程序的运行。可以通过log包提供函数。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if err := Ping(); err != nil &#123;</span><br><span class="line">    log.Printf(&quot;ping failed: %v; networking disabled&quot;,err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件结尾错误（EOF）"><a href="#文件结尾错误（EOF）" class="headerlink" title="文件结尾错误（EOF）"></a>文件结尾错误（EOF）</h3><p>待写（没啥写，注意细节）。。。</p>
+<h2 id="函数值"><a href="#函数值" class="headerlink" title="函数值"></a>函数值</h2><ul>
+<li>函数像其他值一样，拥有类型，可以被赋值给其他变量</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func square(n int) int &#123; return n * n &#125;</span><br><span class="line"> f := square</span><br><span class="line"> fmt.Println(f(3)) // &quot;9&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>函数类型的零值是nil。调用值为nil的函数值会引起panic错误：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var f func(int) int</span><br><span class="line">f(3) // 此处f的值为nil, 会引起panic错误</span><br></pre></td></tr></table></figure>
+
+<h2 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h2><blockquote>
+<p>函数值字面量是一种表达式，它的值被称为匿名函数（anonymous function）：func关键字后没有函数名。</p>
+</blockquote>
+<blockquote>
+<p>函数字面量允许我们在使用函数时，再定义它。</p>
+</blockquote>
+<blockquote>
+<p>匿名函数可以访问和更新有函数名的局部变量（变量的生命周期不由它的作用域决定），这意味者匿名函数中存在变量引用，这就是函数值属于引用类型和函数值不可比较的原因。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func(r rune) rune &#123; return r + 1 &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h2><p>在最后一个参数类型之前加上省略符号“…”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">//1</span><br><span class="line">func main() &#123; </span><br><span class="line">   print(&quot;1&quot;,&quot;2&quot;,&quot;3&quot;)</span><br><span class="line">&#125;</span><br><span class="line">func print (a ...interface&#123;&#125;)&#123; </span><br><span class="line">   for _,v:=range a&#123;</span><br><span class="line">        fmt.Print(v)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println()</span><br><span class="line">&#125;</span><br><span class="line">//2</span><br><span class="line">func sum(vals...int) int &#123;</span><br><span class="line">    total := 0</span><br><span class="line">    for _, val := range vals &#123;</span><br><span class="line">        total += val</span><br><span class="line">    &#125;</span><br><span class="line">    return total</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>定义可变参数(类型不确定，会导致接收函数的处理复杂)</p>
+</blockquote>
+<blockquote>
+<p>接受可变参数的函数（range..）range 表达式（数组、指向数组的指针、切片、字符串、map、可以接收传输的 channel）</p>
+</blockquote>
+<blockquote>
+<p>如果原始参数已经是切片类型，只需在最后一个参数后加上省略符。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">values := []int&#123;1, 2, 3, 4&#125;</span><br><span class="line">fmt.Println(sum(values...)) // &quot;10</span><br></pre></td></tr></table></figure>
+
+<h2 id="Deferred函数"><a href="#Deferred函数" class="headerlink" title="Deferred函数"></a>Deferred函数</h2><blockquote>
+<p>在调用普通函数或方法前加上关键字defer，defer语句被执行时，跟在defer后面的函数会被延迟执行。直到包含该defer语句的函数执行完毕时，defer后的函数才会被执行，不论包含defer语句的函数是通过return正常结束，还是由于panic导致的异常结束。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">func triple(x int) (result int) &#123;</span><br><span class="line">    defer func() &#123; result += x &#125;()</span><br><span class="line">    return double(x)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(triple(4)) // &quot;12&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>defer语句经常被用于处理成对的操作，如打开、关闭、连接、断开连接、加锁、释放锁。通过defer机制，不论函数逻辑多复杂，都能保证在任何执行路径下，资源被释放。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var mu sync.Mutex</span><br><span class="line">var m = make(map[string]int)</span><br><span class="line">func lookup(key string) int &#123;</span><br><span class="line">    mu.Lock()</span><br><span class="line">    defer mu.Unlock()</span><br><span class="line">    return m[key]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Panic异常"><a href="#Panic异常" class="headerlink" title="Panic异常"></a>Panic异常</h2><blockquote>
+<p>Go的类型系统会在编译时捕获很多错误，但有些错误只能在运行时检查,这些运行时错误会引起painc异常.发生panic时的函数调用堆栈跟踪信息.</p>
+</blockquote>
+<blockquote>
+<p>接调用内置的panic函数也会引发panic异常,当某些不应该发生的场景发生时，我们就应该调用panic.</p>
+</blockquote>
+<h2 id="Recover捕获异常"><a href="#Recover捕获异常" class="headerlink" title="Recover捕获异常"></a>Recover捕获异常</h2><blockquote>
+<p>通常来说，不应该对panic异常做任何处理，但有时，也许我们可以从异常中恢复.使用 defer </p>
+</blockquote>
+<hr>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><blockquote>
+<p>在定义的时候，会在func和方法名之间增加一个参数，这个参数就是接收者。（有所属）</p>
+</blockquote>
+<blockquote>
+<p>Go 没有类。不过你可以为结构体类型定义方法。</p>
+</blockquote>
+<blockquote>
+<p>方法就是一类带特殊的接收者 参数的函数。</p>
+</blockquote>
+<blockquote>
+<p>接收者的类型定义和方法声明必须在同一包内；不能为内建类型声明方法。</p>
+</blockquote>
+<blockquote>
+<p>也可以为非结构体类型声明方法。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type Vertex struct &#123;</span><br><span class="line">	X, Y float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (v Vertex) Abs() float64 &#123;</span><br><span class="line">	return math.Sqrt(v.X*v.X + v.Y*v.Y)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="基于指针对象的方法"><a href="#基于指针对象的方法" class="headerlink" title="基于指针对象的方法"></a>基于指针对象的方法</h2><blockquote>
+<p>当参数实在太大，避免默认的这种拷贝，我们这时候就需要使用指针</p>
+</blockquote>
+<blockquote>
+<p>值接收者使用的是值的副本来调用方法，而指针接收者使实参的值来调用方法。</p>
+</blockquote>
+<blockquote>
+<p>由于方法经常需要修改它的接收者，指针接收者比值接收者更常用。但方法的值接收者，可以起到封装作用。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;math&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Vertex struct &#123;</span><br><span class="line">	X, Y float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (v Vertex) Abs() float64 &#123;</span><br><span class="line">	return math.Sqrt(v.X*v.X + v.Y*v.Y)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (v *Vertex) Scale(f float64) &#123;</span><br><span class="line">	v.X = v.X * f</span><br><span class="line">	v.Y = v.Y * f</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	v := Vertex&#123;3, 4&#125;</span><br><span class="line">	 v.Scale(10)</span><br><span class="line">	fmt.Println(v.Abs())</span><br><span class="line">&#125;// 50</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>去除方法的函数形式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;math&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Vertex struct &#123;</span><br><span class="line">	X, Y float64</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Abs(v Vertex) float64 &#123;</span><br><span class="line">	return math.Sqrt(v.X*v.X + v.Y*v.Y)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Scale(v *Vertex, f float64) &#123;</span><br><span class="line">	v.X = v.X * f</span><br><span class="line">	v.Y = v.Y * f</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	v := Vertex&#123;3, 4&#125;</span><br><span class="line">	Scale(&amp;v, 10)</span><br><span class="line">	fmt.Println(Abs(v))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>带指针参数的函数必须接受一个指针。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">func ScaleFunc(v *Vertex, f float64) &#123;</span><br><span class="line">	v.X = v.X * f</span><br><span class="line">	v.Y = v.Y * f</span><br><span class="line">&#125;</span><br><span class="line">var v Vertex</span><br><span class="line">ScaleFunc(v, 5)  // 编译错误！</span><br><span class="line">ScaleFunc(&amp;v, 5) // OK</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>以指针为接收者的方法被调用时，接收者既能为值又能为指针。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var v Vertex</span><br><span class="line">v.Scale(5)  // OK</span><br><span class="line">p := &amp;v</span><br><span class="line">p.Scale(10) // OK</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过嵌入结构体来扩展类型</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &quot;image/color&quot;</span><br><span class="line"></span><br><span class="line">type Point struct&#123; X, Y float64 &#125;</span><br><span class="line"></span><br><span class="line">type ColoredPoint struct &#123;</span><br><span class="line">    Point</span><br><span class="line">    Color color.RGBA</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们可以直接认为通过嵌入的字段就是ColoredPoint自身的字段，而完全不需要在调用时指出Point</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var cp ColoredPoint</span><br><span class="line">cp.X = 1</span><br><span class="line">fmt.Println(cp.Point.X) // &quot;1&quot;</span><br><span class="line">cp.Point.Y = 2</span><br><span class="line">fmt.Println(cp.Y) // &quot;2&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><blockquote>
+<p>一个对象的变量或者方法如果对调用方是不可见的话，一般就被定义为“封装”</p>
+</blockquote>
+<blockquote>
+<p>大写首字母的标识符会从定义它们的包中被导出，小写字母的则不会。这种限制包内成员的方式同样适用于struct或者一个类型的方法</p>
+</blockquote>
+<blockquote>
+<p>隐藏实现的细节，可以防止调用方依赖那些可能变化的具体实现，这样使设计包的程序员在不破坏对外的api情况下能得到更大的自由。</p>
+</blockquote>
+<blockquote>
+<p>阻止了外部调用方对对象内部的值任意地进行修改</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:14:42.000Z" itemprop="dateUpdated">2019-03-28 00:14:42</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/03/28/Cpp编程-套接字/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Cpp编程-套接字</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/28/GO语法-包、变量、命令/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">GO语法-包、变量、命令</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

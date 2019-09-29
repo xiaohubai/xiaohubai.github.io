@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Go语法-数据类型 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="golang">
+    <meta name="description" content="基本类型 基本类型本质上是原始类型，也就是不可改变的，所以对他们进行操作，一般都会返回一个新创建的值，所以把这些值传递给函数时，其实传递的是一个值的副本。  123456789101112131415boolstringint  int8  int16  int32  int64uint uint8 uint16 uint32 uint64 uintptrbyte // uint8 的别名rune">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语法-数据类型">
+<meta property="og:url" content="http://yoursite.com/2019/03/31/Go语法-数据类型/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="基本类型 基本类型本质上是原始类型，也就是不可改变的，所以对他们进行操作，一般都会返回一个新创建的值，所以把这些值传递给函数时，其实传递的是一个值的副本。  123456789101112131415boolstringint  int8  int16  int32  int64uint uint8 uint16 uint32 uint64 uintptrbyte // uint8 的别名rune">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-31T15:56:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go语法-数据类型">
+<meta name="twitter:description" content="基本类型 基本类型本质上是原始类型，也就是不可改变的，所以对他们进行操作，一般都会返回一个新创建的值，所以把这些值传递给函数时，其实传递的是一个值的副本。  123456789101112131415boolstringint  int8  int16  int32  int64uint uint8 uint16 uint32 uint64 uintptrbyte // uint8 的别名rune">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Go语法-数据类型</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Go语法-数据类型</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-31T15:54:23.000Z" itemprop="datePublished" class="page-time">
+  2019-03-31
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基本类型"><span class="post-toc-number">1.</span> <span class="post-toc-text">基本类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#整数"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">整数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#浮点数"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">浮点数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#复数"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">复数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#布尔型"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">布尔型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#字符串"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">字符串</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#UTF-8"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">UTF-8</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#字符串和Byte切片"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">字符串和Byte切片</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#字符串和数字的转换"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">字符串和数字的转换</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常量"><span class="post-toc-number">1.9.</span> <span class="post-toc-text">常量</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#无类型常量"><span class="post-toc-number">1.9.1.</span> <span class="post-toc-text">无类型常量</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#复合类型"><span class="post-toc-number">2.</span> <span class="post-toc-text">复合类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数组"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">数组</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Slicce-切片"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">Slicce(切片)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Map"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">Map</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#结构体"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">结构体</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#json"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">json</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文本和HTML模板"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">文本和HTML模板</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Go语法-数据类型"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Go语法-数据类型</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-31 23:54:23" datetime="2019-03-31T15:54:23.000Z"  itemprop="datePublished">2019-03-31</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h1><ul>
+<li>基本类型本质上是原始类型，也就是不可改变的，所以对他们进行操作，一般都会返回一个新创建的值，所以把这些值传递给函数时，其实传递的是一个值的副本。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">bool</span><br><span class="line"></span><br><span class="line">string</span><br><span class="line"></span><br><span class="line">int  int8  int16  int32  int64</span><br><span class="line">uint uint8 uint16 uint32 uint64 uintptr</span><br><span class="line"></span><br><span class="line">byte // uint8 的别名</span><br><span class="line"></span><br><span class="line">rune // int32 的别名</span><br><span class="line">     // 代表一个Unicode码</span><br><span class="line"></span><br><span class="line">float32 float64</span><br><span class="line"></span><br><span class="line">complex64 complex128</span><br></pre></td></tr></table></figure>
+
+<h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">*      /      %      &lt;&lt;       &gt;&gt;     &amp;       &amp;^</span><br><span class="line">+      -      |      ^</span><br><span class="line">==     !=     &lt;      &lt;=       &gt;      &gt;=</span><br><span class="line">&amp;&amp;</span><br><span class="line">||</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&amp;      位运算 AND</span><br><span class="line">|      位运算 OR</span><br><span class="line">^      位运算 XOR</span><br><span class="line">&amp;^     位清空 (AND NOT)</span><br><span class="line">&lt;&lt;     左移</span><br><span class="line">&gt;&gt;     右移</span><br></pre></td></tr></table></figure>
+
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">float32 float64</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Printf函数的%g参数打印浮点数。</p>
+</blockquote>
+<h2 id="复数"><a href="#复数" class="headerlink" title="复数"></a>复数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">complex64 complex128</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>内置的complex函数用于构建复数，内建的real和imag函数分别返回复数的实部和虚部：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var x complex128 = complex(1, 2) // 1+2i</span><br><span class="line">var y complex128 = complex(3, 4) // 3+4i</span><br><span class="line">fmt.Println(x*y)                 // &quot;(-5+10i)&quot;</span><br><span class="line">fmt.Println(real(x*y))           // &quot;-5&quot;</span><br><span class="line">fmt.Println(imag(x*y))           // &quot;10&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>math/cmplx包提供了复数处理的许多函数</p>
+</blockquote>
+<h2 id="布尔型"><a href="#布尔型" class="headerlink" title="布尔型"></a>布尔型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">true false</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>布尔值并不会隐式转换为数字值0或1，反之亦然。必须使用一个显式的if语句辅助转换</p>
+</blockquote>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><blockquote>
+<p>len函数返回一个字符串中的字节数目。</p>
+</blockquote>
+<blockquote>
+<p>字符串是不可修改的</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ ： 连接字符串</span><br><span class="line">+= ：追加字符串</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">\a      响铃</span><br><span class="line">\b      退格</span><br><span class="line">\f      换页</span><br><span class="line">\n      换行</span><br><span class="line">\r      回车</span><br><span class="line">\t      制表符</span><br><span class="line">\v      垂直制表符</span><br><span class="line">\&apos;      单引号 (只用在 &apos;\&apos;&apos; 形式的rune符号面值中)</span><br><span class="line">\&quot;      双引号 (只用在 &quot;...&quot; 形式的字符串面值中)</span><br><span class="line">\\      反斜杠</span><br></pre></td></tr></table></figure>
+
+<h2 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h2><blockquote>
+<p>早期 美国用ASCll字符集，但是其他国家无法使用自己的符号系统，混合多种语言的数据Unicode产生，每个符号为int32,但是浪费空间，utf-8产生。</p>
+</blockquote>
+<p>UTF8是一个将Unicode码点编码为字节序列的变长编码，UTF8编码使用1到4个字节来表示每个Unicode码点，</p>
+<p>ASCII部分字符只使用1个字节<br>常用字符部分使用2或3个字节表示</p>
+<p>每个符号编码后，第一个字节的高端bit为：<br>0  表示对应7bit的ASCII字符，ASCII字符每个字符依然是一个字节，和传统的ASCII编码兼容。<br>110 说明需要2个字节；后续的每个高端bit都以10开头</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0xxxxxxx                             runes 0-127    (ASCII)</span><br><span class="line">110xxxxx 10xxxxxx                    128-2047       (values &lt;128 unused)</span><br><span class="line">1110xxxx 10xxxxxx 10xxxxxx           2048-65535     (values &lt;2048 unused)</span><br><span class="line">11110xxx 10xxxxxx 10xxxxxx 10xxxxxx  65536-0x10ffff (other values unused)</span><br></pre></td></tr></table></figure>
+
+<p>变长的编码无法直接通过索引来访问第n个字符<br>UTF8编码比较紧凑，完全兼容ASCII码，并且可以自动同步：它可以通过向前回朔最多2个字节就能确定当前字符编码的开始字节的位置<br>它也是一个前缀编码，所以当从左向右解码时不会有任何歧义也并不需要向前查看<br>没有任何字符的编码是其它字符编码的子串，或是其它编码序列的字串，因此搜索一个字符时只要搜索它的字节编码序列即可，不用担心前后的上下文会对搜索结果产生干扰</p>
+<h2 id="字符串和Byte切片"><a href="#字符串和Byte切片" class="headerlink" title="字符串和Byte切片"></a>字符串和Byte切片</h2><p>标准库中有四个包对字符串处理尤为重要：bytes、strings、strconv和unicode包<br>strings包提供了许多如字符串的查询、替换、比较、截断、拆分和合并等功能。<br>strconv包提供了布尔型、整型数、浮点数和对应字符串的相互转换，还提供了双引号转义相关的转换。<br>unicode包提供了IsDigit、IsLetter、IsUpper和IsLower等类似功能</p>
+<h2 id="字符串和数字的转换"><a href="#字符串和数字的转换" class="headerlink" title="字符串和数字的转换"></a>字符串和数字的转换</h2><ul>
+<li>数值转字符串</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x := 123</span><br><span class="line">y := fmt.Sprintf(&quot;%d&quot;, x)</span><br><span class="line">fmt.Println(y, strconv.Itoa(x)) // &quot;123 123&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字符串转数值</li>
+</ul>
+<p>x, err := strconv.Atoi(“123”)             // x is an int<br>y, err := strconv.ParseInt(“123”, 10, 64) // base 10, up to 64 bi   10进制 int64</p>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2><h3 id="无类型常量"><a href="#无类型常量" class="headerlink" title="无类型常量"></a>无类型常量</h3><p>无类型的布尔型、无类型的整数、无类型的字符、无类型的浮点数、无类型的复数、无类型的字符串</p>
+<h1 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h1><ul>
+<li>数组 结构体 Slice map json 文本和HTML模板</li>
+</ul>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var a [10]int</span><br><span class="line"></span><br><span class="line">primes := [6]int&#123;2, 3, 5, 7, 11, 13&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>数组的长度是根据初始化值的个数来计算</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">q := [...]int&#123;1, 2, 3&#125;</span><br><span class="line">fmt.Printf(&quot;%T\n&quot;, q) // &quot;[3]int&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r := [...]int&#123;99: -1&#125; //最后一个元素被初始化为-1，其他为0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array:=[5]int&#123;1:1,3:4&#125; //只初始化索引1和3的值。</span><br></pre></td></tr></table></figure>
+
+<p>-打印出数组的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    array := [5]int&#123;1: 1, 3: 4&#125;    </span><br><span class="line">    for i, v := range array &#123;</span><br><span class="line">        fmt.Printf(&quot;索引:%d,值:%d\n&quot;, i, v)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指针数组</li>
+</ul>
+<blockquote>
+<p>指针数组和数组本身差不多，只不过元素类型是指针。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array := [5]*int&#123;1: new(int), 3:new(int)&#125;</span><br><span class="line">*array[1] = 1</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>只可以给索引1和3赋值,其他赋值需要先分配内存。</p>
+</blockquote>
+<ul>
+<li>函数间传递数组</li>
+</ul>
+<blockquote>
+<p>以值的方式，如果变量是个数组，那么就会整个复制，并传递给函数。当数组很大时，传递数组的指针。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    array := [5]int&#123;1: 2, 3:4&#125;</span><br><span class="line">    modify(&amp;array)</span><br><span class="line">    fmt.Println(array)</span><br><span class="line">&#125;</span><br><span class="line">func modify(a *[5]int)&#123;</span><br><span class="line">    a[1] =3</span><br><span class="line">    fmt.Println(*a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">数组的指针和指针数组是两个概念，数组的指针是*[5]int,指针数组是[5]*int，注意*的位置。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>长度和类型一样是可以赋值的</p>
+</blockquote>
+<h2 id="Slicce-切片"><a href="#Slicce-切片" class="headerlink" title="Slicce(切片)"></a>Slicce(切片)</h2><blockquote>
+<p>变长的序列，序列中每个元素都有相同的类型,</p>
+</blockquote>
+<blockquote>
+<p>slice由三个部分构成：指针、长度和容量</p>
+</blockquote>
+<blockquote>
+<p>len和cap函数分别返回slice的长度和容量。</p>
+</blockquote>
+<blockquote>
+<p>切片并不存储任何数据，它只是描述了底层数组中的一段</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[low : high] //顾首不顾尾</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>make创建切片<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slice:=make([]int,5)</span><br><span class="line">slice:=make([]int,5,10)</span><br><span class="line">slice:=[]int&#123;1,2,3,4,5&#125;</span><br><span class="line">slice:=[]int&#123;4:1&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>和数组的区别是 数组[]内要有值，而切片[]不需要。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//数组</span><br><span class="line">array:=[5]int&#123;4:1&#125;</span><br><span class="line"></span><br><span class="line">//切片</span><br><span class="line">slice:=[]int&#123;4:1&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>nil切片表示不存在的切片，而空切片表示一个空集合</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//nil切片</span><br><span class="line">var nilSlice []int</span><br><span class="line"></span><br><span class="line">//空切片</span><br><span class="line">slice:=[]int&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>切片多用于基于现有的数组或者切片创建</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var a [10]int //数组</span><br><span class="line"></span><br><span class="line">a[0:10]</span><br><span class="line">a[:10]</span><br><span class="line">a[0:]</span><br><span class="line">a[:]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>内置append函数可以为一个切片追加一个元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var s []int</span><br><span class="line">s = append(s, 2, 3, 4)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用for  range遍历</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var pow = []int&#123;1, 2, 4, 8, 16, 32, 64, 128&#125;</span><br><span class="line">for i, v := range pow &#123;</span><br><span class="line">		fmt.Printf(&quot;2**%d = %d\n&quot;, i, v)</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>忽略索引或值，使用_ </p>
+</blockquote>
+<blockquote>
+<p>切片和原切片共用的是一个底层数组，值修改，底层数组的值就会被改变</p>
+</blockquote>
+<blockquote>
+<p>函数间传递切片 原切片和新切片地址不一样，切片在函数间传递是复制的。修改一个索引的值后，发现原切片的值也被修改了，说明它们共用一个底层数组。</p>
+</blockquote>
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><blockquote>
+<p>是一个集合，用于存储一系列无序的键值对(key/value)。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ages := make(map[string]int) // mapping from strings to ints</span><br><span class="line"></span><br><span class="line">ages := map[string]int&#123;</span><br><span class="line">    &quot;alice&quot;:   31,</span><br><span class="line">    &quot;charlie&quot;: 34,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">map[string]int&#123;&#125;</span><br><span class="line"></span><br><span class="line">delete(ages, &quot;alice&quot;) //删除元素</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ages[&quot;alice&quot;] += 1 //++,+= 赋值是可以的</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>但是map中的元素并不是一个变量，因此我们不能对map的元素进行取址操作</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_ = &amp;ages[&quot;bob&quot;]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>禁止对map元素取址的原因是map可能随着元素数量的增长而重新分配更大的内存空间，从而可能导致之前的地址无效 </p>
+</blockquote>
+<ul>
+<li>遍历map</li>
+</ul>
+<blockquote>
+<p>遍历的顺序是随机的，每一次遍历的顺序都不相同.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for name, age := range ages &#123;</span><br><span class="line">    fmt.Printf(&quot;%s\t%d\n&quot;, name, age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>map的key中不存在value 将返回零值。当类型是数字时，就要使用map的下标语法产生的第二个值，判断是否存在了。</p>
+</blockquote>
+<ul>
+<li>判断相等</li>
+</ul>
+<blockquote>
+<p>需要比较长度，和值</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func equal(x, y map[string]int) bool &#123;</span><br><span class="line">    if len(x) != len(y) &#123;</span><br><span class="line">        return false</span><br><span class="line">    &#125;</span><br><span class="line">    for k, xv := range x &#123;</span><br><span class="line">        if yv, ok := y[k]; !ok || yv != xv &#123;</span><br><span class="line">            return false</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在函数间传递map</li>
+</ul>
+<blockquote>
+<p>传递的是本身，函数内修改了，会影响到原map</p>
+</blockquote>
+<h2 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type person struct &#123;</span><br><span class="line">    age int</span><br><span class="line">    name string</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用. 访问成员</p>
+</blockquote>
+<blockquote>
+<p>可以取地址，通过指针访问</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">指针 p，那么可以通过 (*p).X；也可隐式间接引用 p.X</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>一个结构体可能同时包含导出和未导出的成员，大写导出。</p>
+</blockquote>
+<ul>
+<li>结构体嵌入</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">type Point struct &#123;</span><br><span class="line">    X, Y int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Circle struct &#123;</span><br><span class="line">    Center Point</span><br><span class="line">    Radius int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Wheel struct &#123;</span><br><span class="line">    Circle Circle</span><br><span class="line">    Spokes int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var w Wheel</span><br><span class="line">w.Circle.Center.X = 8</span><br><span class="line">w.Circle.Center.Y = 8</span><br><span class="line">w.Circle.Radius = 5</span><br><span class="line">w.Spokes = 20</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>匿名成员</li>
+</ul>
+<blockquote>
+<p>只声明一个成员对应的数据类型而不指名成员的名字</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type Circle struct &#123;</span><br><span class="line">    Point //匿名</span><br><span class="line">    Radius int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Wheel struct &#123;</span><br><span class="line">    Circle //匿名</span><br><span class="line">    Spokes int</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>访问时方便，不需要给出完整的路径。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var w Wheel</span><br><span class="line">w.X = 8            // equivalent to w.Circle.Point.X = 8</span><br><span class="line">w.Y = 8            // equivalent to w.Circle.Point.Y = 8</span><br><span class="line">w.Radius = 5       // equivalent to w.Circle.Radius = 5</span><br><span class="line">w.Spokes = 20</span><br></pre></td></tr></table></figure>
+
+<h2 id="json"><a href="#json" class="headerlink" title="json"></a>json</h2><blockquote>
+<p>encoding/json包</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">type Movie struct &#123;</span><br><span class="line">    Title  string</span><br><span class="line">    Year   int  `json:&quot;released&quot;`</span><br><span class="line">    Color  bool `json:&quot;color,omitempty&quot;`</span><br><span class="line">    Actors []string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var movies = []Movie&#123;</span><br><span class="line">    &#123;Title: &quot;Casablanca&quot;, Year: 1942, Color: false,</span><br><span class="line">        Actors: []string&#123;&quot;Humphrey Bogart&quot;, &quot;Ingrid Bergman&quot;&#125;&#125;,</span><br><span class="line">    &#123;Title: &quot;Cool Hand Luke&quot;, Year: 1967, Color: true,</span><br><span class="line">        Actors: []string&#123;&quot;Paul Newman&quot;&#125;&#125;,</span><br><span class="line">    &#123;Title: &quot;Bullitt&quot;, Year: 1968, Color: true,</span><br><span class="line">        Actors: []string&#123;&quot;Steve McQueen&quot;, &quot;Jacqueline Bisset&quot;&#125;&#125;,</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>movies的结构体slice转为JSON的过程叫编组,编组通过调用json.Marshal函数完成：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data, err := json.Marshal(movies)</span><br><span class="line">if err != nil &#123;</span><br><span class="line">    log.Fatalf(&quot;JSON marshaling failed: %s&quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Printf(&quot;%s\n&quot;, data)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解码，json.Unmarshal函数：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var titles []struct&#123; Title string &#125;</span><br><span class="line">if err := json.Unmarshal(data, &amp;titles); err != nil &#123;</span><br><span class="line">    log.Fatalf(&quot;JSON unmarshaling failed: %s&quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(titles) // &quot;[&#123;Casablanca&#125; &#123;Cool Hand Luke&#125; &#123;Bullitt&#125;]&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="文本和HTML模板"><a href="#文本和HTML模板" class="headerlink" title="文本和HTML模板"></a>文本和HTML模板</h2><p>待写中。。。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-31T15:56:04.000Z" itemprop="dateUpdated">2019-03-31 23:56:04</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/04/13/Go语法-流程控制语句/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Go语法-流程控制语句</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/28/Cpp编程-SocketAPI/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Cpp编程-SocketAPI</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

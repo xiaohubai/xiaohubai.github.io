@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>面试-矩阵连乘 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="算法">
+    <meta name="description" content="动态规划分析： 什么问题可以用动态规划?   （1）最优子结构（2）子问题重   分治法与动态规划的主要区别？   （1）分治法需要运行大量的重叠子问题。 （2）分治法采用自顶向下递归遍历。 （3）动态规划采用自底向上的方法，每次选择最优子结构，可以有效避免子问题重叠问题。   动态规划解题过程？   （1）分析最优解的结构特征。（2）建立最优解的递归式。（3）自底向上。（4）构造最优解。  问题">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试-矩阵连乘">
+<meta property="og:url" content="http://yoursite.com/2017/03/28/面试-矩阵连乘/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="动态规划分析： 什么问题可以用动态规划?   （1）最优子结构（2）子问题重   分治法与动态规划的主要区别？   （1）分治法需要运行大量的重叠子问题。 （2）分治法采用自顶向下递归遍历。 （3）动态规划采用自底向上的方法，每次选择最优子结构，可以有效避免子问题重叠问题。   动态规划解题过程？   （1）分析最优解的结构特征。（2）建立最优解的递归式。（3）自底向上。（4）构造最优解。  问题">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:46:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面试-矩阵连乘">
+<meta name="twitter:description" content="动态规划分析： 什么问题可以用动态规划?   （1）最优子结构（2）子问题重   分治法与动态规划的主要区别？   （1）分治法需要运行大量的重叠子问题。 （2）分治法采用自顶向下递归遍历。 （3）动态规划采用自底向上的方法，每次选择最优子结构，可以有效避免子问题重叠问题。   动态规划解题过程？   （1）分析最优解的结构特征。（2）建立最优解的递归式。（3）自底向上。（4）构造最优解。  问题">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">面试-矩阵连乘</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">面试-矩阵连乘</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-03-27T16:45:10.000Z" itemprop="datePublished" class="page-time">
+  2017-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#动态规划分析："><span class="post-toc-number">1.</span> <span class="post-toc-text">动态规划分析：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题描述："><span class="post-toc-number">2.</span> <span class="post-toc-text">问题描述：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#算法分析："><span class="post-toc-number">3.</span> <span class="post-toc-text">算法分析：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#程序源码："><span class="post-toc-number">4.</span> <span class="post-toc-text">程序源码：</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-面试-矩阵连乘"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">面试-矩阵连乘</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-03-28 00:45:10" datetime="2017-03-27T16:45:10.000Z"  itemprop="datePublished">2017-03-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="动态规划分析："><a href="#动态规划分析：" class="headerlink" title="动态规划分析："></a><strong>动态规划分析：</strong></h2><ul>
+<li>什么问题可以用动态规划?</li>
+</ul>
+<blockquote>
+<p>（1）最优子结构<br>（2）子问题重</p>
+</blockquote>
+<ul>
+<li>分治法与动态规划的主要区别？</li>
+</ul>
+<blockquote>
+<p>（1）分治法需要运行大量的重叠子问题。<br> （2）分治法采用自顶向下递归遍历。<br> （3）动态规划采用自底向上的方法，每次选择最优子结构，可以有效避免子问题重叠问题。</p>
+</blockquote>
+<ul>
+<li>动态规划解题过程？</li>
+</ul>
+<blockquote>
+<p>（1）分析最优解的结构特征。<br>（2）建立最优解的递归式。<br>（3）自底向上。<br>（4）构造最优解。</p>
+</blockquote>
+<h2 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a><strong>问题描述：</strong></h2><blockquote>
+<p>给定n个矩阵的链&lt;A1,A2,…..An&gt;,Ai的规模为p[i]-1Xp<a href="1<=i<=n">i</a>,求完全括号化方案，使得乘积A[1]A[2]….A[n]所需的标量乘法次数最少。</p>
+</blockquote>
+<h2 id="算法分析："><a href="#算法分析：" class="headerlink" title="算法分析："></a><strong>算法分析：</strong></h2><ul>
+<li>找最优子结构特征</li>
+</ul>
+<blockquote>
+<p>假设A[1]….A[j]的最优括号方案在A[k]和A[k+1]之间（i&lt;=k&lt;j） (A[i]….A[k])<br>(A[k+1]….A[j]) (k为1，2….j-1中的任意一值)。</p>
+</blockquote>
+<ul>
+<li>建立最优解的递归式</li>
+</ul>
+<blockquote>
+<p>设m[i,j]为A[1]….A[j]的最小乘次。则m[i,j]=m[i,k]+m[k+1,j]+p[i-1]p[k]p[j]</p>
+</blockquote>
+<ul>
+<li>自底向上分析</li>
+</ul>
+<blockquote>
+<p>对于子链A[i…k]存在k-i+1小于j-i+1个矩阵的积，子链A[K+1…j-1]也存在j-k小于j-i+1个矩阵的积。因此算法应该用长度递增的顺序求解问题。</p>
+</blockquote>
+<ul>
+<li>构造最优解</li>
+</ul>
+<blockquote>
+<p>记录每个递增顺序最优括号方案的位置。</p>
+</blockquote>
+<h2 id="程序源码："><a href="#程序源码：" class="headerlink" title="程序源码："></a><strong>程序源码：</strong></h2><pre><code>#include&lt;cstdio&gt;
+#include&lt;cstring&gt;
+#include&lt;iostream&gt;
+using namespace std;
+const int msize = 100;
+int p[msize];
+int m[msize][msize];
+int s[msize][msize];
+int n;
+
+void matrixchain()
+{
+    int i,j,r,k;
+    memset(m,0,sizeof(m));
+    memset(s,0,sizeof(s));
+    for(r = 2; r &lt;= n; r++)        
+    {
+        for(i = 1; i &lt;= n-r+1; i++)
+        {
+           j = i + r - 1;
+           m[i][j] = m[i+1][j] + p[i-1] * p[i] * p[j]; 
+           s[i][j] = i;                    
+           for(k = i+1; k &lt; j; k++) 
+            {
+                int t = m[i][k] + m[k+1][j] + p[i-1] * p[k] * p[j];
+                if(t &lt; m[i][j])
+                {
+                    m[i][j] = t;
+                    s[i][j] = k;
+                }
+            }
+        }
+    }
+}
+void print(int i,int j)
+{
+    if( i == j )
+    {
+       cout &lt;&lt;&quot;A[&quot; &lt;&lt; i &lt;&lt; &quot;]&quot;;
+       return ;
+    }
+    cout &lt;&lt; &quot;(&quot;;
+    print(i,s[i][j]);
+    print(s[i][j]+1,j);
+    cout &lt;&lt; &quot;)&quot;;
+}
+int main()
+{
+    cout &lt;&lt; &quot;请输入矩阵的个数 n:&quot;;
+    cin &gt;&gt; n;
+    int i ,j;
+    cout &lt;&lt; &quot;请依次输入每个矩阵的行数和最后一个矩阵的列数:&quot;;
+    for (i = 0; i &lt;= n; i++ )
+        cin &gt;&gt; p[i];
+    matrixchain();
+    print(1,n);
+    cout &lt;&lt; endl;
+
+    cout &lt;&lt; &quot;最少乘法次数： &quot; &lt;&lt; m[1][n] &lt;&lt; endl;
+}</code></pre>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:46:26.000Z" itemprop="dateUpdated">2019-03-28 00:46:26</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/05/28/面试-最短路径Dijkstra/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">面试-最短路径Dijkstra</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/03/28/Cpp语法-面向对象系列/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Cpp语法-面向对象系列</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

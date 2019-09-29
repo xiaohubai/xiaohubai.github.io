@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Cpp编程-SocketAPI | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="网络编程,C++">
+    <meta name="description" content="1. 通用socket地址123456789#include&amp;lt;bits/socket.h&amp;gt;struct  sockaddr&amp;#123;sa_family_t  sa_family ;char  sa_data[ 14 ] ;&amp;#125;  1.1 专用socket地址 Unix 本地域协议族使用如下专用 socket 地址结构体  1234567891011#include&amp;lt;sy">
+<meta name="keywords" content="网络编程,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cpp编程-SocketAPI">
+<meta property="og:url" content="http://yoursite.com/2019/03/28/Cpp编程-SocketAPI/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="1. 通用socket地址123456789#include&amp;lt;bits/socket.h&amp;gt;struct  sockaddr&amp;#123;sa_family_t  sa_family ;char  sa_data[ 14 ] ;&amp;#125;  1.1 专用socket地址 Unix 本地域协议族使用如下专用 socket 地址结构体  1234567891011#include&amp;lt;sy">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:53:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cpp编程-SocketAPI">
+<meta name="twitter:description" content="1. 通用socket地址123456789#include&amp;lt;bits/socket.h&amp;gt;struct  sockaddr&amp;#123;sa_family_t  sa_family ;char  sa_data[ 14 ] ;&amp;#125;  1.1 专用socket地址 Unix 本地域协议族使用如下专用 socket 地址结构体  1234567891011#include&amp;lt;sy">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Cpp编程-SocketAPI</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Cpp编程-SocketAPI</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-27T16:38:27.000Z" itemprop="datePublished" class="page-time">
+  2019-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-通用socket地址"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 通用socket地址</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-1-专用socket地址"><span class="post-toc-number">2.</span> <span class="post-toc-text">1.1 专用socket地址</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Unix-本地域协议族使用如下专用-socket-地址结构体"><span class="post-toc-number">2.0.1.</span> <span class="post-toc-text">Unix 本地域协议族使用如下专用 socket 地址结构体</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TCP-IP-协议族有-sockaddr-in-和-sockaddr-in6-两个专用-socket-地址结构体，分别用于-IPv4-和-IPv6-："><span class="post-toc-number">2.0.2.</span> <span class="post-toc-text">TCP/IP 协议族有 sockaddr_in 和 sockaddr_in6 两个专用 socket 地址结构体，分别用于 IPv4 和 IPv6 ：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-socket过程"><span class="post-toc-number">3.</span> <span class="post-toc-text">2. socket过程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建socket"><span class="post-toc-number">3.0.1.</span> <span class="post-toc-text">创建socket</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#命名socket"><span class="post-toc-number">3.0.2.</span> <span class="post-toc-text">命名socket</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#监听socket"><span class="post-toc-number">3.0.3.</span> <span class="post-toc-text">监听socket</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#接受连接"><span class="post-toc-number">3.0.4.</span> <span class="post-toc-text">接受连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#发起连接"><span class="post-toc-number">3.0.5.</span> <span class="post-toc-text">发起连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关闭连接"><span class="post-toc-number">3.0.6.</span> <span class="post-toc-text">关闭连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#半关闭"><span class="post-toc-number">3.0.7.</span> <span class="post-toc-text">半关闭</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-数据读写"><span class="post-toc-number">4.</span> <span class="post-toc-text">3.数据读写</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-1文件读写"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">3.1文件读写</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#打开文件"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">打开文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#写入文件数据"><span class="post-toc-number">4.1.2.</span> <span class="post-toc-text">写入文件数据</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#读取文件数据"><span class="post-toc-number">4.1.3.</span> <span class="post-toc-text">读取文件数据</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-2-socket数据读写"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">3.2 socket数据读写</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TCP数据读写"><span class="post-toc-number">4.2.1.</span> <span class="post-toc-text">TCP数据读写</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#UDP数据读写"><span class="post-toc-number">4.2.2.</span> <span class="post-toc-text">UDP数据读写</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TCP-UD数据读写"><span class="post-toc-number">4.2.3.</span> <span class="post-toc-text">TCP/UD数据读写</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-带外标记"><span class="post-toc-number">5.</span> <span class="post-toc-text">4.带外标记</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#5-地址信息函数"><span class="post-toc-number">6.</span> <span class="post-toc-text">5.地址信息函数</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#6-读取和设置socket属性"><span class="post-toc-number">7.</span> <span class="post-toc-text">6.读取和设置socket属性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#有些选项在accept之前才能有效。"><span class="post-toc-number">7.0.1.</span> <span class="post-toc-text">有些选项在accept之前才能有效。</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SO-REUSEDDR"><span class="post-toc-number">7.0.2.</span> <span class="post-toc-text">SO_REUSEDDR</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#SO-RCVBUF和SO-SNDBUF"><span class="post-toc-number">7.0.3.</span> <span class="post-toc-text">SO_RCVBUF和SO_SNDBUF</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Cpp编程-SocketAPI"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Cpp编程-SocketAPI</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-28 00:38:27" datetime="2019-03-27T16:38:27.000Z"  itemprop="datePublished">2019-03-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-通用socket地址"><a href="#1-通用socket地址" class="headerlink" title="1. 通用socket地址"></a>1. 通用socket地址</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;bits/socket.h&gt;</span><br><span class="line"></span><br><span class="line">struct  sockaddr</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">sa_family_t  sa_family ;</span><br><span class="line">char  sa_data[ 14 ] ;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="1-1-专用socket地址"><a href="#1-1-专用socket地址" class="headerlink" title="1.1 专用socket地址"></a>1.1 专用socket地址</h1><ul>
+<li><h3 id="Unix-本地域协议族使用如下专用-socket-地址结构体"><a href="#Unix-本地域协议族使用如下专用-socket-地址结构体" class="headerlink" title="Unix 本地域协议族使用如下专用 socket 地址结构体"></a>Unix 本地域协议族使用如下专用 socket 地址结构体</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/un.h&gt;</span><br><span class="line"></span><br><span class="line">struct  sockaddr_un</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">sa_family_t  sin_family;   /* 地址族：AF_UNIX  */ </span><br><span class="line"></span><br><span class="line">char  sun_path[ 108 ] ;  /*  文件路径名  */</span><br><span class="line"></span><br><span class="line">&#125; ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="TCP-IP-协议族有-sockaddr-in-和-sockaddr-in6-两个专用-socket-地址结构体，分别用于-IPv4-和-IPv6-："><a href="#TCP-IP-协议族有-sockaddr-in-和-sockaddr-in6-两个专用-socket-地址结构体，分别用于-IPv4-和-IPv6-：" class="headerlink" title="TCP/IP 协议族有 sockaddr_in 和 sockaddr_in6 两个专用 socket 地址结构体，分别用于 IPv4 和 IPv6 ："></a>TCP/IP 协议族有 sockaddr_in 和 sockaddr_in6 两个专用 socket 地址结构体，分别用于 IPv4 和 IPv6 ：</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">struct  sockaddr_in</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">sa_family_t  sin_family ;  /* 地址族：AF_INET */</span><br><span class="line"></span><br><span class="line">u_intl6_t  sin_port ;  /* 端口号，要用网络字节序表示 */</span><br><span class="line"></span><br><span class="line">struct  in_addr  sin_addr ;  /* IPv4地址结构体  */ </span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct  in_addr</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">u_int32_t  s_addr ;  /* IPv4地址，用网络字节序表示*/</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">struct  sockaddr_in6</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">sa_family_t  sin6_family ; /*  地址族：AF_INET6 */</span><br><span class="line"></span><br><span class="line">u_int16_t  sin6_port ;  /* 端口号，用网络字节序表示 */</span><br><span class="line"></span><br><span class="line">u_int32_t  sin6_flowinfo ; /* 流信息，应设置为0 */</span><br><span class="line"></span><br><span class="line">struct  in6_addr  sin6_addr ;  /* IPv6地址结构体 */</span><br><span class="line"></span><br><span class="line">u_int32_t  sin6_scope_id ;  /* scope ID ，实验阶段*/</span><br><span class="line"></span><br><span class="line">&#125; ;</span><br><span class="line"></span><br><span class="line">struct  in6_addr</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">unsigned  char  sa_addr[ 16 ] ; /* IPv6地址，用网络字节序表示*/</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-socket过程"><a href="#2-socket过程" class="headerlink" title="2. socket过程"></a>2. socket过程</h1><ul>
+<li><h3 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int  socket ( int domain , int type , int protocol ) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>domain参数:底层协议族</p>
+</blockquote>
+<blockquote>
+<p>PE_INET //用于IPv4</p>
+</blockquote>
+<blockquote>
+<p>PF_INET6 //用于IPv6</p>
+</blockquote>
+<blockquote>
+<p>type参数：服务类型。 </p>
+</blockquote>
+<blockquote>
+<p>SOCK_STREAM //用于TCP</p>
+</blockquote>
+<blockquote>
+<p>SOCK_UGRAM //用于UDP</p>
+</blockquote>
+<blockquote>
+<p>SOCK_NONBLOCK //用于非阻塞</p>
+</blockquote>
+<blockquote>
+<p>SOCK_CLOEXEC //子进程中关闭该socket</p>
+</blockquote>
+<blockquote>
+<p>protocol参数：一个具体的协议，通常为0</p>
+</blockquote>
+<ul>
+<li><h3 id="命名socket"><a href="#命名socket" class="headerlink" title="命名socket"></a>命名socket</h3></li>
+<li>将一个socket与socket地址绑定称为给socket命名。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int bind(int sockfd ,const struct sockaddr* my_addr , socklen_t addrlen ) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sockfd:创建的文件描述符</p>
+</blockquote>
+<blockquote>
+<p>my_addr:所指的socket 地址分配给未命名的sockfd 文件描述符。</p>
+</blockquote>
+<blockquote>
+<p>addrlen:该socket地址的长度。</p>
+</blockquote>
+<blockquote>
+<p>bind成功时返回0，失败则返回-1并设置errno。</p>
+</blockquote>
+<blockquote>
+<p>errno:EACCES //被绑定的地址是受保护的地址，仅超级用户能够访问；<br>EADDRINUSE //被绑定的地址正在使用中。</p>
+</blockquote>
+<ul>
+<li><h3 id="监听socket"><a href="#监听socket" class="headerlink" title="监听socket"></a>监听socket</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int  listen ( int  sockfd , int  backlog) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sockfd参数指定被监听的socket。</p>
+<p>backlog参数提示内核监听队列的最大长度。</p>
+</blockquote>
+<ul>
+<li><h3 id="接受连接"><a href="#接受连接" class="headerlink" title="接受连接"></a>接受连接</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int accept( int sockfd , struct  sockaddr  *addr , socklen_t  *addrlen);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sockfd参数是执行过listen系统调用的监听socket。</p>
+</blockquote>
+<blockquote>
+<p>addr 参数用来获取被接受连接的远端socket地址，该socket地址的长度由addrlen参数指出。</p>
+</blockquote>
+<ul>
+<li><h3 id="发起连接"><a href="#发起连接" class="headerlink" title="发起连接"></a>发起连接</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int connect (int sockfd, const struct sockaddr *serv_addr , socklen_t addrlen) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sockfd参数由socket系统调用返回一个socket。</p>
+</blockquote>
+<blockquote>
+<p>serv_addr参数是服务器监听的socket地址。</p>
+</blockquote>
+<blockquote>
+<p>addrlen参数指定这个地址的长度。</p>
+</blockquote>
+<blockquote>
+<p>connect成功时返回0，失败则返回-1并设置errno：</p>
+</blockquote>
+<blockquote>
+<p>ECONNREFUSED：目标端口不存在（客户端收到复位报文段），连接被拒绝。</p>
+</blockquote>
+<blockquote>
+<p>ETIMEOUT：连接超时（网络繁忙导致服务器没有发回应答报文，客户端不断重连，多次重连仍然无效则连接超时）</p>
+</blockquote>
+<ul>
+<li><h3 id="关闭连接"><a href="#关闭连接" class="headerlink" title="关闭连接"></a>关闭连接</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">int  close( int  fd ) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>fd 参数是待关闭的socket。不过，close系统调用并非总是立即关闭一个连接，而是将fd 的引用计数减一。只有当fd 的引用计数为0时，才真正关闭连接。</p>
+</blockquote>
+<blockquote>
+<p>多进程程序中，一次fork 系统调用默认将使父进程中打开的socket的引用计数加1，因此我们必须在父进程和子进程中都对该socket执行close调用才能将连接关闭。</p>
+</blockquote>
+<ul>
+<li><h3 id="半关闭"><a href="#半关闭" class="headerlink" title="半关闭"></a>半关闭</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int  shutdown ( int  sockfd , int  howto ) ;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>howto参数：</p>
+</blockquote>
+<blockquote>
+<p>SHUT_RD:关闭socket读的这一半。</p>
+</blockquote>
+<blockquote>
+<p>SHUT_WR:关闭socket写的这一半。</p>
+</blockquote>
+<blockquote>
+<p>SHUT_RDWR:关闭读写。</p>
+</blockquote>
+<h1 id="3-数据读写"><a href="#3-数据读写" class="headerlink" title="3.数据读写"></a>3.数据读写</h1><ul>
+<li><h2 id="3-1文件读写"><a href="#3-1文件读写" class="headerlink" title="3.1文件读写"></a>3.1文件读写</h2></li>
+<li><h3 id="打开文件"><a href="#打开文件" class="headerlink" title="打开文件"></a>打开文件</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/stat.h&gt;</span><br><span class="line">#include&lt;fcntl.h&gt;</span><br><span class="line">int open(const char *path,int flag);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">path:文件名的字符串地址</span><br><span class="line">flag:</span><br><span class="line">O_CREAT //必要时创建文件</span><br><span class="line">O_TRUNC //删除全部现有数据</span><br><span class="line">O_APPEND //追加保存到后面</span><br><span class="line">O_RDONLY //只读打开</span><br><span class="line">O_WRONLY //只写打开</span><br><span class="line">O_RDWR //读写打开</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="写入文件数据"><a href="#写入文件数据" class="headerlink" title="写入文件数据"></a>写入文件数据</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;unistd.h&gt;</span><br><span class="line">ssize_t write(int fd,const void*buf,size_t nbytes);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fd:显示数据传输对象的文件描述符。</span><br><span class="line">buf: 保存要传输数据的缓冲地址值。</span><br><span class="line">nbytes:要传输数据的字节数。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h3 id="读取文件数据"><a href="#读取文件数据" class="headerlink" title="读取文件数据"></a>读取文件数据</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;unistd.h&gt;</span><br><span class="line">ssize_t read(int fd,void*buf,size_t nbytes);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fd:显示数据接收对象的文件描述符。</span><br><span class="line">buf: 保存要接收数据的缓冲地址值。</span><br><span class="line">nbytes:要接收数据的字节数。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h2 id="3-2-socket数据读写"><a href="#3-2-socket数据读写" class="headerlink" title="3.2 socket数据读写"></a>3.2 socket数据读写</h2></li>
+<li><h3 id="TCP数据读写"><a href="#TCP数据读写" class="headerlink" title="TCP数据读写"></a>TCP数据读写</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t  recv ( int  sockfd  , void *buf ,  size_t  len ,  int  flags );</span><br><span class="line">ssize_t  send ( int  sockfd  , const void *buf , size_t  len , int  flags);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>读取 sockfd上的数据，buf和len参数分别指定读缓冲区的位置和大小。<br>flags：MSG_OOB ：发送/接受紧急数据。<br>成功时返回实际读取到的数据的长度。<br>recv返回0，意味着通信对方已经关闭连接了。</p>
+</blockquote>
+<ul>
+<li><h3 id="UDP数据读写"><a href="#UDP数据读写" class="headerlink" title="UDP数据读写"></a>UDP数据读写</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">ssize_t  recvfrom(int sockfd , void *buf,  size_t  len,  int flags, struct  sockaddr *src_addr,  socklen_t  *addrlen );</span><br><span class="line">ssize _t  sendto ( int sockfd , const  void *buf ,  size_t  len ,int flags , const struct sockaddr *dest_addr  , socklen_t  addrlen ) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>recvfrom 读取sockfd上的数据， buf 和 len 参数分别指定读缓冲区的位置和大小。因为UDP通信没有连接的概念，所以我们每次读取数据都需要获取发送端的socket地址，即参数src_addr所指的内容，addrlen参数则指定该地址的长度。</p>
+</blockquote>
+<blockquote>
+<p>sendto 往sockfd 上写入数据，buf 和 len 参数分别指定缓冲区的位置和大小。dest_addr参数指定接收端的socket地址，addrlen参数则指定该地址的长度。</p>
+</blockquote>
+<blockquote>
+<p>recvfrom / sendto可以用于面向流的socket的数据读写，将最后两个参数设置为NULL。</p>
+</blockquote>
+<ul>
+<li><h3 id="TCP-UD数据读写"><a href="#TCP-UD数据读写" class="headerlink" title="TCP/UD数据读写"></a>TCP/UD数据读写</h3></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssize_t  recvmsg ( int  sockfd , struct msghdr *msg , int flags ) ;</span><br><span class="line">ssize_t  sendmsg ( int  sockfd , struct msghdr *msg , int flags ) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sockfd：被操作的目标socket。msg参数是msghdr结构图类型的指针。</p>
+</blockquote>
+<ul>
+<li><em>msghdr结构体的定义如下</em>：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">struct  msghdr&#123;</span><br><span class="line"></span><br><span class="line">void *msg_name ;  / * socket 地址 */</span><br><span class="line"></span><br><span class="line">socklen_t  msg_namelen  /* socket 地址的长度 */</span><br><span class="line"></span><br><span class="line">struct  iovec *msg_iov ;  /* 分散的内存块，见后文 */</span><br><span class="line"></span><br><span class="line">int  msg_iovlen ;  /* 分散内存块的数量 */</span><br><span class="line"></span><br><span class="line">void  *msg_control ; / * 指向辅助数据的起始位置 */</span><br><span class="line"></span><br><span class="line">socklen_t  msg_controllen ;  /* 辅助数据的大小*/ </span><br><span class="line"></span><br><span class="line">int  msg_flags ;/*复制函数中的flag参数，并在调用过程中更新*/</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>msg_name成员指向一个socket地址结构变量，它指定通信双方的socket地址。对于TCP，该成员必须被设置为NULL。这是因为对数据流socket而言，对方的地址已经知道。<br>msg_namelen成员则指定了msg_name所指socket地址的长度。msg_iov成员是iovec结构体类型的指针。</p>
+</blockquote>
+<ul>
+<li><em>iovec结构体的定义如下</em>：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct  iovec&#123;</span><br><span class="line"></span><br><span class="line">void  *iov_base ; /*内存起始地址 */</span><br><span class="line"></span><br><span class="line">size_t  iov_len ;  /* 这块内存的长度 */</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对于recvmsg而言，数据将被读取并存放在msg_iovlen块分散的内存中，这些内存的位置和长度则由msg_iov指向的数组指定，这成为分散读；对于sendmsg而言，msg_iovlen块分散内存中的数据将被一并发送，这称为集中写。</p>
+</blockquote>
+<blockquote>
+<p>msg_control和msg_controllen成员用于辅助数据的传送。</p>
+</blockquote>
+<blockquote>
+<p>msg_flags 成员无须设定，它会复制recvmsg/sendmsg的flags参数的内容以影响数据读写过程。recvmsg还会在调用结束前，将某些更新后的标志设置到msg_flags中。</p>
+</blockquote>
+<blockquote>
+<p>recvmsg/sendmsg 的flags参数以及返回值的含义与send/recv的flags参数及返回值相同</p>
+</blockquote>
+<h1 id="4-带外标记"><a href="#4-带外标记" class="headerlink" title="4.带外标记"></a>4.带外标记</h1><ul>
+<li><em>由flags参数的可选值</em>：MSG_OOB确定。</li>
+</ul>
+<blockquote>
+<p>Linux内核检测到TCP紧急标志时，将通知应用程序有带外数据需要接收，内核通知应用程序带外数据到达得两种常见方式是：I/O复用产生的异常事件和SIGURG信号。</p>
+</blockquote>
+<blockquote>
+<p>得到了有带外数据需要接收的通知，还需要知道带外数据在数据流中的具体位置，才能准确接收带外数据。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int  sockatmark ( int  sockfd ) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sockatmark 判断 sockfd 是否处于带外标记，即下一个读取到的数据是否是带外数据。如果是，sockatmark 返回1，此时我们就可以利用带MSG_OOB标志的recv调用来接收带外数据。如果不是，则sockatmark返回0。</p>
+</blockquote>
+<h1 id="5-地址信息函数"><a href="#5-地址信息函数" class="headerlink" title="5.地址信息函数"></a>5.地址信息函数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int getsockname ( int  sockfd ,  struct  sockaddr  *address ,  socklen_t  *address_len ) ;</span><br><span class="line">int getpeername ( int  sockfd ,  struct  sockaddr  *address ,   socklen_t  *address_len ) ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>getsockname获取sockfd对应的本端socket地址，并将其存储于address参数指定的内存中，该socket地址的长度则存储于address_len参数指向的变量中，</p>
+</blockquote>
+<blockquote>
+<p>getsockname成功时返回0，失败返回-1并设置errno。</p>
+</blockquote>
+<blockquote>
+<p>getpeername获取sockfd对应的远端socket地址，其参数及返回值的含义与getsockname的参数及返回值相同。</p>
+</blockquote>
+<h1 id="6-读取和设置socket属性"><a href="#6-读取和设置socket属性" class="headerlink" title="6.读取和设置socket属性"></a>6.读取和设置socket属性</h1><ul>
+<li><em>除了fcntl控制文件描述符属性的通用POSIX方法。还有以下专门读取和设置socket属性的方法</em></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">int  getsockopt ( int  sockfd , int  level , int  option_name , void *option_value ,  socklen_t  *restrict  option_len ) ;</span><br><span class="line">int  setsockopt ( int  sockfd , int level ,  int  option_name , const  void *option_value , socklen_t  *option_len );</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sockfd参数指定被操作的目标socket。</p>
+</blockquote>
+<blockquote>
+<p>evel 参数指定要操作哪个协议的选项（即属性，比如IPv4，IPv6，TCP等）</p>
+</blockquote>
+<blockquote>
+<p>option_name参数则指定选项：详情《linux高性能服务器编程-游双》P88页。</p>
+</blockquote>
+<blockquote>
+<p>getsockopt和setsockopt 这两个函数成功时返回0，失败时返回-1并设置errno 。</p>
+</blockquote>
+<ul>
+<li><h3 id="有些选项在accept之前才能有效。"><a href="#有些选项在accept之前才能有效。" class="headerlink" title="有些选项在accept之前才能有效。"></a>有些选项在accept之前才能有效。</h3><blockquote>
+<p>解决方案：对监听socket设置这些socket选项，那么accept返回的连接socket将自动继承这些选项。<br>socket选项包括：SO_DEBUG , SO_DONTROUTE , SO_KEEPALIVE , SO_LINGER , SO_OOBINLINE , SO_RCVBUF , SO_RCVLOWAT , SO_SNDBUF , SO_SNDLOWAT , TCP_MAXSEG ,TCP_NODELAY </p>
+</blockquote>
+</li>
+<li><h3 id="SO-REUSEDDR"><a href="#SO-REUSEDDR" class="headerlink" title="SO_REUSEDDR"></a>SO_REUSEDDR</h3></li>
+<li><blockquote>
+<p>TCP连接处于TIME_WAIT状态时，服务器程序可以通过设置socket选项SO_REUSEADDR来强制使用处于TIME_WAIT状态的连接占用的socket地址。</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>setsocketopt的设置之后，即使sock处于TIME_WAIT状态，与之绑定的socket地址也可以立即被重用。</p>
+</blockquote>
+<blockquote>
+<p>也可以修改内核参数/proc/sys/net/ipv4/tcp_tw_recycle来快速回收被关闭的socket，从而使得TCP连接根本就不进入TIME_WAIT状态，进而允许应用程序立即重用本地的socket地址。</p>
+</blockquote>
+<ul>
+<li><h3 id="SO-RCVBUF和SO-SNDBUF"><a href="#SO-RCVBUF和SO-SNDBUF" class="headerlink" title="SO_RCVBUF和SO_SNDBUF"></a>SO_RCVBUF和SO_SNDBUF</h3></li>
+</ul>
+<p><em>表示TCP接受缓冲区和发送缓冲区的大小。</em></p>
+<blockquote>
+<p>用setsockopt来设置TCP的接受缓冲区和发送缓冲区的大小时，系统都会将其值加倍，并且不得小于某个最小值。</p>
+</blockquote>
+<blockquote>
+<p>TCP接受缓冲区的最小值是256字节，而发送缓冲区的最小值是2048字节，系统这样做的目的，主要是确保一个TCP连接拥有足够的空闲缓冲区来处理阻塞</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:53:28.000Z" itemprop="dateUpdated">2019-03-28 00:53:28</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络编程/">网络编程</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/03/31/Go语法-数据类型/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Go语法-数据类型</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/28/Cpp编程-IP地址/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Cpp编程-IP地址</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

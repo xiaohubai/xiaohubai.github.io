@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Go语法-流程控制语句 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="golang">
+    <meta name="description" content="for 如同C的for循环  1for init; condition; post &amp;#123; &amp;#125;  123for i := 0; i &amp;lt; 10; i++ &amp;#123;		sum += i	&amp;#125;   省略若干条件  123for ; sum &amp;lt; 1000; &amp;#123;		sum += sum	&amp;#125;  for…range 遍历123for key, valu">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语法-流程控制语句">
+<meta property="og:url" content="http://yoursite.com/2019/04/13/Go语法-流程控制语句/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="for 如同C的for循环  1for init; condition; post &amp;#123; &amp;#125;  123for i := 0; i &amp;lt; 10; i++ &amp;#123;		sum += i	&amp;#125;   省略若干条件  123for ; sum &amp;lt; 1000; &amp;#123;		sum += sum	&amp;#125;  for…range 遍历123for key, valu">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-13T02:50:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go语法-流程控制语句">
+<meta name="twitter:description" content="for 如同C的for循环  1for init; condition; post &amp;#123; &amp;#125;  123for i := 0; i &amp;lt; 10; i++ &amp;#123;		sum += i	&amp;#125;   省略若干条件  123for ; sum &amp;lt; 1000; &amp;#123;		sum += sum	&amp;#125;  for…range 遍历123for key, valu">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Go语法-流程控制语句</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Go语法-流程控制语句</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-13T02:48:57.000Z" itemprop="datePublished" class="page-time">
+  2019-04-13
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#for"><span class="post-toc-number">1.</span> <span class="post-toc-text">for</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#for…range-遍历"><span class="post-toc-number">2.</span> <span class="post-toc-text">for…range 遍历</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#while"><span class="post-toc-number">3.</span> <span class="post-toc-text">while</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#死循环"><span class="post-toc-number">4.</span> <span class="post-toc-text">死循环</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#if"><span class="post-toc-number">5.</span> <span class="post-toc-text">if</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#if-else"><span class="post-toc-number">6.</span> <span class="post-toc-text">if else</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#switch"><span class="post-toc-number">7.</span> <span class="post-toc-text">switch</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#defer"><span class="post-toc-number">8.</span> <span class="post-toc-text">defer</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Go语法-流程控制语句"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Go语法-流程控制语句</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-13 10:48:57" datetime="2019-04-13T02:48:57.000Z"  itemprop="datePublished">2019-04-13</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="for"><a href="#for" class="headerlink" title="for"></a>for</h1><ul>
+<li>如同C的for循环</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for init; condition; post &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for i := 0; i &lt; 10; i++ &#123;</span><br><span class="line">		sum += i</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>省略若干条件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for ; sum &lt; 1000; &#123;</span><br><span class="line">		sum += sum</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="for…range-遍历"><a href="#for…range-遍历" class="headerlink" title="for…range 遍历"></a>for…range 遍历</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for key, value := range oldMap &#123;</span><br><span class="line">	newMap[key] = value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="while"><a href="#while" class="headerlink" title="while"></a>while</h1><blockquote>
+<p>没有初始值、步长，只有条件。</p>
+</blockquote>
+<blockquote>
+<p>没有 do-while 形式。</p>
+</blockquote>
+<ul>
+<li>如同C的while循环</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for condition &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for sum &lt; 1000 &#123;</span><br><span class="line">		sum += sum</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="死循环"><a href="#死循环" class="headerlink" title="死循环"></a>死循环</h1><ul>
+<li>如同C的for(;;)循环</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for &#123;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="if"><a href="#if" class="headerlink" title="if"></a>if</h1><blockquote>
+<p>无需小括号 ( ) ，而大括号 { } 则是必须的</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if x &lt; 0 &#123;</span><br><span class="line">		s+=1</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="if-else"><a href="#if-else" class="headerlink" title="if else"></a>if else</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if x &lt; 0 &#123;</span><br><span class="line">		s+=1</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">	    n+=1;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h1><blockquote>
+<p>Go 自动提供了在这些语言中每个 case 后面所需的 break 语句。 除非以 fallthrough 语句结束，否则分支会自动终止.</p>
+</blockquote>
+<blockquote>
+<p>case 不必为常量</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	fmt.Println(&quot;When&apos;s Saturday?&quot;)</span><br><span class="line">	today := time.Now().Weekday()</span><br><span class="line">	switch time.Saturday &#123;</span><br><span class="line">	case today + 0:</span><br><span class="line">		fmt.Println(&quot;Today.&quot;)</span><br><span class="line">	case today + 1:</span><br><span class="line">		fmt.Println(&quot;Tomorrow.&quot;)</span><br><span class="line">	case today + 2:</span><br><span class="line">		fmt.Println(&quot;In two days.&quot;)</span><br><span class="line">	default:</span><br><span class="line">		fmt.Println(&quot;Too far away.&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>switch 求值顺序</li>
+</ul>
+<blockquote>
+<p>从上到下顺次执行，直到匹配成功时停止。</p>
+</blockquote>
+<ul>
+<li>没有条件的switch </li>
+</ul>
+<blockquote>
+<p>没有条件的switch 和if-else-if-else 效果一样。更简洁</p>
+</blockquote>
+<h1 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h1><blockquote>
+<p>defer 语句会将函数推迟到外层函数返回之后执行。</p>
+</blockquote>
+<blockquote>
+<p>推迟调用的函数其参数会立即求值，但直到外层函数返回前该函数都不会被调用。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	defer fmt.Println(&quot;world&quot;)</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;hello&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//hello</span><br><span class="line">  world</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>defer 栈</li>
+</ul>
+<blockquote>
+<p>推迟的函数调用会被压入一个栈中。当外层函数返回时，被推迟的函数会按照后进先出的顺序调用。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	fmt.Println(&quot;counting&quot;)</span><br><span class="line"></span><br><span class="line">	for i := 0; i &lt; 10; i++ &#123;</span><br><span class="line">		defer fmt.Println(i)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;done&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">counting</span><br><span class="line">done</span><br><span class="line">9</span><br><span class="line">8</span><br><span class="line">7</span><br><span class="line">6</span><br><span class="line">5</span><br><span class="line">4</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">1</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-04-13T02:50:58.000Z" itemprop="dateUpdated">2019-04-13 10:50:58</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/04/13/Go语法-接口/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Go语法-接口</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/31/Go语法-数据类型/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Go语法-数据类型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

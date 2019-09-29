@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Cpp语法-面向对象系列 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="C++">
+    <meta name="description" content="防卫式的声明：12345#ifndef _COMPLEX_#define _COMPLEX_#endif  头文件布局：123456789101112#ifndef _COMPLEX_#define _COMPLEX_#include&amp;lt;cmath&amp;gt; //前置声明class complex;class complex //头-定义&amp;#123;    ....&amp;#125;;complex:">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cpp语法-面向对象系列">
+<meta property="og:url" content="http://yoursite.com/2016/03/28/Cpp语法-面向对象系列/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="防卫式的声明：12345#ifndef _COMPLEX_#define _COMPLEX_#endif  头文件布局：123456789101112#ifndef _COMPLEX_#define _COMPLEX_#include&amp;lt;cmath&amp;gt; //前置声明class complex;class complex //头-定义&amp;#123;    ....&amp;#125;;complex:">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:54:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cpp语法-面向对象系列">
+<meta name="twitter:description" content="防卫式的声明：12345#ifndef _COMPLEX_#define _COMPLEX_#endif  头文件布局：123456789101112#ifndef _COMPLEX_#define _COMPLEX_#include&amp;lt;cmath&amp;gt; //前置声明class complex;class complex //头-定义&amp;#123;    ....&amp;#125;;complex:">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Cpp语法-面向对象系列</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Cpp语法-面向对象系列</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-03-27T16:28:32.000Z" itemprop="datePublished" class="page-time">
+  2016-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#防卫式的声明："><span class="post-toc-number">1.</span> <span class="post-toc-text">防卫式的声明：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#头文件布局："><span class="post-toc-number">2.</span> <span class="post-toc-text">头文件布局：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#class的声明："><span class="post-toc-number">3.</span> <span class="post-toc-text">class的声明：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#访问级别："><span class="post-toc-number">4.</span> <span class="post-toc-text">访问级别：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#构造函数："><span class="post-toc-number">5.</span> <span class="post-toc-text">构造函数：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参数传递与返回值："><span class="post-toc-number">6.</span> <span class="post-toc-text">参数传递与返回值：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#友元："><span class="post-toc-number">7.</span> <span class="post-toc-text">友元：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#代码质量："><span class="post-toc-number">8.</span> <span class="post-toc-text">代码质量：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#return-by-reference"><span class="post-toc-number">9.</span> <span class="post-toc-text">return by reference</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#操作符重载："><span class="post-toc-number">10.</span> <span class="post-toc-text">操作符重载：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#待续。。。"><span class="post-toc-number">11.</span> <span class="post-toc-text">待续。。。</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Cpp语法-面向对象系列"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Cpp语法-面向对象系列</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-03-28 00:28:32" datetime="2016-03-27T16:28:32.000Z"  itemprop="datePublished">2016-03-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="防卫式的声明："><a href="#防卫式的声明：" class="headerlink" title="防卫式的声明："></a>防卫式的声明：</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#ifndef _COMPLEX_</span><br><span class="line">#define _COMPLEX_</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+
+<h1 id="头文件布局："><a href="#头文件布局：" class="headerlink" title="头文件布局："></a>头文件布局：</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#ifndef _COMPLEX_</span><br><span class="line">#define _COMPLEX_</span><br><span class="line">#include&lt;cmath&gt; //前置声明</span><br><span class="line">class complex;</span><br><span class="line"></span><br><span class="line">class complex //头-定义</span><br><span class="line">&#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">complex::function...//头-定义</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+
+<h1 id="class的声明："><a href="#class的声明：" class="headerlink" title="class的声明："></a>class的声明：</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class complex</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    complex (couble r =0,double i=0)：re(r),im(i)</span><br><span class="line">    &#123; &#125;</span><br><span class="line">    complex&amp; operator += (const complex&amp;);</span><br><span class="line">    double real () const &#123;return re;&#125;</span><br><span class="line">    double imag () const &#123;return im;&#125;</span><br><span class="line">private:</span><br><span class="line">    double re,im;</span><br><span class="line">    </span><br><span class="line">    friend complex&amp; _doapl (complex*,const complex&amp;);</span><br><span class="line">    </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="访问级别："><a href="#访问级别：" class="headerlink" title="访问级别："></a>访问级别：</h1><blockquote>
+<p>public:</p>
+<p>protected:</p>
+<p>private:</p>
+</blockquote>
+<h1 id="构造函数："><a href="#构造函数：" class="headerlink" title="构造函数："></a>构造函数：</h1><blockquote>
+<p>5.1：overloading(重载)</p>
+</blockquote>
+<blockquote>
+<p>5.2：构造函数有默认值=默认构造函数</p>
+</blockquote>
+<blockquote>
+<p>5.3：</p>
+</blockquote>
+<h1 id="参数传递与返回值："><a href="#参数传递与返回值：" class="headerlink" title="参数传递与返回值："></a>参数传递与返回值：</h1><blockquote>
+<p>函数后 加const:不改变数据内容。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">double real () const &#123;return re;&#125;</span><br><span class="line">     double imag () &#123;return rm;&#125;</span><br><span class="line">     const complex c1 (2,1);</span><br><span class="line">     c1.real();</span><br><span class="line">  !? c1.imag();</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>c1.imag() 错误！编译器认为imag()没加const,会改变数据内容，而我们实例化的c1只是读取数据。</p>
+</blockquote>
+<blockquote>
+<p>尽量所有的参数传递都传引用。</p>
+</blockquote>
+<blockquote>
+<p>引用传递后，别名修改内容后会影响引用传递前的实体(引用的特性)，让，不能修改传递的内容。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const complex&amp;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="友元："><a href="#友元：" class="headerlink" title="友元："></a>友元：</h1><blockquote>
+<p>当class类将数据private封装后，类外不能直接动class内的数据，有一种例外：类的友元。</p>
+</blockquote>
+<blockquote>
+<p>相同class的各个object互为friends(友元)</p>
+</blockquote>
+<h1 id="代码质量："><a href="#代码质量：" class="headerlink" title="代码质量："></a>代码质量：</h1><blockquote>
+<p>数据一定放在private内</p>
+</blockquote>
+<blockquote>
+<p>参数尽量以引用方式传递，加const看情况。</p>
+</blockquote>
+<blockquote>
+<p>返回值尽量用引用方式传递。</p>
+</blockquote>
+<blockquote>
+<p>class body内，应该加const就加，不然有时会报错</p>
+</blockquote>
+<blockquote>
+<p>构造函数尽量函数体外初始化数据。</p>
+</blockquote>
+<h1 id="return-by-reference"><a href="#return-by-reference" class="headerlink" title="return by reference"></a>return by reference</h1><blockquote>
+<p>函数内有两个参数a,b。函数作用是计算a+b,但是a+b的值放在那里？所以函数内创建变量c存入a+b的结果，但是这时候函数返回不能是c的引用，因为c随着函数销毁而销毁。</p>
+</blockquote>
+<blockquote>
+<p>传递者无需知道接收者是以引用形式接收。</p>
+</blockquote>
+<h1 id="操作符重载："><a href="#操作符重载：" class="headerlink" title="操作符重载："></a>操作符重载：</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">complex c1(2,1);</span><br><span class="line">complex c2(5);</span><br><span class="line">c2+=c1;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>语法形式上：只是r指向了c1.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">complex&amp; complex::operator +=(const complex&amp; r)</span><br><span class="line">&#123;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>理解实际上：有一个隐含的this指针，指向的是c2。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">complex&amp; complex::operator +=(this,const complex&amp; r)</span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>类中 只要有指针，就尽量操作符重载</p>
+</blockquote>
+<blockquote>
+<p>所有的指针操作之前，必须指针检查</p>
+</blockquote>
+<ul>
+<li>拷贝赋值函数：</li>
+</ul>
+<blockquote>
+<p>s2=s1;先清除s2的空间，再创建和s1一样的空间结构，再执行赋值。但是如果是浅拷贝,s1和s2指针指向同一个空间，不能先清除s2，所以先判断:</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if(this==&amp;str)</span><br><span class="line">  return *this;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>清除s2;创建和s1一样的空间；执行赋值；</p>
+</blockquote>
+<h1 id="待续。。。"><a href="#待续。。。" class="headerlink" title="待续。。。"></a>待续。。。</h1>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:54:06.000Z" itemprop="dateUpdated">2019-03-28 00:54:06</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/03/28/面试-矩阵连乘/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">面试-矩阵连乘</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2015/03/28/面试-会议安排/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">面试-会议安排</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

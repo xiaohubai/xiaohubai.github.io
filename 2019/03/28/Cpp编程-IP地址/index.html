@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Cpp编程-IP地址 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="网络编程,C++">
+    <meta name="description" content="1.协议： 协议就是为了完成数据交换而定好的约定。  1.2公有ip:12345A：0-127 B：128-191 C：192-223 D：224-239（组播）E：240-255（保留）  1.3私有IP地址范围：123A: 10.0.0.0~10.255.255.255 B:172.16.0.0~172.31.255.255C:192.168.0.0~192.168.255.255  2.端口">
+<meta name="keywords" content="网络编程,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cpp编程-IP地址">
+<meta property="og:url" content="http://yoursite.com/2019/03/28/Cpp编程-IP地址/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="1.协议： 协议就是为了完成数据交换而定好的约定。  1.2公有ip:12345A：0-127 B：128-191 C：192-223 D：224-239（组播）E：240-255（保留）  1.3私有IP地址范围：123A: 10.0.0.0~10.255.255.255 B:172.16.0.0~172.31.255.255C:192.168.0.0~192.168.255.255  2.端口">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:53:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cpp编程-IP地址">
+<meta name="twitter:description" content="1.协议： 协议就是为了完成数据交换而定好的约定。  1.2公有ip:12345A：0-127 B：128-191 C：192-223 D：224-239（组播）E：240-255（保留）  1.3私有IP地址范围：123A: 10.0.0.0~10.255.255.255 B:172.16.0.0~172.31.255.255C:192.168.0.0~192.168.255.255  2.端口">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Cpp编程-IP地址</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Cpp编程-IP地址</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-27T16:37:02.000Z" itemprop="datePublished" class="page-time">
+  2019-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-协议："><span class="post-toc-number">1.</span> <span class="post-toc-text">1.协议：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-2公有ip"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">1.2公有ip:</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3私有IP地址范围："><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">1.3私有IP地址范围：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-端口号："><span class="post-toc-number">2.</span> <span class="post-toc-text">2.端口号：</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-地址信息的表示"><span class="post-toc-number">3.</span> <span class="post-toc-text">3.地址信息的表示</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-网络字节序与地址转换"><span class="post-toc-number">4.</span> <span class="post-toc-text">4.网络字节序与地址转换</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-1-大端序-小端序"><span class="post-toc-number">4.0.1.</span> <span class="post-toc-text">4.1 -大端序/小端序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-2字节序转换接口："><span class="post-toc-number">4.0.2.</span> <span class="post-toc-text">4.2字节序转换接口：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#5-网络地址的初始化与分配"><span class="post-toc-number">5.</span> <span class="post-toc-text">5.网络地址的初始化与分配</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#6-代码实现："><span class="post-toc-number">6.</span> <span class="post-toc-text">6.代码实现：</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Cpp编程-IP地址"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Cpp编程-IP地址</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-28 00:37:02" datetime="2019-03-27T16:37:02.000Z"  itemprop="datePublished">2019-03-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="1-协议："><a href="#1-协议：" class="headerlink" title="1.协议："></a>1.协议：</h1><ul>
+<li>协议就是为了完成数据交换而定好的约定。</li>
+</ul>
+<h3 id="1-2公有ip"><a href="#1-2公有ip" class="headerlink" title="1.2公有ip:"></a>1.2公有ip:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">A：0-127 </span><br><span class="line">B：128-191 </span><br><span class="line">C：192-223 </span><br><span class="line">D：224-239（组播）</span><br><span class="line">E：240-255（保留）</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3私有IP地址范围："><a href="#1-3私有IP地址范围：" class="headerlink" title="1.3私有IP地址范围："></a>1.3私有IP地址范围：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A: 10.0.0.0~10.255.255.255 </span><br><span class="line">B:172.16.0.0~172.31.255.255</span><br><span class="line">C:192.168.0.0~192.168.255.255</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-端口号："><a href="#2-端口号：" class="headerlink" title="2.端口号："></a>2.端口号：</h1><blockquote>
+<p>IP用于区分计算机，只要有IP地址就能向目标主机传输数据，但仅凭这些无法把数据传输给最终的应用程序。比如一个接受视频的套接字，一个接受网页信息的套接字。怎么区分？–端口号。端口号就是在同一个系统内为区分不同套接字而设置的，端口号由16位构成，可分配的端口号范围是0-65535，但0-1023一般已经分配给特定的应用程序了。端口号不能重复，但可以分配给不同类型套接字程序，因为它们不会共用端口号。如tcp套接字分配9190，UDP套接字也可以使用。</p>
+</blockquote>
+<h1 id="3-地址信息的表示"><a href="#3-地址信息的表示" class="headerlink" title="3.地址信息的表示"></a>3.地址信息的表示</h1><ul>
+<li>一个地址信息包括：地址族+IP地址+端口号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//标准结构体</span><br><span class="line">struct sockaddr</span><br><span class="line">&#123;</span><br><span class="line">    sa_family_t   sin_family;//地址族</span><br><span class="line">    char          sa_data[14];//地址信息(IP地址和端口号)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//扩展结构体</span><br><span class="line">struct sockaddr_in</span><br><span class="line">&#123;</span><br><span class="line">    sa_family_t      sin_family; //地址族：AF_INET,AF_INET6</span><br><span class="line">    uint16_t         sin_port;   //端口号</span><br><span class="line">    struct in_addr   sin_addr;   //IP地址</span><br><span class="line">    char             sin_sero[8]; //不使用</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">struct in_addr</span><br><span class="line">&#123;</span><br><span class="line">    In_addr_t    s_addr;   //4字节IPv4地址</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-网络字节序与地址转换"><a href="#4-网络字节序与地址转换" class="headerlink" title="4.网络字节序与地址转换"></a>4.网络字节序与地址转换</h1><h3 id="4-1-大端序-小端序"><a href="#4-1-大端序-小端序" class="headerlink" title="4.1 -大端序/小端序"></a>4.1 -大端序/小端序</h3><blockquote>
+<p>不同的CPU，在向内存保存数据的方式也可能不一样，分为2种：大端序和小端序，大端序是指高地址先存，而小端序是指低地址先存。像Intel和AMD系列的CPU就是采用小端序标准。如：0x12345678，大端序下传输顺序一致为0x12345678，而小端序下传输顺序相反为0x78563412。若服务端和客服端CPU标准不同，那么传递的数据就不一致了。为了解决这个问题，就约定了一个统一的方式：统一为大端序，这种约定我们称为网络字节序，即先把数据转化为大端序格式再进行传输。</p>
+</blockquote>
+<h3 id="4-2字节序转换接口："><a href="#4-2字节序转换接口：" class="headerlink" title="4.2字节序转换接口："></a>4.2字节序转换接口：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">unsigned short htons(unsigned short);</span><br><span class="line">unsigned short ntohs(unsigned short);</span><br><span class="line">unsigned long htonl(unsigned long);</span><br><span class="line">unsigned long ntohl(unsigned long); </span><br><span class="line">/*</span><br><span class="line">注释：h代表主机字节序，n代表网络字节序，s代表short，l代表long（linux中long占4字节）。</span><br><span class="line">例如：ntohs是把short型数据 ，网络字节序——&gt;主机字节序。</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-网络地址的初始化与分配"><a href="#5-网络地址的初始化与分配" class="headerlink" title="5.网络地址的初始化与分配"></a>5.网络地址的初始化与分配</h1><ul>
+<li>将点分十进制IP地址(127.0.0.1)转化为32位整型IP地址，同时还满足网络字节序。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">in_addr_t inet_addr(const chat *string);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>和上面功能一样，但多了一个参数，能把转化好的IP地址同时用in_addr类型变量保存。即网络地址初始化时，可以省去手动再单独给serv_addr.sin_addr.s_addr 赋值这一步。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">in_addr_t inet_aton(const chat *string);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把32位整型数据IP转化为点分字符串IP。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">char * inet_ntoa(struct in_addr adr);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>自动获取运行服务端计算机IP地址。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INADDR_ANY//常量</span><br><span class="line">addr.sin_addr.s_add=htonl(INADDR_ANY);</span><br></pre></td></tr></table></figure>
+
+<h1 id="6-代码实现："><a href="#6-代码实现：" class="headerlink" title="6.代码实现："></a>6.代码实现：</h1><ul>
+<li>服务端网络地址分配(接收连接)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct sockaddr_in serv_addr;</span><br><span class="line">...</span><br><span class="line">memset(&amp;serv_addr, 0, sizeof(serv_addr));</span><br><span class="line">serv_addr.sin_family = AF_INET;</span><br><span class="line">serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">serv_addr.sin_port = htons(9190);</span><br><span class="line"></span><br><span class="line">if(bind(serv_sock, (struct sockaddr*) &amp;serv_addr, sizeof(serv_addr)) == -1)</span><br><span class="line">    error_handling(&quot;bind() error&quot;);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>客服端连接服务端分配的地址</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">memset(&amp;serv_addr, 0, sizeof(serv_addr));</span><br><span class="line">serv_addr.sin_family = AF_INET;</span><br><span class="line">serv_addr.sin_addr.s_addr = inet_addr(&quot;127.0.0.1&quot;);</span><br><span class="line">serv_addr.sin_port = htons(9190);</span><br><span class="line"></span><br><span class="line">if(connect(sock, (struct sockaddr*) &amp;serv_addr, sizeof(serv_addr)) == -1)</span><br><span class="line">     error_handling(&quot;connect() error&quot;);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:53:16.000Z" itemprop="dateUpdated">2019-03-28 00:53:16</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络编程/">网络编程</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/03/28/Cpp编程-SocketAPI/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Cpp编程-SocketAPI</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/28/Cpp编程-迭代服务器/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Cpp编程-迭代服务器</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

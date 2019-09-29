@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Cpp编程-迭代服务器 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="网络编程,C++">
+    <meta name="description" content="#1. 名言： “计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决”。 2.Tcp/ip产生背景:“通过因特网完成有效数据传输”，中遇到的不同领域（硬件、系统、路由算法）等划分成小问题后，出现多种协议，它们通过层次结构简历紧密联系。 ###2.1 链路层：网卡等网络硬件设备及驱动程序，专门定义LAN,WAN,MAN等网络标准。 ###2.2 IP层： IP本身是面向消息的，不可靠的协议">
+<meta name="keywords" content="网络编程,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cpp编程-迭代服务器">
+<meta property="og:url" content="http://yoursite.com/2019/03/28/Cpp编程-迭代服务器/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="#1. 名言： “计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决”。 2.Tcp/ip产生背景:“通过因特网完成有效数据传输”，中遇到的不同领域（硬件、系统、路由算法）等划分成小问题后，出现多种协议，它们通过层次结构简历紧密联系。 ###2.1 链路层：网卡等网络硬件设备及驱动程序，专门定义LAN,WAN,MAN等网络标准。 ###2.2 IP层： IP本身是面向消息的，不可靠的协议">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:53:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cpp编程-迭代服务器">
+<meta name="twitter:description" content="#1. 名言： “计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决”。 2.Tcp/ip产生背景:“通过因特网完成有效数据传输”，中遇到的不同领域（硬件、系统、路由算法）等划分成小问题后，出现多种协议，它们通过层次结构简历紧密联系。 ###2.1 链路层：网卡等网络硬件设备及驱动程序，专门定义LAN,WAN,MAN等网络标准。 ###2.2 IP层： IP本身是面向消息的，不可靠的协议">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Cpp编程-迭代服务器</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Cpp编程-迭代服务器</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-27T16:34:39.000Z" itemprop="datePublished" class="page-time">
+  2019-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-Tcp-ip产生背景"><span class="post-toc-number">1.</span> <span class="post-toc-text">2.Tcp/ip产生背景:</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-3TCP-UDP层："><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">2.3TCP/UDP层：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4应用层："><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">2.4应用层：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-TCP默认函数调用顺序："><span class="post-toc-number">2.</span> <span class="post-toc-text">3.TCP默认函数调用顺序：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-1-服务端顺序如下："><span class="post-toc-number">2.0.1.</span> <span class="post-toc-text">-  3.1 服务端顺序如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-2客服端顺序如下："><span class="post-toc-number">2.0.2.</span> <span class="post-toc-text">- 3.2客服端顺序如下：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#4-迭代服务端"><span class="post-toc-number">3.</span> <span class="post-toc-text">4.迭代服务端</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#5-代码实现："><span class="post-toc-number">4.</span> <span class="post-toc-text">5.代码实现：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#服务端代码"><span class="post-toc-number">4.0.1.</span> <span class="post-toc-text">- 服务端代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#客户端代码"><span class="post-toc-number">4.0.2.</span> <span class="post-toc-text">- 客户端代码</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#注意："><span class="post-toc-number">5.</span> <span class="post-toc-text">注意：</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Cpp编程-迭代服务器"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Cpp编程-迭代服务器</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-28 00:34:39" datetime="2019-03-27T16:34:39.000Z"  itemprop="datePublished">2019-03-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>#1. 名言：<br> “计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决”。</p>
+<h1 id="2-Tcp-ip产生背景"><a href="#2-Tcp-ip产生背景" class="headerlink" title="2.Tcp/ip产生背景:"></a>2.Tcp/ip产生背景:</h1><p>“通过因特网完成有效数据传输”，中遇到的不同领域（硬件、系统、路由算法）等划分成小问题后，出现多种协议，它们通过层次结构简历紧密联系。</p>
+<p>###2.1 链路层：<br>网卡等网络硬件设备及驱动程序，专门定义LAN,WAN,MAN等网络标准。</p>
+<p>###2.2 IP层：</p>
+<p>IP本身是面向消息的，不可靠的协议。每次传输数据时会帮我们选择路径，但并不一致。如果传输中发生路径错误，则选择其他路径，但如果发生数据丢失或错误，则无法解决。</p>
+<h3 id="2-3TCP-UDP层："><a href="#2-3TCP-UDP层：" class="headerlink" title="2.3TCP/UDP层："></a>2.3TCP/UDP层：</h3><p>TCP协议确认后向不可靠的IP协议赋予可靠性。TCP每发送一个数据都会和接收端确认，如果接收端确认收到才发下一个数据，否则重新发送。 </p>
+<h3 id="2-4应用层："><a href="#2-4应用层：" class="headerlink" title="2.4应用层："></a>2.4应用层：</h3><p>网络编程的大部分内容就是设计并实现应用层协议。如：超文本传输协议HTTP,邮件传送协议SMTP等。</p>
+<h1 id="3-TCP默认函数调用顺序："><a href="#3-TCP默认函数调用顺序：" class="headerlink" title="3.TCP默认函数调用顺序："></a>3.TCP默认函数调用顺序：</h1><h3 id="3-1-服务端顺序如下："><a href="#3-1-服务端顺序如下：" class="headerlink" title="-  3.1 服务端顺序如下："></a>-  3.1 服务端顺序如下：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">socket()  //创建套接字 </span><br><span class="line">bind()  //分配套接字地址 </span><br><span class="line">listen()  //等待连接请求状态 </span><br><span class="line">accept()  //允许连接</span><br><span class="line">read()/write()  //数据交换 </span><br><span class="line">close()  //断开连接</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>listen() ：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">int listen(int sock, int backlog); </span><br><span class="line"></span><br><span class="line">//sock：服务端套接字文件描述符(监听套接字) </span><br><span class="line">//backlog：连接请求等待队列的大小。即客服端请求的连接会先放入这个队列中排队，等待处理。如果队列长度为5，则表示最多使5个连接请求进入队列。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>accept()：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">int accept(int sock, struct sockaddr *addr, socklen_t *addrlen); </span><br><span class="line"></span><br><span class="line">//sock：服务端套接字的文件描述符 </span><br><span class="line">//addr：保存发起连接请求的客服端地址信息的变量 </span><br><span class="line">//addrlen：保存客服端地址长度 </span><br><span class="line">//注：这个函数就是受理连接请求等待队列中待处理的客服端连接请求。它是个阻断函数，只有队列中有请求才会返回，并在其内部自动产生用于数据I/O的套接字</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2客服端顺序如下："><a href="#3-2客服端顺序如下：" class="headerlink" title="- 3.2客服端顺序如下："></a>- 3.2客服端顺序如下：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">socket() // 创建套接字 </span><br><span class="line">connect()  //请求连接(要在listen()调用之后) </span><br><span class="line">read()/write()  //数据交换 </span><br><span class="line">close()  //断开连接</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>connect()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line">int connect(int sock, struct sockaddr *servaddr, socklen_t addrlen); </span><br><span class="line">sock：客户端套接字文件描述符 </span><br><span class="line">servaddr：保存目标服务端地址信息的变量 </span><br><span class="line">addrlen：服务端地址变量长度 </span><br><span class="line">注释：accept()要获取客户端的地址信息，但客户端没有bind()分配地址这一步，那么客户端套接字地址信息在哪呢？其实是在调用connect()时，由操作系统自动分配的，IP用的主机的IP，端口随机。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>write()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"> ssize_t write(int fd, const void *buf, size_t nbytes); </span><br><span class="line">fd：数据传输对象的文件描述符 </span><br><span class="line">buf：保存要传输数据的缓冲地址值 </span><br><span class="line">nbytes：要传输数据的字节数</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>read()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">ssize_t read(int fd, void *buf, size_t nbytes); </span><br><span class="line">fd：数据接收数据的文件描述符 </span><br><span class="line">buf：保存要接收数据的缓冲地址值 </span><br><span class="line">nbytes：要接收数据的字节数</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-迭代服务端"><a href="#4-迭代服务端" class="headerlink" title="4.迭代服务端"></a>4.迭代服务端</h1><p>问题思考：<br>之前是单一提供服务。<br>怎么使服务器向其它用户提供服务。</p>
+<p>解决：插入循环语句反复调用accept()，利用read()、write()交换数据。</p>
+<p>好处：一个客户端close()后，服务端还可以为其它客户服务。但同一时间只能一个客户交换数据。</p>
+<h1 id="5-代码实现："><a href="#5-代码实现：" class="headerlink" title="5.代码实现："></a>5.代码实现：</h1><h3 id="服务端代码"><a href="#服务端代码" class="headerlink" title="- 服务端代码"></a>- 服务端代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">#define BUF_SIZE 1024</span><br><span class="line">void error_handling(char *message)</span><br><span class="line">&#123;</span><br><span class="line">    fputs(message, stderr);</span><br><span class="line">    fputc(&apos;\n&apos;, stderr);</span><br><span class="line">    exit(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    int serv_sock, clnt_sock;</span><br><span class="line">    char message[BUF_SIZE];</span><br><span class="line">    int str_len, i;</span><br><span class="line"></span><br><span class="line">    struct sockaddr_in serv_adr, clnt_adr;</span><br><span class="line">    socklen_t clnt_adr_sz;</span><br><span class="line"></span><br><span class="line">    if(argc != 2)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;Usage: %s &lt;port&gt; \n&quot;, argv[0]);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    serv_sock = socket(PF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if(serv_sock == -1)</span><br><span class="line">        error_handling(&quot;socket() error&quot;);</span><br><span class="line"></span><br><span class="line">    memset(&amp;serv_adr, 0, sizeof(serv_adr));</span><br><span class="line">    serv_adr.sin_family = AF_INET;</span><br><span class="line">    serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);</span><br><span class="line">    serv_adr.sin_port = htons(atoi(argv[1]));</span><br><span class="line"></span><br><span class="line">    if(bind(serv_sock, (struct sockaddr *) &amp;serv_adr, sizeof(serv_adr)) == -1)</span><br><span class="line">        error_handling(&quot;bind() error&quot;);</span><br><span class="line"></span><br><span class="line">    if(listen(serv_sock, 5) == -1)</span><br><span class="line">        error_handling(&quot;listen() error&quot;);</span><br><span class="line"></span><br><span class="line">    clnt_adr_sz = sizeof(clnt_adr);</span><br><span class="line"></span><br><span class="line">    for (i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">        clnt_sock = accept(serv_sock, (struct sockaddr *) &amp;clnt_adr, &amp;clnt_adr_sz);</span><br><span class="line">        if(clnt_sock == -1)</span><br><span class="line">            error_handling(&quot;accept() error&quot;);</span><br><span class="line">        else</span><br><span class="line">            printf(&quot;Connected client %d \n&quot;, i+1);</span><br><span class="line"></span><br><span class="line">        while ((str_len = read(clnt_sock, message, BUF_SIZE)) != 0)</span><br><span class="line">            write(clnt_sock, message, str_len);</span><br><span class="line"></span><br><span class="line">        close(clnt_sock);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(serv_sock);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="客户端代码"><a href="#客户端代码" class="headerlink" title="- 客户端代码"></a>- 客户端代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;arpa/inet.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">#define BUF_SIZE 1024</span><br><span class="line">void error_handling(char *message)</span><br><span class="line">&#123;</span><br><span class="line">    fputs(message, stderr);</span><br><span class="line">    fputc(&apos;\n&apos;, stderr);</span><br><span class="line">    exit(1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[]) &#123;</span><br><span class="line">    int sock;</span><br><span class="line">    char message[BUF_SIZE];</span><br><span class="line">    int str_len, recv_len, recv_cnt;</span><br><span class="line">    struct sockaddr_in serv_adr;</span><br><span class="line"></span><br><span class="line">    if(argc != 3)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;Usage: %s &lt;IP&gt; &lt;port&gt; \n&quot;, argv[0]);</span><br><span class="line">        exit(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sock = socket(PF_INET, SOCK_STREAM, 0);</span><br><span class="line">    if(sock == -1)</span><br><span class="line">        error_handling(&quot;socket() error&quot;);</span><br><span class="line"></span><br><span class="line">    memset(&amp;serv_adr, 0, sizeof(serv_adr));</span><br><span class="line">    serv_adr.sin_family = AF_INET;</span><br><span class="line">    serv_adr.sin_addr.s_addr = inet_addr(argv[1]);</span><br><span class="line">    serv_adr.sin_port = htons(atoi(argv[2]));</span><br><span class="line"></span><br><span class="line">    if (connect(sock, (struct sockaddr *) &amp;serv_adr, sizeof(serv_adr)) == -1)</span><br><span class="line">        error_handling(&quot;connect() error&quot;);</span><br><span class="line">    else</span><br><span class="line">        puts(&quot;Connected ...............&quot;);</span><br><span class="line"></span><br><span class="line">    while (1) &#123;</span><br><span class="line">        fputs(&quot;Input message(Q to quit): &quot;, stdout);</span><br><span class="line">        fgets(message, BUF_SIZE, stdin);</span><br><span class="line">        if (!strcmp(message, &quot;q\n&quot;) || !strcmp(message, &quot;Q\n&quot;))</span><br><span class="line">            break;</span><br><span class="line"></span><br><span class="line">        str_len = write(sock, message, strlen(message));</span><br><span class="line"></span><br><span class="line">        /*这里需要循环读取，因为TCP没有数据边界，不循环读取可能出现一个字符串一次发送</span><br><span class="line">        但分多次读取而导致输出字符串不完整*/</span><br><span class="line">        recv_len = 0;</span><br><span class="line">        while (recv_len &lt; str_len) &#123;</span><br><span class="line">            recv_cnt = read(sock, &amp;message[recv_len], BUF_SIZE - 1);</span><br><span class="line">            if(recv_cnt == -1)</span><br><span class="line">                error_handling(&quot;read() error&quot;);</span><br><span class="line">            recv_len += recv_cnt;</span><br><span class="line">        &#125;</span><br><span class="line">        message[recv_len] = 0;</span><br><span class="line">        printf(&quot;Message from server: %s&quot;, message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    close(sock);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h1><p><strong>每次调用read,write都会以字符串为单位执行实际的I/O操作。但因为TCP不存在数据边界，因此多次调用的write传递的字符串可能一次性的传递到服务端上，而客户端也可能一次性接受到多个字符串，另外，服务端要传输的数据太大，操作系统可能把数据分包发送到客户端，而客户端也可能没有在收到全部数据包时，就调用read()函数。</strong></p>
+<ul>
+<li>未完待续。。。。</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:53:38.000Z" itemprop="dateUpdated">2019-03-28 00:53:38</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络编程/">网络编程</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/03/28/Cpp编程-IP地址/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Cpp编程-IP地址</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/28/Cpp编程-套接字/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Cpp编程-套接字</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Cpp语法-基础 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="C++">
+    <meta name="description" content="内存模型 32位的操作系统，内存空间中每一个字节的编号是一个32位二进制数。 内存编号从0000 0000 0000 0000 0000 0000 0000 0000至1111 1111 1111 1111 1111 1111 1111 1111。 16进制也就是0x00000000至0xFFFFFFFF。 10机制就是从0~2^32-1。 64位操作系统，内存编号也就是从64个0至64个1。">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cpp语法-基础">
+<meta property="og:url" content="http://yoursite.com/2019/04/13/Cpp语法-基础/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="内存模型 32位的操作系统，内存空间中每一个字节的编号是一个32位二进制数。 内存编号从0000 0000 0000 0000 0000 0000 0000 0000至1111 1111 1111 1111 1111 1111 1111 1111。 16进制也就是0x00000000至0xFFFFFFFF。 10机制就是从0~2^32-1。 64位操作系统，内存编号也就是从64个0至64个1。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-13T03:59:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cpp语法-基础">
+<meta name="twitter:description" content="内存模型 32位的操作系统，内存空间中每一个字节的编号是一个32位二进制数。 内存编号从0000 0000 0000 0000 0000 0000 0000 0000至1111 1111 1111 1111 1111 1111 1111 1111。 16进制也就是0x00000000至0xFFFFFFFF。 10机制就是从0~2^32-1。 64位操作系统，内存编号也就是从64个0至64个1。">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Cpp语法-基础</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Cpp语法-基础</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-13T03:58:34.000Z" itemprop="datePublished" class="page-time">
+  2019-04-13
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#内存模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">内存模型</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#指针与指针变量"><span class="post-toc-number">2.</span> <span class="post-toc-text">指针与指针变量</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#指针变量-指针常量"><span class="post-toc-number">3.</span> <span class="post-toc-text">指针变量/指针常量</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Cpp语法-基础"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Cpp语法-基础</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-13 11:58:34" datetime="2019-04-13T03:58:34.000Z"  itemprop="datePublished">2019-04-13</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h1><ol>
+<li>32位的操作系统，内存空间中每一个字节的编号是一个32位二进制数。</li>
+<li>内存编号从0000 0000 0000 0000 0000 0000 0000 0000至1111 1111 1111 1111 1111 1111 1111 1111。</li>
+<li>16进制也就是0x00000000至0xFFFFFFFF。</li>
+<li>10机制就是从0~2^32-1。</li>
+<li>64位操作系统，内存编号也就是从64个0至64个1。</li>
+</ol>
+<h1 id="指针与指针变量"><a href="#指针与指针变量" class="headerlink" title="指针与指针变量"></a>指针与指针变量</h1><ol>
+<li>指针就是内存地址、内存编号。</li>
+<li>指针变量：存储指针的变量、存储内存地址（内存编号）的变量。</li>
+<li>指针变量和整型变量、字符型变量以及其他数据类型的变量一样都是变量类型，但不管什么类型的指针都是一样的，所占的内存大小都是四个字节（32位机器下），存储的是32位的内存地址。</li>
+<li>对于int型指针变量，我们需要从该指针变量存储的（首）地址开始向后一直搜索4个字节的内存空间。</li>
+<li>当我们使用*pa，必须先知道pa是一个整型的指针。</li>
+<li>对指针变量进行算术运算，比如pa + 2,pb + +之类的操作，是以数据类型大小为单位的。</li>
+<li>pa + 2,相当于0x12ff60 + sizeof(int) * 2 = 0x12ff60 + 4 * 2 = 0x12ff68,不是0x12ff60 + 2。</li>
+</ol>
+<h1 id="指针变量-指针常量"><a href="#指针变量-指针常量" class="headerlink" title="指针变量/指针常量"></a>指针变量/指针常量</h1><ul>
+<li>指针变量</li>
+</ul>
+<ol>
+<li>指针变量首先是一个变量，指针变量存储了某个变量的内存首地址，我们通常认为”指针变量指向了该变量”。</li>
+<li>某一时刻指针变量pa指向变量a，下个时候可能不存储变量a的首地址，而是存储变量c的首地址。也就是说指针变量是一个变量，它的值可以变动的。</li>
+</ol>
+<ul>
+<li>指针常量</li>
+</ul>
+<ol>
+<li>存储固定的内存单元地址编号的”量“，它一旦存储了某个内存地址以后，不可再改存储其他的内存地址了。</li>
+<li>指针常量对应的是const关键字定义的量，而不是指针字面量。</li>
+<li>&amp;a,&amp;b,&amp;a + 2等是指针字面量。const int *p = &a;中的p才算是真正的指针常量</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-04-13T03:59:48.000Z" itemprop="dateUpdated">2019-04-13 11:59:48</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/04/13/编译原理-具有-e动作的NFA到DFA确定化算法/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">编译原理-具有 e动作的NFA到DFA确定化算法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

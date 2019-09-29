@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Go语法-并发 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="golang">
+    <meta name="description" content="goroutine 线程 在前面加 go,会启动一个新的线程并执行。  1go f(x, y, z)  channels 信道 有类型的管道，通过它用信道操作符 &amp;lt;- 来发送或者接收值。   可以让一个goroutine通过它给另一个goroutine发送值信息。   两个相同类型的channel可以使用==运算符比较，如果两个channel引用的是相通的对象，那么比较的结果为真。  无缓冲">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语法-并发">
+<meta property="og:url" content="http://yoursite.com/2019/04/13/Go语法-并发/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="goroutine 线程 在前面加 go,会启动一个新的线程并执行。  1go f(x, y, z)  channels 信道 有类型的管道，通过它用信道操作符 &amp;lt;- 来发送或者接收值。   可以让一个goroutine通过它给另一个goroutine发送值信息。   两个相同类型的channel可以使用==运算符比较，如果两个channel引用的是相通的对象，那么比较的结果为真。  无缓冲">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-13T02:55:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go语法-并发">
+<meta name="twitter:description" content="goroutine 线程 在前面加 go,会启动一个新的线程并执行。  1go f(x, y, z)  channels 信道 有类型的管道，通过它用信道操作符 &amp;lt;- 来发送或者接收值。   可以让一个goroutine通过它给另一个goroutine发送值信息。   两个相同类型的channel可以使用==运算符比较，如果两个channel引用的是相通的对象，那么比较的结果为真。  无缓冲">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Go语法-并发</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Go语法-并发</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-13T02:52:23.000Z" itemprop="datePublished" class="page-time">
+  2019-04-13
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#goroutine-线程"><span class="post-toc-number">1.</span> <span class="post-toc-text">goroutine 线程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#channels-信道"><span class="post-toc-number">2.</span> <span class="post-toc-text">channels 信道</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#无缓冲信道（同步Channels）"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">无缓冲信道（同步Channels）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#带缓冲的信道"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">带缓冲的信道</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基于select的多路复用"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">基于select的多路复用</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基于共享变量的并发"><span class="post-toc-number">3.</span> <span class="post-toc-text">基于共享变量的并发</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#竞争条件"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">竞争条件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#有三种方式可以避免数据竞争："><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">有三种方式可以避免数据竞争：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#sync-Mutex互斥锁"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">sync.Mutex互斥锁</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#sync-RWMutex读写锁"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">sync.RWMutex读写锁</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内存同步"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">内存同步</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#sync-Once初始化"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">sync.Once初始化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#竞争条件检测"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">竞争条件检测</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#控制并发"><span class="post-toc-number">3.7.</span> <span class="post-toc-text">控制并发</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#WaitGroup"><span class="post-toc-number">3.7.1.</span> <span class="post-toc-text">WaitGroup</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#chan通知，结束不会自己结束的后台goruntine"><span class="post-toc-number">3.7.2.</span> <span class="post-toc-text">chan通知，结束不会自己结束的后台goruntine</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Context"><span class="post-toc-number">3.7.3.</span> <span class="post-toc-text">Context</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#close"><span class="post-toc-number">4.</span> <span class="post-toc-text">close</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#goroutine和线程"><span class="post-toc-number">5.</span> <span class="post-toc-text">goroutine和线程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#动态栈"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">动态栈</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#调度"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">调度</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#GOMAXPROCS"><span class="post-toc-number">6.</span> <span class="post-toc-text">GOMAXPROCS</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Goroutine没有ID号"><span class="post-toc-number">7.</span> <span class="post-toc-text">Goroutine没有ID号</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Go语法-并发"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Go语法-并发</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-13 10:52:23" datetime="2019-04-13T02:52:23.000Z"  itemprop="datePublished">2019-04-13</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="goroutine-线程"><a href="#goroutine-线程" class="headerlink" title="goroutine 线程"></a>goroutine 线程</h1><blockquote>
+<p>在前面加 go,会启动一个新的线程并执行。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go f(x, y, z)</span><br></pre></td></tr></table></figure>
+
+<h1 id="channels-信道"><a href="#channels-信道" class="headerlink" title="channels 信道"></a>channels 信道</h1><blockquote>
+<p>有类型的管道，通过它用信道操作符 &lt;- 来发送或者接收值。</p>
+</blockquote>
+<blockquote>
+<p>可以让一个goroutine通过它给另一个goroutine发送值信息。</p>
+</blockquote>
+<blockquote>
+<p>两个相同类型的channel可以使用==运算符比较，如果两个channel引用的是相通的对象，那么比较的结果为真。</p>
+</blockquote>
+<h2 id="无缓冲信道（同步Channels）"><a href="#无缓冲信道（同步Channels）" class="headerlink" title="无缓冲信道（同步Channels）"></a>无缓冲信道（同步Channels）</h2><blockquote>
+<p>发送方会阻塞，直到另一个协程执行接收操作。基于无缓存Channels的发送和接收操作将导致两个goroutine做一次同步操作。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch := make(chan int)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ch &lt;- v    // 将 v 发送至信道 ch。</span><br><span class="line">v := &lt;-ch  // 从 ch 接收值并赋予 v。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>串联的Channels（Pipeline）管道</li>
+</ul>
+<blockquote>
+<p>将多个goroutine链接在一起，一个Channels的输出作为下一个Channels的输入。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">	ch1 := make(chan int)</span><br><span class="line">	ch2 := make(chan int)</span><br><span class="line"></span><br><span class="line">	go func() &#123;</span><br><span class="line">		for i := 1; i &lt;= 10; i++ &#123;</span><br><span class="line">			ch1 &lt;- i</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	go func() &#123;</span><br><span class="line">		for &#123;</span><br><span class="line">			x := &lt;-ch1</span><br><span class="line">			ch2 &lt;- x * x</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	for &#123;</span><br><span class="line">		fmt.Println(&lt;-ch2)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>单方向的Channel</li>
+</ul>
+<blockquote>
+<p>当一个channel作为一个函数参数是，它一般总是被专门用于只发送或者只接收。</p>
+</blockquote>
+<blockquote>
+<p>类型chan&lt;-int表示一个只发送int的channel，只能发送不能接收。相反，类型&lt;-chan int表示一个只接收int的channel，只能接收不能发送。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func squarer(out chan&lt;- int, in &lt;-chan int) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="带缓冲的信道"><a href="#带缓冲的信道" class="headerlink" title="带缓冲的信道"></a>带缓冲的信道</h2><blockquote>
+<p>容量内 无阻塞。</p>
+</blockquote>
+<blockquote>
+<p>将缓冲长度作为第二个参数提供给 make 来初始化一个带缓冲的信道（内部缓存队列）：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch := make(chan int, 100)</span><br><span class="line">cap(ch) //计算缓冲值 容量</span><br><span class="line">len(ch) //返回内部缓存队列中有效元素的个数</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果内部缓存队列是满的，那么发送操作将阻塞直到因另一个goroutine执行接收操作而释放了新的队列空间。相反，如果channel是空的，接收操作将阻塞直到有另一个goroutine执行发送操作而向队列插入元素。</p>
+</blockquote>
+<h2 id="基于select的多路复用"><a href="#基于select的多路复用" class="headerlink" title="基于select的多路复用"></a>基于select的多路复用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">select &#123;</span><br><span class="line">case &lt;-ch1:</span><br><span class="line">    // ...</span><br><span class="line">case x := &lt;-ch2:</span><br><span class="line">    // ...use x...</span><br><span class="line">case ch3 &lt;- y:</span><br><span class="line">    // ...</span><br><span class="line">default:</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="基于共享变量的并发"><a href="#基于共享变量的并发" class="headerlink" title="基于共享变量的并发"></a>基于共享变量的并发</h1><h2 id="竞争条件"><a href="#竞争条件" class="headerlink" title="竞争条件"></a>竞争条件</h2><blockquote>
+<p>只要有两个goroutine并发访问同一变量，且至少其中的一个是写操作的时候就会发生数据竞争。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var x []int</span><br><span class="line">go func() &#123; x = make([]int, 10) &#125;()</span><br><span class="line">go func() &#123; x = make([]int, 1000000) &#125;()</span><br><span class="line">x[999999] = 1 // NOTE: undefined behavior; memory corruption possible!</span><br><span class="line">// x可能为nil 或者其他</span><br></pre></td></tr></table></figure>
+
+<h3 id="有三种方式可以避免数据竞争："><a href="#有三种方式可以避免数据竞争：" class="headerlink" title="有三种方式可以避免数据竞争："></a>有三种方式可以避免数据竞争：</h3><ul>
+<li>不要去写变量，每一个goroutine 都只读取而已</li>
+</ul>
+<ul>
+<li>避免从多个goroutine访问变量。</li>
+</ul>
+<blockquote>
+<p>只使用一个channel来发送给指定的goroutine请求来查询更新变量，“不要使用共享数据来通信；使用通信来共享数据”</p>
+</blockquote>
+<ul>
+<li>允许多个goroutine去访问变量，但是在同一个时刻最多只有一个goroutine在访问。</li>
+</ul>
+<h2 id="sync-Mutex互斥锁"><a href="#sync-Mutex互斥锁" class="headerlink" title="sync.Mutex互斥锁"></a>sync.Mutex互斥锁</h2><blockquote>
+<p>用一个容量只有1的channel来保证最多只有一个goroutine在同一时刻访问一个共享变量。</p>
+</blockquote>
+<blockquote>
+<p>sync包里的Mutex类型直接支持。它的Lock方法能够获取到token(这里叫锁)，并且Unlock方法会释放这个token：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import &quot;sync&quot;</span><br><span class="line"></span><br><span class="line">var (</span><br><span class="line">    mu      sync.Mutex // guards balance</span><br><span class="line">    balance int</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func Deposit(amount int) &#123;</span><br><span class="line">    mu.Lock()</span><br><span class="line">    balance = balance + amount</span><br><span class="line">    mu.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Balance() int &#123;</span><br><span class="line">    mu.Lock()</span><br><span class="line">    b := balance</span><br><span class="line">    mu.Unlock()</span><br><span class="line">    return b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们用defer来调用Unlock，临界区会隐式地延伸到函数作用域的最后，这样我们就从“总要记得在函数返回之后或者发生错误返回时要记得调用一次Unlock”这种状态中获得了解放。</p>
+</blockquote>
+<h2 id="sync-RWMutex读写锁"><a href="#sync-RWMutex读写锁" class="headerlink" title="sync.RWMutex读写锁"></a>sync.RWMutex读写锁</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var mu sync.RWMutex</span><br><span class="line">var balance int</span><br><span class="line">func Balance() int &#123;</span><br><span class="line">    mu.RLock() // readers lock</span><br><span class="line">    defer mu.RUnlock()</span><br><span class="line">    return balance</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内存同步"><a href="#内存同步" class="headerlink" title="内存同步"></a>内存同步</h2><blockquote>
+<p>cpu参与计算时将内存上的数据提取到cpu高速缓存区，这时缓冲区处理后的数据，与另一个goruntine在内存上获取的数据不一致。</p>
+</blockquote>
+<blockquote>
+<p>所以可能的话，将变量限定在goroutine内部；如果是多个goroutine都需要访问的变量，使用互斥条件来访问</p>
+</blockquote>
+<h2 id="sync-Once初始化"><a href="#sync-Once初始化" class="headerlink" title="sync.Once初始化"></a>sync.Once初始化</h2><blockquote>
+<p>初始化成本比较大的话，将初始化延迟到需要的时候再去做就是一个比较好的选择。</p>
+</blockquote>
+<blockquote>
+<p>当我们使用变量时，首先判断该值是否初始化，若没有初始化，就初始化，用一个mutex来同步检查。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var mu sync.Mutex // guards icons</span><br><span class="line">var icons map[string]image.Image</span><br><span class="line"></span><br><span class="line">// Concurrency-safe.</span><br><span class="line">func Icon(name string) image.Image &#123;</span><br><span class="line">    mu.Lock()</span><br><span class="line">    defer mu.Unlock()</span><br><span class="line">    if icons == nil &#123;</span><br><span class="line">        loadIcons()</span><br><span class="line">    &#125;</span><br><span class="line">    return icons[name]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>互斥访问的代价时没有办法对该变量进行并发访问。sync.Once。概念上来讲，一次性的初始化需要一个互斥量mutex和一个boolean变量来记录初始化是不是已经完成了。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var loadIconsOnce sync.Once</span><br><span class="line">var icons map[string]image.Image</span><br><span class="line">// Concurrency-safe.</span><br><span class="line">func Icon(name string) image.Image &#123;</span><br><span class="line">    loadIconsOnce.Do(loadIcons)</span><br><span class="line">    return icons[name]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>每一次对Do(loadIcons)的调用都会锁定mutex，并会检查boolean变量。在第一次调用时，变量的值是false，Do会调用loadIcons并会将boolean设置为true。随后的调用什么都不会做，但是mutex同步会保证loadIcons对内存(这里其实就是指icons变量啦)产生的效果能够对所有goroutine可见。用这种方式来使用sync.Once的话，我们能够避免在变量被构建完成之前和其它goroutine共享该变量。</p>
+</blockquote>
+<h2 id="竞争条件检测"><a href="#竞争条件检测" class="headerlink" title="竞争条件检测"></a>竞争条件检测</h2><blockquote>
+<p>Go的runtime和工具链为我们装备了一个复杂但好用的动态分析工具。</p>
+</blockquote>
+<blockquote>
+<p>go build，go run或者go test命令后面加上-race的flag，就会使编译器创建一个你的应用的“修改”版或者一个附带了能够记录所有运行期对共享变量访问工具的test，并且会记录下每一个读或者写共享变量的goroutine的身份信息。另外，修改版的程序会记录下所有的同步事件，比如go语句，channel操作，以及对(<em>sync.Mutex).Lock，(</em>sync.WaitGroup).Wait等等的调用。</p>
+</blockquote>
+<h2 id="控制并发"><a href="#控制并发" class="headerlink" title="控制并发"></a>控制并发</h2><h3 id="WaitGroup"><a href="#WaitGroup" class="headerlink" title="WaitGroup"></a>WaitGroup</h3><blockquote>
+<p>一个程序，可能需要多个goruntine协同完成，如何保证所有都完成才能退出。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    var wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">    wg.Add(2)</span><br><span class="line">    go func() &#123;</span><br><span class="line">        time.Sleep(2*time.Second)</span><br><span class="line">        fmt.Println(&quot;1号完成&quot;)</span><br><span class="line">        wg.Done()</span><br><span class="line">    &#125;()</span><br><span class="line">   go func() &#123;</span><br><span class="line">        time.Sleep(2*time.Second)</span><br><span class="line">        fmt.Println(&quot;2号完成&quot;)</span><br><span class="line">        wg.Done()</span><br><span class="line">    &#125;()</span><br><span class="line">    wg.Wait()</span><br><span class="line">    fmt.Println(&quot;好了，大家都干完了，放工&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="chan通知，结束不会自己结束的后台goruntine"><a href="#chan通知，结束不会自己结束的后台goruntine" class="headerlink" title="chan通知，结束不会自己结束的后台goruntine"></a>chan通知，结束不会自己结束的后台goruntine</h3><blockquote>
+<p>我们启用一个全局变量，当一个goruntine结束时，改变这个变量状态，另一个goruntine不停的检查这个变量，当有变化发生，就结束自己。（但是要保证这个变量的线性安全）</p>
+</blockquote>
+<ul>
+<li>chan+select</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    stop := make(chan bool)</span><br><span class="line">    go func() &#123;</span><br><span class="line">            for &#123;</span><br><span class="line">                        select &#123;</span><br><span class="line">                                    case &lt;-stop:</span><br><span class="line">                                            fmt.Println(&quot;监控退出，停止了...&quot;)                </span><br><span class="line">                                            return</span><br><span class="line">                                    default:</span><br><span class="line">                                            fmt.Println(&quot;goroutine监控中...&quot;)</span><br><span class="line">                                            time.Sleep(2 * time.Second)</span><br><span class="line">                         &#125;</span><br><span class="line">               &#125;</span><br><span class="line">     &#125;()</span><br><span class="line"></span><br><span class="line">    time.Sleep(10 * time.Second)</span><br><span class="line">    fmt.Println(&quot;可以了，通知监控停止&quot;)</span><br><span class="line">    stop&lt;- true</span><br><span class="line">    //为了检测监控过是否停止，如果没有监控输出，就表示停止了</span><br><span class="line">    time.Sleep(5 * time.Second)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    ctx, cancel := context.WithCancel(context.Background())</span><br><span class="line">    go watch(ctx,&quot;【监控1】&quot;)    </span><br><span class="line">    go watch(ctx,&quot;【监控2】&quot;)    </span><br><span class="line">    go watch(ctx,&quot;【监控3】&quot;)</span><br><span class="line"></span><br><span class="line">    time.Sleep(10 * time.Second)</span><br><span class="line">    fmt.Println(&quot;可以了，通知监控停止&quot;)</span><br><span class="line">    cancel()    </span><br><span class="line">    //为了检测监控过是否停止，如果没有监控输出，就表示停止了</span><br><span class="line">    time.Sleep(5 * time.Second)</span><br><span class="line">&#125;</span><br><span class="line">func watch(ctx context.Context, name string) &#123;</span><br><span class="line">    for &#123;        </span><br><span class="line">        select &#123;        </span><br><span class="line">            case &lt;-ctx.Done():</span><br><span class="line">            fmt.Println(name,&quot;监控退出，停止了...&quot;)           </span><br><span class="line">             return</span><br><span class="line">        default:</span><br><span class="line">            fmt.Println(name,&quot;goroutine监控中...&quot;)</span><br><span class="line">            time.Sleep(2 * time.Second)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="close"><a href="#close" class="headerlink" title="close"></a>close</h1><blockquote>
+<p>发送者通过close关闭一个信道来表示没有需要发送的值了。</p>
+</blockquote>
+<blockquote>
+<p>接收者通过为接受表达式分配第二个参数来测试信道是否关闭。若没有值可以接收且信道已被关闭，那么在执行完v, ok := &lt;-ch 之后ok 为false</p>
+</blockquote>
+<blockquote>
+<p>向一个已经关闭的信道发送数据会引发程序恐慌（panic）</p>
+</blockquote>
+<blockquote>
+<p>信道与文件不同，通常情况下无需关闭它们。只有在必须告诉接收者不再有需要发送的值时才有必要关闭</p>
+</blockquote>
+<h1 id="goroutine和线程"><a href="#goroutine和线程" class="headerlink" title="goroutine和线程"></a>goroutine和线程</h1><h2 id="动态栈"><a href="#动态栈" class="headerlink" title="动态栈"></a>动态栈</h2><blockquote>
+<p>每一个os线程都有一块固定大小（2MB）做栈，用于存储当前被调用或者挂起的函数的内部变量。但是goruntine以一个很小的栈开始其生命周期（2kb）,栈大小不固定，会动态伸缩，最大达到1GB.这样的灵活性为了创建更多的goroutine.</p>
+</blockquote>
+<h2 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h2><blockquote>
+<p>上下文切换 中断处理器会挂起当前执行的线程并保存内存中它的寄存器内容。检查线程列表并决定下一次哪个线程可以被运行，并从内存中恢复该线程的寄存器信息，这样消耗时间长，增加cpu运行周期。</p>
+</blockquote>
+<blockquote>
+<p>Go的运行时包含了其自己的调度器，它与内核的调度时相似的，但这个调度器只关注单独的Go程序中的goroutine。调度器会使其进入休眠并开始执行另一个goroutine直到时机到了再去唤醒第一个goroutine，不需要进入内涵上下文。</p>
+</blockquote>
+<h1 id="GOMAXPROCS"><a href="#GOMAXPROCS" class="headerlink" title="GOMAXPROCS"></a>GOMAXPROCS</h1><blockquote>
+<p>Go的调度器使用了一个叫做GOMAXPROCS的变量来决定会有多少个操作系统的线程同时执行Go的代码。其默认的值是运行机器上的CPU的核心数。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">for &#123;</span><br><span class="line">    go fmt.Print(0)</span><br><span class="line">    fmt.Print(1)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ GOMAXPROCS=1 go run hacker-cliché.go</span><br><span class="line">111111111111111111110000000000000000000011111...</span><br><span class="line"></span><br><span class="line">$ GOMAXPROCS=2 go run hacker-cliché.go</span><br><span class="line">010101010101010101011001100101011010010100110...</span><br></pre></td></tr></table></figure>
+
+<h1 id="Goroutine没有ID号"><a href="#Goroutine没有ID号" class="headerlink" title="Goroutine没有ID号"></a>Goroutine没有ID号</h1><blockquote>
+<p>大多数多线程的操作系统和程序语言中，当前的线程都有一个独特的身份(id)，</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-04-13T02:55:00.000Z" itemprop="dateUpdated">2019-04-13 10:55:00</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/04/13/Go语法-log日志/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Go语法-log日志</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/04/13/Go语法-测试/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Go语法-测试</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>编译原理-具有 e动作的NFA到DFA确定化算法 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="编译原理">
+    <meta name="description" content="具有 e动作的NFA的确定化算法算法：子集法 与不存在e的NFA不一样，开始状态在查找过程中，因为e的存在，递归进行a/b时会产生n个不确定的状态链，需要对这些多个e组成的状态链，在转化为DFA过程中，转换，去除。从而达到可以转化成为DFA。也是必要条件。  算法解析： 初始C={}；  e-closure(0)的意思是：从位于0的开始状态，经由任意条e弧而能到达的状态的集合。所以 e-closu">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理-具有 e动作的NFA到DFA确定化算法">
+<meta property="og:url" content="http://yoursite.com/2019/04/13/编译原理-具有-e动作的NFA到DFA确定化算法/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="具有 e动作的NFA的确定化算法算法：子集法 与不存在e的NFA不一样，开始状态在查找过程中，因为e的存在，递归进行a/b时会产生n个不确定的状态链，需要对这些多个e组成的状态链，在转化为DFA过程中，转换，去除。从而达到可以转化成为DFA。也是必要条件。  算法解析： 初始C={}；  e-closure(0)的意思是：从位于0的开始状态，经由任意条e弧而能到达的状态的集合。所以 e-closu">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-13T02:58:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编译原理-具有 e动作的NFA到DFA确定化算法">
+<meta name="twitter:description" content="具有 e动作的NFA的确定化算法算法：子集法 与不存在e的NFA不一样，开始状态在查找过程中，因为e的存在，递归进行a/b时会产生n个不确定的状态链，需要对这些多个e组成的状态链，在转化为DFA过程中，转换，去除。从而达到可以转化成为DFA。也是必要条件。  算法解析： 初始C={}；  e-closure(0)的意思是：从位于0的开始状态，经由任意条e弧而能到达的状态的集合。所以 e-closu">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">编译原理-具有 e动作的NFA到DFA确定化算法</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">编译原理-具有 e动作的NFA到DFA确定化算法</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-04-13T02:53:20.000Z" itemprop="datePublished" class="page-time">
+  2019-04-13
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#具有-e动作的NFA的确定化算法"><span class="post-toc-number">1.</span> <span class="post-toc-text">具有 e动作的NFA的确定化算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#算法：子集法"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">算法：子集法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#算法解析："><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">算法解析：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#未经允许，禁止转载"><span class="post-toc-number">2.</span> <span class="post-toc-text">未经允许，禁止转载</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-编译原理-具有-e动作的NFA到DFA确定化算法"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">编译原理-具有 e动作的NFA到DFA确定化算法</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-04-13 10:53:20" datetime="2019-04-13T02:53:20.000Z"  itemprop="datePublished">2019-04-13</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="具有-e动作的NFA的确定化算法"><a href="#具有-e动作的NFA的确定化算法" class="headerlink" title="具有 e动作的NFA的确定化算法"></a>具有 e动作的NFA的确定化算法</h1><h3 id="算法：子集法"><a href="#算法：子集法" class="headerlink" title="算法：子集法"></a>算法：子集法</h3><ul>
+<li>与不存在e的NFA不一样，开始状态在查找过程中，因为e的存在，递归进行a/b时会产生n个不确定的状态链，需要对这些多个e组成的状态链，在转化为DFA过程中，转换，去除。从而达到可以转化成为DFA。也是必要条件。</li>
+</ul>
+<h3 id="算法解析："><a href="#算法解析：" class="headerlink" title="算法解析："></a>算法解析：</h3><ul>
+<li><p>初始C={}；</p>
+</li>
+<li><p>e-closure(0)的意思是：从位于0的开始状态，经由任意条e弧而能到达的状态的集合。所以 e-closure(0)={0,1,2,4,7}，{0,1,2,4,7}是新的唯一的状态，加入到C集合中，用T0表示。T0=e-e-closure(0)={0,1,2,4,7}。</p>
+</li>
+<li><p>不能标识的意思：因为它是一个新的状态，我们在转化为DFA时，不能识别出它是已具有的与a,b前驱后继的状态，那么DFA在转化过程中，这个状态没办法与a,b建立关系，这样的后果是，a,b和这个状态没什么连接关系。所以，针对新的不能识别的状态，我们让它参与到a,b的路径定位运算。使得它可以成为一个能被DFA在转化过程中所接受的一个状态。</p>
+</li>
+<li><p>Move(T0,a)意思是：在T0状态集中，查找与a路径相关的状态的集合。</p>
+</li>
+<li><p>即：e-closure(move(T0,a)={0,1,2,3,4,6,7,8},先查找C集合中,有没有对应的状态，明显没有，所以再定义一个T1,T1=e-closure(move(T0,a)={0,1,2,3,4,6,7,8},(以e弧相关状态为基础求与a弧相关状态的集合)。</p>
+</li>
+<li><p>参与完到a,的路径定位运算后，接着b.</p>
+</li>
+<li><p>e-closure(move(T0,b)={1,2,4,5,6,7}先查找C集合中,有没有对应的状态，明显没有，所以再定义一个T2,</p>
+</li>
+<li><p>此时C集合为{T0,T1,T2}</p>
+</li>
+<li><p>T0参与完 a,b的路径定位运算后。该T1。</p>
+</li>
+<li><p>所以接着让T1也执行T0的操作，即T1查找与a弧相关的状态集。</p>
+</li>
+<li><p>e-closure(move(T1,a)={1,2,3,4,6,7,8},先查找C集合中,有没有对应的状态，发现对应于C集合中T1,即在DFA转化过程中，可以找到与a,b弧对应的状态标识。所以不需要再定义新的Ti,(i-&gt;1,2,3 ……)</p>
+</li>
+<li><p>T1执行b</p>
+</li>
+<li><p>e-closure(move(T1,b)={1,2,4,5,6,7,9},先查找C集合中,有没有对应的状态，明显没有，所以再定义一个T3,C={T0,T1,T2,T3};</p>
+</li>
+<li><p>接着让T2执行操作，即T2查找与a，b弧相关的状态集。</p>
+</li>
+<li><p>e-closure(move(T2,a)={1,2,3,4,6,7,8},先查找C集合中,有没有对应的状态，发现对应于C集合的T1. </p>
+</li>
+<li><p>T2执行b</p>
+</li>
+<li><p>e-closure(move(T2,b)={1,2,4,5,6,7},查找C集合中, 发现对应于C集合的T2. </p>
+</li>
+</ul>
+<ul>
+<li><p>接着让T3执行操作，即T3查找与a，b弧相关的状态集。</p>
+</li>
+<li><p>e-closure(move(T3,a)={1,2,3,4,6,7,8},查找C集合中, 发现对应于C集合的T1.</p>
+</li>
+<li><p>e-closure(move(T3,b)={1,2,3,5,6,7,10},查找C集合中,有没有对应的状态，明显没有，所以再定义一个T4,C={T0,T1,T2,T3,T4};</p>
+</li>
+<li><p>接着让T4执行操作，即T4查找与a，b弧相关的状态集。</p>
+</li>
+<li><p>e-closure(move(T4,a)={1,2,3,4,6,7,8},查找C集合中, 发现对应于C集合的T1.</p>
+</li>
+<li><p>e-closure(move(T4,b)={1,2,4,5,6,7},查找C集合中, 发现对应于C集合的T2.</p>
+</li>
+</ul>
+<p>C集合查找新状态对应完毕。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">综上信息归纳：M=&#123;S,E,D,S0,St&#125;</span><br><span class="line">T0=&#123;0,1,2,4,7&#125;</span><br><span class="line">T1=&#123;1,2,3,4,6,7,8&#125;</span><br><span class="line">T2=&#123;1,2,4,5,6,7&#125;</span><br><span class="line">T3=&#123;1,2,4,5,6,7,9&#125;</span><br><span class="line">T4=&#123;1,2,4,5,6,7,10&#125;</span><br><span class="line"></span><br><span class="line">S=&#123;[T0],[T1],[T2],[T3],T[4]&#125;</span><br><span class="line">E=&#123;a,b&#125;</span><br><span class="line">D([T0],a)= [T1]</span><br><span class="line">D([T0],b)= [T2]</span><br><span class="line">D([T1],a)= [T1]</span><br><span class="line">D([T1],b)= [T3]</span><br><span class="line">D([T2],a)= [T1]</span><br><span class="line">D([T2],b)= [T2]</span><br><span class="line">D([T3],a)= [T1]</span><br><span class="line">D([T3],b)= [T4]</span><br><span class="line">D([T4],a)= [T1]</span><br><span class="line">D([T4],a)= [T2]</span><br><span class="line"></span><br><span class="line">S0=[T0]</span><br><span class="line">St=[T4]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由上面推导的内容，就可以将NFA有e符号的弧，转化为无符号的DFA。</li>
+</ul>
+<h1 id="未经允许，禁止转载"><a href="#未经允许，禁止转载" class="headerlink" title="未经允许，禁止转载"></a>未经允许，禁止转载</h1>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-04-13T02:58:12.000Z" itemprop="dateUpdated">2019-04-13 10:58:12</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编译原理/">编译原理</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/04/13/Cpp语法-基础/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Cpp语法-基础</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/04/13/编译原理-词法分析/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">编译原理-词法分析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

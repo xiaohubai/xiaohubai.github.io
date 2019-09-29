@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>面试-最短路径Dijkstra | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="算法">
+    <meta name="description" content="问题描述： 给定有向带权值图G=（V,E）,其中每条边的权值都是非负实数。求源点到其他各点的最短路径。  Dijkstra-思想： 1.解决单源最短路径问题的贪心算法，它先求出长度最短的一条路径，再参照该最短路径求出次长的一条路径，以此类推，直到求出源点到其他的各个顶点的距离。  算法设计： （1）设置带权邻接矩阵为map[][]，dist[i]来记录从源点到i顶点的最短路径长度；采用一维数组p[">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试-最短路径Dijkstra">
+<meta property="og:url" content="http://yoursite.com/2018/05/28/面试-最短路径Dijkstra/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="问题描述： 给定有向带权值图G=（V,E）,其中每条边的权值都是非负实数。求源点到其他各点的最短路径。  Dijkstra-思想： 1.解决单源最短路径问题的贪心算法，它先求出长度最短的一条路径，再参照该最短路径求出次长的一条路径，以此类推，直到求出源点到其他的各个顶点的距离。  算法设计： （1）设置带权邻接矩阵为map[][]，dist[i]来记录从源点到i顶点的最短路径长度；采用一维数组p[">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:48:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面试-最短路径Dijkstra">
+<meta name="twitter:description" content="问题描述： 给定有向带权值图G=（V,E）,其中每条边的权值都是非负实数。求源点到其他各点的最短路径。  Dijkstra-思想： 1.解决单源最短路径问题的贪心算法，它先求出长度最短的一条路径，再参照该最短路径求出次长的一条路径，以此类推，直到求出源点到其他的各个顶点的距离。  算法设计： （1）设置带权邻接矩阵为map[][]，dist[i]来记录从源点到i顶点的最短路径长度；采用一维数组p[">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">面试-最短路径Dijkstra</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">面试-最短路径Dijkstra</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-27T16:48:14.000Z" itemprop="datePublished" class="page-time">
+  2018-05-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题描述："><span class="post-toc-number">1.</span> <span class="post-toc-text">问题描述：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Dijkstra-思想："><span class="post-toc-number">2.</span> <span class="post-toc-text">Dijkstra-思想：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#算法设计："><span class="post-toc-number">3.</span> <span class="post-toc-text">算法设计：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码实现："><span class="post-toc-number">4.</span> <span class="post-toc-text">代码实现：</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-面试-最短路径Dijkstra"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">面试-最短路径Dijkstra</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-28 00:48:14" datetime="2018-05-27T16:48:14.000Z"  itemprop="datePublished">2018-05-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h2><blockquote>
+<p>给定有向带权值图G=（V,E）,其中每条边的权值都是非负实数。求源点到其他各点的最短路径。</p>
+</blockquote>
+<h2 id="Dijkstra-思想："><a href="#Dijkstra-思想：" class="headerlink" title="Dijkstra-思想："></a>Dijkstra-思想：</h2><blockquote>
+<p>1.解决单源最短路径问题的贪心算法，它先求出长度最短的一条路径，再参照该最短路径求出次长的一条路径，以此类推，直到求出源点到其他的各个顶点的距离。</p>
+</blockquote>
+<h2 id="算法设计："><a href="#算法设计：" class="headerlink" title="算法设计："></a>算法设计：</h2><blockquote>
+<p>（1）设置带权邻接矩阵为map[][]，dist[i]来记录从源点到i顶点的最短路径长度；采用一维数组p[i]来记录最短路径上i顶点的前驱。<br>（2）初始化dist[i]=map[u][i]，如果源点u到顶点i有边相连，初始化p[i]=u，否则p[i]= −1。<br>（3）找最小。在集合V−S中依照贪心策略来寻找使得dist[j]具有最小值的顶点t，即dist[t]=min（dist[j]|j属于V−S集合），则顶点t就是集合V−S中距离源点u最近的顶点。<br>（4）加入S战队。将顶点t加入集合S中，同时更新V−S。 （5）判结束。如果集合V−S为空，算法结束，否则转（6）。<br>（6）借东风。在（3）中已经找到了源点到t的最短路径，那么对集合V−S中所有与顶点t相邻的顶点j，都可以借助t走捷径。如果dis[j]&gt;dist[t]+map[t][j]，则dist[j]=dist[t]+map[t][j]，记录顶点j的前驱为t，有p[j]=<br>t，转（3）。</p>
+</blockquote>
+<h2 id="代码实现："><a href="#代码实现：" class="headerlink" title="代码实现："></a>代码实现：</h2><pre><code>#include &lt;cstdio&gt;
+#include &lt;iostream&gt;
+#include&lt;cstring&gt;
+#include&lt;windows.h&gt;
+#include&lt;stack&gt;
+using namespace std;
+const int N = 100; // 城市的个数可修改
+const int INF = 1e7; // 初始化无穷大为10000000
+int map[N][N],dist[N],p[N],n,m;//n城市的个数，m为城市间路线的条数
+bool flag[N]; //如果flag[i]等于true，说明顶点i已经加入到集合S;否则顶点i属于集合V-S
+void Dijkstra(int u)
+{
+   for(int i=1; i&lt;=n; i++)//①
+    {
+     dist[i] =map[u][i]; //初始化源点u到其他各个顶点的最短路径长度
+     flag[i]=false;
+     if(dist[i]==INF)
+        p[i]=-1; //源点u到该顶点的路径长度为无穷大，说明顶点i与源点u不相邻
+     else
+        p[i]=u; //说明顶点i与源点u相邻，设置顶点i的前驱p[i]=u
+     }
+    dist[u] = 0;
+    flag[u]=true;   //初始时，集合S中只有一个元素：源点u
+    for(int i=1; i&lt;=n; i++)//②
+     {
+         int temp = INF,t = u;
+         for(int j=1; j&lt;=n; j++) //③在集合V-S中寻找距离源点u最近的顶点t
+           if(!flag[j]&amp;&amp;dist[j]&lt;temp)
+             {
+              t=j;
+              temp=dist[j];
+             }
+           if(t==u) return ; //找不到t，跳出循环
+           flag[t]= true;  //否则，将t加入集合
+           for(int j=1;j&lt;=n;j++)//④//更新集合V-S中与t邻接的顶点到源点u的距离
+             if(!flag[j]&amp;&amp; map[t][j]&lt;INF)//!s[j]表示j在V-S中  
+                if(dist[j]&gt;(dist[t]+map[t][j]))
+                 {
+                   dist[j]=dist[t]+map[t][j] ;
+                   p[j]=t ;
+                 }
+             }
+     }
+     int main()
+     {
+             int u,v,w,st;
+             system(&quot;color 0d&quot;);
+             cout &lt;&lt; &quot;请输入城市的个数：&quot;&lt;&lt;endl;
+             cin &gt;&gt; n;
+             cout &lt;&lt; &quot;请输入城市之间的路线的个数：&quot;&lt;&lt;endl;
+             cin &gt;&gt;m;
+             cout &lt;&lt; &quot;请输入城市之间的路线以及距离：&quot;&lt;&lt;endl;
+             for(int i=1;i&lt;=n;i++)//初始化图的邻接矩阵
+               for(int j=1;j&lt;=n;j++)
+               {
+                   map[i][j]=INF;//初始化邻接矩阵为无穷大
+               }
+             while(m--)
+             {
+               cin &gt;&gt; u &gt;&gt; v &gt;&gt; w;
+               map[u][v] =min(map[u][v],w); //邻接矩阵储存，保留最小的距离
+             }
+             cout &lt;&lt;&quot;请输入小明所在的位置：&quot;&lt;&lt;endl; ;
+             cin &gt;&gt; st;
+             Dijkstra(st);
+             cout &lt;&lt;&quot;小明所在的位置：&quot;&lt;&lt;st&lt;&lt;endl;
+             for(int i=1;i&lt;=n;i++){
+                   cout &lt;&lt;&quot;小明：&quot;&lt;&lt;st&lt;&lt;&quot; - &quot;&lt;&lt;&quot;要去的位置：&quot;&lt;&lt;i&lt;&lt;endl;
+                   if(dist[i] == INF)
+                      cout &lt;&lt; &quot;sorry,无路可达&quot;&lt;&lt;endl;
+                   else
+                      cout &lt;&lt; &quot;最短距离为:&quot;&lt;&lt;dist[i]&lt;&lt;endl;
+             }
+             return 0;
+   }</code></pre>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:48:58.000Z" itemprop="dateUpdated">2019-03-28 00:48:58</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/12/28/面试-快速排序/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">面试-快速排序</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/03/28/面试-矩阵连乘/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">面试-矩阵连乘</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

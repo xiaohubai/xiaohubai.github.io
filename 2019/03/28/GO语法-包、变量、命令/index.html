@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>GO语法-包、变量、命令 | Xiaohu&#39;s Blog | 这辈子没法做太多事情，所以每一件都要做到精彩绝伦。</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="golang">
+    <meta name="description" content="跨平台编译 因为Go汇编语言实际上来源于plan9汇编语言，而plan9汇编语言最初来源于Go语言作者之一的Ken Thompson为plan9系统所写的C语言编译器输出的汇编伪代码。使用 go env 查看编译环境  123456789101112131415$ go envset GOARCH=amd64set GOBIN=E:\Project\Go\binset GOCACHE=C:\Use">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GO语法-包、变量、命令">
+<meta property="og:url" content="http://yoursite.com/2019/03/28/GO语法-包、变量、命令/index.html">
+<meta property="og:site_name" content="Xiaohu&#39;s Blog">
+<meta property="og:description" content="跨平台编译 因为Go汇编语言实际上来源于plan9汇编语言，而plan9汇编语言最初来源于Go语言作者之一的Ken Thompson为plan9系统所写的C语言编译器输出的汇编伪代码。使用 go env 查看编译环境  123456789101112131415$ go envset GOARCH=amd64set GOBIN=E:\Project\Go\binset GOCACHE=C:\Use">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-27T16:12:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GO语法-包、变量、命令">
+<meta name="twitter:description" content="跨平台编译 因为Go汇编语言实际上来源于plan9汇编语言，而plan9汇编语言最初来源于Go语言作者之一的Ken Thompson为plan9系统所写的C语言编译器输出的汇编伪代码。使用 go env 查看编译环境  123456789101112131415$ go envset GOARCH=amd64set GOBIN=E:\Project\Go\binset GOCACHE=C:\Use">
+    
+        <link rel="alternate" type="application/atom+xml" title="Xiaohu&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Xiaohu Bai</h5>
+          <a href="mailto:XiaohuBai@outlook.com" title="XiaohuBai@outlook.com" class="mail">XiaohuBai@outlook.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/Xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://zhuanlan.zhihu.com/xiaohubai" target="_blank" >
+                <i class="icon icon-lg icon-zhihu"></i>
+                知乎
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">GO语法-包、变量、命令</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">GO语法-包、变量、命令</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-03-27T16:10:14.000Z" itemprop="datePublished" class="page-time">
+  2019-03-28
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#跨平台编译"><span class="post-toc-number">1.</span> <span class="post-toc-text">跨平台编译</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#包"><span class="post-toc-number">2.</span> <span class="post-toc-text">包</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#导入"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">导入</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#导出"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">导出</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#包的init函数"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">包的init函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#go-终端命令"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">go 终端命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#变量"><span class="post-toc-number">3.</span> <span class="post-toc-text">变量</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#常量"><span class="post-toc-number">4.</span> <span class="post-toc-text">常量</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#类型转换"><span class="post-toc-number">5.</span> <span class="post-toc-text">类型转换</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#零值"><span class="post-toc-number">6.</span> <span class="post-toc-text">零值</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#类型声明"><span class="post-toc-number">7.</span> <span class="post-toc-text">类型声明</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#作用域"><span class="post-toc-number">8.</span> <span class="post-toc-text">作用域</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-GO语法-包、变量、命令"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">GO语法-包、变量、命令</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-03-28 00:10:14" datetime="2019-03-27T16:10:14.000Z"  itemprop="datePublished">2019-03-28</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="跨平台编译"><a href="#跨平台编译" class="headerlink" title="跨平台编译"></a>跨平台编译</h1><ul>
+<li>因为Go汇编语言实际上来源于plan9汇编语言，而plan9汇编语言最初来源于Go语言作者之一的Ken Thompson为plan9系统所写的C语言编译器输出的汇编伪代码。<br>使用 go env 查看编译环境</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ go env</span><br><span class="line">set GOARCH=amd64</span><br><span class="line">set GOBIN=E:\Project\Go\bin</span><br><span class="line">set GOCACHE=C:\Users\Xiaohu\AppData\Local\go-build</span><br><span class="line">set GOEXE=.exe</span><br><span class="line">set GOFLAGS=</span><br><span class="line">set GOHOSTARCH=amd64</span><br><span class="line">set GOHOSTOS=windows</span><br><span class="line">set GOOS=windows</span><br><span class="line">set GOPATH=E:\Project\Go</span><br><span class="line">set GOPROXY=</span><br><span class="line">set GORACE=</span><br><span class="line">set GOROOT=C:\Go</span><br><span class="line">set GOTMPDIR=</span><br><span class="line">set GOTOOLDIR=C:\Go\pkg\tool\windows_amd64</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>注意里面两个重要的环境变量GOOS和GOARCH,其中GOOS指的是目标操作系统，它的可用值为：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">darwin</span><br><span class="line">freebsd</span><br><span class="line">linux</span><br><span class="line">windows</span><br><span class="line">android</span><br><span class="line">dragonfly</span><br><span class="line">netbsd</span><br><span class="line">openbsd</span><br><span class="line">plan9</span><br><span class="line">solaris</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>GOARCH指的是目标处理器的架构，目前支持的有：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">arm</span><br><span class="line">arm64</span><br><span class="line">386</span><br><span class="line">amd64</span><br><span class="line">ppc64</span><br><span class="line">ppc64le</span><br><span class="line">mips64</span><br><span class="line">mips64le</span><br><span class="line">s390x</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果我们要生成不同平台架构的可执行程序，只要改变这两个环境变量就可以了，比如要生成linux 64位的程序，命令如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GOOS=linux GOARCH=amd64 go build xiaohubai.github.io/hello</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>只针对本次运行有效，不会更改我们默认的配置。</p>
+</blockquote>
+<h1 id="包"><a href="#包" class="headerlink" title="包"></a>包</h1><ul>
+<li>每个 Go 程序都是由包组成的。程序运行的入口是包 <code>main</code>。<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	xh_fmt &quot;xiaohu/fmt&quot;</span><br><span class="line">	_ &quot;math&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>导入的包名称重复，对导入的包重新命名（我们导入的时候，在包名的左侧，起一个新的包名就可以了。）</p>
+</blockquote>
+<blockquote>
+<p>导入的包原则上必须使用，如果导入后暂时不用 前面加空白标志符 “_”（使用_重命名我们导入的包）</p>
+</blockquote>
+<blockquote>
+<p>下划线 “_”是空标识符，可以当作临时变量，因为go 不允许存在无用的临时变量，不然编译错误。</p>
+</blockquote>
+<h2 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h2><ul>
+<li>在 Go 中，首字母大写的名称是可以被导出的，也就是可以被别的包调用，小写的不行。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fmt.Println(“heloworld”)</span><br></pre></td></tr></table></figure>
+
+<h2 id="包的init函数"><a href="#包的init函数" class="headerlink" title="包的init函数"></a>包的init函数</h2><ul>
+<li>每个包都可以有任意多个init函数，这些init函数都会在main函数之前执行，init函数通常用来做初始化变量、设置包或者其他需要在程序执行前的引导工作。</li>
+<li>比如上面我们讲的需要使用_空标志符来导入一个包的目的，就是想执行这个包里的init函数（比如数据库驱动加载）</li>
+</ul>
+<h2 id="go-终端命令"><a href="#go-终端命令" class="headerlink" title="go 终端命令"></a>go 终端命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">build       启动编译，把我们的包和相关的依赖编译成一个可执行的文件</span><br><span class="line">clean       清理我们编译生成的文件，比如生成的可执行文件，生成obj对象等等。</span><br><span class="line">doc         show documentation for package or symbol</span><br><span class="line">env         go环境配置信息</span><br><span class="line">bug         start a bug report</span><br><span class="line">fix         run go tool fix on packages</span><br><span class="line">fmt         统一代码风格</span><br><span class="line">generate    generate Go files by processing source</span><br><span class="line">get         可以从网上下载更新指定的包以及依赖的包，并对它们进行编译和安装</span><br><span class="line"> |--v       看到下载的进度以及更多的调试信息. </span><br><span class="line"> |--u       下载丢失的包，但不会更新已经存在的包</span><br><span class="line"> |--d       只下载，不安装</span><br><span class="line">install     编译后,把生成的可执行文件或者库安装到对应的目录下（如果生成的是可执行文件，那么安装在$GOPATH/bin目录下；如果是可引用的库，那么安装在$GOPATH/pkg目录下。），以供使用。</span><br><span class="line">list        list packages</span><br><span class="line">run         编译后直接输出结果，不会编译成一个可执行的文件</span><br><span class="line">test        单元测试</span><br><span class="line">tool        run specified go tool</span><br><span class="line">version     print Go version</span><br><span class="line">vet         检查代码中常见的错误</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>test 单元测试</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">   import &quot;testing&quot;</span><br><span class="line">   func TestAdd(t *testing.T) &#123; </span><br><span class="line">        if Add(1,2) == 3 &#123;</span><br><span class="line">             t.Log(&quot;1+2=3&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">        if Add(1,1) == 3 &#123;</span><br><span class="line">             t.Error(&quot;1+1=3&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>写有单元测试的文件名，必须以_test.go结尾</p>
+</blockquote>
+<blockquote>
+<p>测试文件要包含若干个测试函数。</p>
+</blockquote>
+<blockquote>
+<p>这些测试函数要以Test为前缀，还要接收一个*testing.T类型的参数。</p>
+</blockquote>
+<hr>
+<h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. var 变量名 类型</span><br><span class="line">2. :=</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>s,seo :=” “,” “</p>
+</blockquote>
+<blockquote>
+<p>var a int</p>
+</blockquote>
+<blockquote>
+<p>q:=24</p>
+</blockquote>
+<h1 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const Pi =3.14</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const (</span><br><span class="line">    a = 1</span><br><span class="line">    b</span><br><span class="line">    c = 2</span><br><span class="line">    d</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">fmt.Println(a, b, c, d) // &quot;1 1 2 2&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>iota 常量生成器</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">type Weekday int</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">    Sunday Weekday = iota</span><br><span class="line">    Monday</span><br><span class="line">    Tuesday</span><br><span class="line">    Wednesday</span><br><span class="line">    Thursday</span><br><span class="line">    Friday</span><br><span class="line">    Saturday</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const (</span><br><span class="line">    _ = 1 &lt;&lt; (10 * iota)</span><br><span class="line">    KiB // 1024</span><br><span class="line">    MiB // 1048576</span><br><span class="line">    GiB // 1073741824</span><br><span class="line">    TiB // 1099511627776             (exceeds 1 &lt;&lt; 32)</span><br><span class="line">    PiB // 1125899906842624</span><br><span class="line">    EiB // 1152921504606846976</span><br><span class="line">    ZiB // 1180591620717411303424    (exceeds 1 &lt;&lt; 64)</span><br><span class="line">    YiB // 1208925819614629174706176</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>常量可以是字符、字符串、布尔值或数值。</p>
+</blockquote>
+<blockquote>
+<p>常量不能用 := 语法声明。</p>
+</blockquote>
+<blockquote>
+<p>常量的运算都可以在编译期完成，这样可以减少运行时的工作，也方便其他编译优化</p>
+</blockquote>
+<h1 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h1><p>只有强制转换，没有隐式转换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int()</span><br><span class="line">    float64(i)</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<h1 id="零值"><a href="#零值" class="headerlink" title="零值"></a>零值</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">数值 0</span><br><span class="line">指针 nil</span><br><span class="line">布尔 ture false</span><br><span class="line">字符串 “”</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="类型声明"><a href="#类型声明" class="headerlink" title="类型声明"></a>类型声明</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type 类型名字 底层类型</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">type Celsius float64    // 摄氏温度</span><br><span class="line">type Fahrenheit float64 // 华氏温度</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Celsius和Fahrenheit分别对应不同的温度单位,相同的底层类型float64，但是它们是不同的数据类型，因此它们不可以被相互比较或混在一个表达式运算。刻意区分类型，可以避免一些像无意中使用。</p>
+</blockquote>
+<h1 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h1><blockquote>
+<p> 当编译器遇到一个名字引用时，如果它看起来像一个声明，它首先从最内层的词法域向全局的作用域查找。内部声明屏蔽了外部同名的声明，让外部的声明的名字无法被访问。</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2019-03-27T16:12:42.000Z" itemprop="dateUpdated">2019-03-28 00:12:42</time>
+</span><br>
+
+
+        
+        极致路，悟道完美人生。
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Xiaohu Bai">
+            Xiaohu Bai
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/golang/">golang</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/03/28/Go语法-函数、方法/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Go语法-函数、方法</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/03/26/VSCode-Golang环境配置/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">VSCode+Golang环境配置</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Xiaohu Bai &copy; 2014 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'Xiaohu's Blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = 'Xiaohu's Blog';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
