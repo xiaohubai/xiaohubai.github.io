@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on xiaohu bai</title>
+    <link>https://xiaohubai.github.io/blog/</link>
+    <description>Recent content in Blog on xiaohu bai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy;{year}, All Rights Reserved</copyright>
+    <lastBuildDate>Tue, 20 Oct 2020 15:12:15 +0900</lastBuildDate>
+    
+        <atom:link href="https://xiaohubai.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+      
+      <item>
+        <title>errgroup并发控制使用</title>
+        <link>https://xiaohubai.github.io/blog/errgroup/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/errgroup/</guid>
+        <description>包 1  golang.org/x/sync/errgroup   errgroup.WithContext() 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18  //创建一个errGroup对象和ctx对象 g, ctx := errgroup.WithContext(context.TODO()) //Group结构体 type Group struct { cancel func() // 这个存的是context的cancel方法  wg sync.WaitGroup // 封装sync.WaitGroup  errOnce sync.Once // 保证获取的是第一次出错的信息，避免被后面的goroutine的错误覆盖  err error // 保存第一个返回的错误 } func WithContext(ctx context.Context) (*Group, context.Context) { ctx, cancel := context.WithCancel(ctx) return &amp;amp;Group{cancel: cancel}, ctx }   Go() 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19  //创建并发线程 g.</description>
+      </item>
+      
+      <item>
+        <title>gin参数校验</title>
+        <link>https://xiaohubai.github.io/blog/gin%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/gin%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/</guid>
+        <description>第三方包 1  github.com/go-playground/validator/v10   常用参数 1 2 3 4 5 6 7  required //必填； len=11 //长度=11； min=3 //如果是数字，验证的是数据大小范围，最小值为3，如果是文本，验证的是最小长度为3， max=6 //如果是数字，验证的是数字最大值为6，如果是文本，验证的是最大长度为6 mail //验证邮箱 gt=3 //对于文本就是长度&amp;gt;=3 lt=6 //对于文本就是长度&amp;lt;=6   翻译中间件 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34  package middleware import ( &amp;#34;github.</description>
+      </item>
+      
+      <item>
+        <title>gin记录请求,返回结果日志</title>
+        <link>https://xiaohubai.github.io/blog/gin%E8%AE%B0%E5%BD%95%E8%AF%B7%E6%B1%82%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%97%A5%E5%BF%97/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/gin%E8%AE%B0%E5%BD%95%E8%AF%B7%E6%B1%82%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%97%A5%E5%BF%97/</guid>
+        <description>记录请求、应答中间件  请求体只能读取一次，解决为重写进请求体  1 2  reqBody, _ := c.GetRawData() c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(reqBody))    写入关键词 key(req、resp、func)便于排查分类  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46  package middleware import ( &amp;#34;bytes&amp;#34; &amp;#34;io/ioutil&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.</description>
+      </item>
+      
+      <item>
+        <title>gorm自制日志</title>
+        <link>https://xiaohubai.github.io/blog/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</guid>
+        <description>第三方包 1  gorm.io/gorm/logger   示例 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152  package boot import ( &amp;#34;context&amp;#34; &amp;#34;fmt&amp;#34; &amp;#34;io/ioutil&amp;#34; &amp;#34;log&amp;#34; &amp;#34;os&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.</description>
+      </item>
+      
+      <item>
+        <title>go接口方法重载</title>
+        <link>https://xiaohubai.github.io/blog/go%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/go%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD/</guid>
+        <description>源码 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57  package main import &amp;#34;fmt&amp;#34; type Log interface { Error() } type LocalLog struct { Level string `json:&amp;#34;level&amp;#34;` Key string `json:&amp;#34;key&amp;#34;` Msg string `json:&amp;#34;msg&amp;#34;` TraceId string `json:&amp;#34;trace_id&amp;#34;` } type Atta struct { Level string `json:&amp;#34;level&amp;#34;` Key string `json:&amp;#34;key&amp;#34;` Msg string `json:&amp;#34;msg&amp;#34;` TraceId string `json:&amp;#34;trace_id&amp;#34;` AttaId string `json:&amp;#34;atta_id&amp;#34;` } func CommError(obj Log) { obj.</description>
+      </item>
+      
+      <item>
+        <title>go项目分层设计</title>
+        <link>https://xiaohubai.github.io/blog/go%E9%A1%B9%E7%9B%AE%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/go%E9%A1%B9%E7%9B%AE%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1/</guid>
+        <description>单系统 Project Layout 介绍 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22  ├── api (API) │ └── v1 (版本) ├── service (业务层) ├── model (结构体层) ├── dao (数据库操作) ├── middleware (中间件) ├── config (全局配置) ├── boot (初始组件) ├── router (路由控制) ├── plugin (组件具体实现) ├── utils (工具) ├── script (脚本) ├── docs (文档) ├── public (静态文件) ├── log (日志) ├── main.</description>
+      </item>
+      
+      <item>
+        <title>mysql优化</title>
+        <link>https://xiaohubai.github.io/blog/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</guid>
+        <description>1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。 2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。 3、应尽量避免在 WHERE 子句中使用 !</description>
+      </item>
+      
+      <item>
+        <title>redis内存满了怎么办？</title>
+        <link>https://xiaohubai.github.io/blog/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+        <description>maxmemory redis 设置最大使用内存 maxmemory，默认资源超过maxmemory后，不允许新key加入 7种淘汰策略 volatile-lru：淘汰那些设置了过期时间且最近最少被访问的数据 volatile-random：随机淘汰，腾出坑位给新人； volatile-ttl：淘汰设置了过期时间key，谁最接近时间就先淘汰谁 allkeys-lru：淘汰最近最少上一线干活的职员； allkeys-lfu：淘汰最少上一线干活的公务员； allkeys-random：随机淘汰职员，为新兵腾出空位。 淘汰执行过程 客户端发送新命令到服务端； 服务端收到客户端命令，Redis 检查内存使用情况，如果大于 maxmemory 限制，则根据策略驱逐数据。执行新命令，否则执行新命令 使用场景 allkeys-lru 使用场景有明显的冷热数据区分，充分利用 LRU 算法把最近最常访问的数据保留，有限的内存提高访问性能 allkeys-random 使用场景数据没有明显的冷热分别，所有的数据分布查询比较均衡，让其随机选择淘汰数据 volatile-lru 业务场景有一些数据不能删除，比如置顶新闻、视频，这时候我们为这些数据不设置过期时间，这样的话数据就不会被删除，该策略就会去根据 LRU 算法去淘汰那些设置了过期时间且最近最少被访问的数据 </description>
+      </item>
+      
+      <item>
+        <title>wsl2固定ip</title>
+        <link>https://xiaohubai.github.io/blog/wsl2%E5%9B%BA%E5%AE%9Aip/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/wsl2%E5%9B%BA%E5%AE%9Aip/</guid>
+        <description>解决wsl2重启 内网ip发生变化 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28  @echo off setlocal enabledelayedexpansion wsl --shutdown ::重新拉起来，并且用root的身份，启动ssh服务和docker服务 wsl -u root service docker start | findstr &amp;#34;Starting Docker&amp;#34; &amp;gt; nul if !errorlevel! equ 0 ( echo docker start success :: 看看我要的IP在不在 wsl -u root ip addr | findstr &amp;#34;172.21.0.2&amp;#34; &amp;gt; nul if !</description>
+      </item>
+      
+      <item>
+        <title>wsl2设置root密码和登录</title>
+        <link>https://xiaohubai.github.io/blog/wsl2%E8%AE%BE%E7%BD%AEroot%E5%AF%86%E7%A0%81%E5%92%8C%E7%99%BB%E5%BD%95/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/wsl2%E8%AE%BE%E7%BD%AEroot%E5%AF%86%E7%A0%81%E5%92%8C%E7%99%BB%E5%BD%95/</guid>
+        <description>设置root密码 1  sudo passwd root   root登录 1  su   </description>
+      </item>
+      
+      <item>
+        <title>zap格式化日志</title>
+        <link>https://xiaohubai.github.io/blog/zap/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/zap/</guid>
+        <description>第三方包 1  go.uber.org/zap   zap记录日志  uber 开源的高性能日志库，面向高性能  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65  package boot import ( &amp;#34;fmt&amp;#34; &amp;#34;path&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.</description>
+      </item>
+      
+      <item>
+        <title>两个事务并发写，能保证数据唯一吗?</title>
+        <link>https://xiaohubai.github.io/blog/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80/</guid>
+        <description>问题? 1  用户注册时，要求手机号不能一样，先查后插时会存在并发，都查询不存在该号码，因此插入多条相同的号码   怎么保证数据唯一？ 唯一索引 1  将一个字段加入唯一索引，可以避免重复数据   为什么唯一索引可以保证数据唯一？ 1 2 3 4 5 6  mysql作为数据库内部主要为 server层（连接管理-&amp;gt;分析器-&amp;gt;优化器-&amp;gt;执行器）和存储引擎层（myISAM、InnoDB、MEMORY）, 数据库读写不从磁盘直接读取，速度太慢，磁盘前面加一层内存（buffer pool），主要是使用双向链表，存放一个个数据页，每个默认16kb, 数据页存放的是磁盘的数据。一般插入、更新 放入change buffer后直接返回，异步更新数据页，再写回磁盘。 但是唯一索引要保证数据唯一，先看数据有无重复，无重复再插入或更新，性能上输了一大截。唯一索引会绕过change buffer , 确保把磁盘数据读取到内存后再判断数据是否存在，不存在才会插入数据，否则报错，以此保证数据唯一。   串行隔离级别 1 2 3 4 5 6 7 8 9 10 11 12  事务们都是依次执行的,保证数据唯一，但是性能较差， // 修改当前会话为串行化 SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE; // 查看当前会话的事务隔离级别 select @@tx_isolation; // 输出 SERIALIZABLE // 查看全局事务隔离级别 select @@global.tx_isolation; // 输出 REPEATABLE-READ   总结 1 2 3 4  加唯一索引可以保证数据并发写入时数据唯一，而且最省事省心。 数据库通过引入一层buffer pool内存来提升读写速度，普通索引可以利用change buffer提高数据插入的性能。 唯一索引会绕过change buffer，确保把磁盘数据读到内存后再判断数据是否存在，不存在才能插入数据，否则报错，以此来保证数据是唯一的。 更改隔离级别为串行化，也能实现并发写入时数据唯一。   </description>
+      </item>
+      
+      <item>
+        <title>控制协程的运行时间</title>
+        <link>https://xiaohubai.github.io/blog/%E6%8E%A7%E5%88%B6%E5%8D%8F%E7%A8%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/%E6%8E%A7%E5%88%B6%E5%8D%8F%E7%A8%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</guid>
+        <description>1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20  func Go(ctx context.Context, timeout time.Duration, handler func(context.Context)) error { oldMsg := codec.Message(ctx) newCtx, newMsg := codec.WithNewMessage(detach(ctx)) codec.CopyMsg(newMsg, oldMsg) newCtx, cancel := context.WithTimeout(newCtx, timeout) go func() { defer func() { if e := recover(); e != nil { buf := make([]byte, PanicBufLen) buf = buf[:runtime.Stack(buf, false)] log.Errorf(&amp;#34;[PANIC]%v\n%s\n&amp;#34;, e, buf) report.PanicNum.Incr() } cancel() }() handler(newCtx) }() return nil }   </description>
+      </item>
+      
+      <item>
+        <title></title>
+        <link>https://xiaohubai.github.io/blog/gc%E5%8E%9F%E7%90%86/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/gc%E5%8E%9F%E7%90%86/</guid>
+        <description>最常见的垃圾回收算法有标记清除(Mark-Sweep) 和引用计数(Reference Count)，Go 语言采用的是标记清除算法。并在此基础上使用了三色标记法和写屏障技术，提高了效率。
+标记清除收集器是跟踪式垃圾收集器，其执行过程可以分成标记（Mark）和清除（Sweep）两个阶段：
+标记阶段 — 从根对象出发查找并标记堆中所有存活的对象；
+清除阶段 — 遍历堆中的全部对象，回收未被标记的垃圾对象并将回收的内存加入空闲链表。
+标记清除算法的一大问题是在标记期间，需要暂停程序（Stop the world，STW），标记结束之后，用户程序才可以继续执行。为了能够异步执行，减少 STW 的时间，Go 语言采用了三色标记法。
+三色标记算法将程序中的对象分成白色、黑色和灰色三类。
+白色：不确定对象。
+灰色：存活对象，子对象待处理。
+黑色：存活对象。
+标记开始时，所有对象加入白色集合（这一步需 STW ）。首先将根对象标记为灰色，加入灰色集合，垃圾搜集器取出一个灰色对象，将其标记为黑色，并将其指向的对象标记为灰色，加入灰色集合。重复这个过程，直到灰色集合为空为止，标记阶段结束。那么白色对象即可需要清理的对象，而黑色对象均为根可达的对象，不能被清理。
+三色标记法因为多了一个白色的状态来存放不确定对象，所以后续的标记阶段可以并发地执行。当然并发执行的代价是可能会造成一些遗漏，因为那些早先被标记为黑色的对象可能目前已经是不可达的了。所以三色标记法是一个 false negative（假阴性）的算法。
+三色标记法并发执行仍存在一个问题，即在 GC 过程中，对象指针发生了改变。比如下面的例子：
+1
+A (黑) -&amp;gt; B (灰) -&amp;gt; C (白) -&amp;gt; D (白)
+正常情况下，D 对象最终会被标记为黑色，不应被回收。但在标记和用户程序并发执行过程中，用户程序删除了 C 对 D 的引用，而 A 获得了 D 的引用。标记继续进行，D 就没有机会被标记为黑色了（A 已经处理过，这一轮不会再被处理）。
+1
+2
+3
+A (黑) -&amp;gt; B (灰) -&amp;gt; C (白)
+↓
+D (白)
+为了解决这个问题，Go 使用了内存屏障技术，它是在用户程序读取对象、创建新对象以及更新对象指针时执行的一段代码，类似于一个钩子。垃圾收集器使用了写屏障（Write Barrier）技术，当对象新增或更新时，会将其着色为灰色。这样即使与用户程序并发执行，对象的引用发生改变时，垃圾收集器也能正确处理了。</description>
+      </item>
+      
+    
+  </channel>
+</rss>

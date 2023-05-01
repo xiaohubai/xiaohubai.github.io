@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql on xiaohu bai</title>
+    <link>https://xiaohubai.github.io/tags/mysql/</link>
+    <description>Recent content in mysql on xiaohu bai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy;{year}, All Rights Reserved</copyright>
+    <lastBuildDate>Tue, 20 Oct 2020 15:12:15 +0900</lastBuildDate>
+    
+        <atom:link href="https://xiaohubai.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    
+      
+      <item>
+        <title>mysql优化</title>
+        <link>https://xiaohubai.github.io/blog/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</guid>
+        <description>1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49  1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。 2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。 3、应尽量避免在 WHERE 子句中使用 !</description>
+      </item>
+      
+      <item>
+        <title>两个事务并发写，能保证数据唯一吗?</title>
+        <link>https://xiaohubai.github.io/blog/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80/</link>
+        <pubDate>Tue, 20 Oct 2020 15:12:15 +0900</pubDate>
+        
+        <guid>https://xiaohubai.github.io/blog/%E4%B8%A4%E4%B8%AA%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E5%86%99%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%94%AF%E4%B8%80/</guid>
+        <description>问题? 1  用户注册时，要求手机号不能一样，先查后插时会存在并发，都查询不存在该号码，因此插入多条相同的号码   怎么保证数据唯一？ 唯一索引 1  将一个字段加入唯一索引，可以避免重复数据   为什么唯一索引可以保证数据唯一？ 1 2 3 4 5 6  mysql作为数据库内部主要为 server层（连接管理-&amp;gt;分析器-&amp;gt;优化器-&amp;gt;执行器）和存储引擎层（myISAM、InnoDB、MEMORY）, 数据库读写不从磁盘直接读取，速度太慢，磁盘前面加一层内存（buffer pool），主要是使用双向链表，存放一个个数据页，每个默认16kb, 数据页存放的是磁盘的数据。一般插入、更新 放入change buffer后直接返回，异步更新数据页，再写回磁盘。 但是唯一索引要保证数据唯一，先看数据有无重复，无重复再插入或更新，性能上输了一大截。唯一索引会绕过change buffer , 确保把磁盘数据读取到内存后再判断数据是否存在，不存在才会插入数据，否则报错，以此保证数据唯一。   串行隔离级别 1 2 3 4 5 6 7 8 9 10 11 12  事务们都是依次执行的,保证数据唯一，但是性能较差， // 修改当前会话为串行化 SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE; // 查看当前会话的事务隔离级别 select @@tx_isolation; // 输出 SERIALIZABLE // 查看全局事务隔离级别 select @@global.tx_isolation; // 输出 REPEATABLE-READ   总结 1 2 3 4  加唯一索引可以保证数据并发写入时数据唯一，而且最省事省心。 数据库通过引入一层buffer pool内存来提升读写速度，普通索引可以利用change buffer提高数据插入的性能。 唯一索引会绕过change buffer，确保把磁盘数据读到内存后再判断数据是否存在，不存在才能插入数据，否则报错，以此来保证数据是唯一的。 更改隔离级别为串行化，也能实现并发写入时数据唯一。   </description>
+      </item>
+      
+    
+  </channel>
+</rss>
