@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="彻底卸载禁用snap # sudo vim /etc/apt/preferences.d/nosnap.pref https://www.cnblogs.com/learner-and-helper-YZY/p/17654961.html oh-my-zsh # sudo apt install zsh -y sh -c &#34;$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&#34; git # 配置github用户 git config --global user.name &#34;youname&#34; git config --global user.email &#34;youname@qq.com&#34; 配置ssh key ssh-keygen -m PEM -t ed25519 -C &#34;yourname@qq.com&#34; # id_ed25519.pub内容 粘贴到远端github的setting-&gt;SSH and GPG keys下 ssh -T git@github.com 配置github和公司仓库地址 cd ~/.ssh &amp;&amp; vim config Host github.com Hostname github.com Port 22 User git PreferredAuthentications publickey IdentityFile ~/.ssh/id_github Host e.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="各种工具安装" />
+<meta property="og:description" content="彻底卸载禁用snap # sudo vim /etc/apt/preferences.d/nosnap.pref https://www.cnblogs.com/learner-and-helper-YZY/p/17654961.html oh-my-zsh # sudo apt install zsh -y sh -c &#34;$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&#34; git # 配置github用户 git config --global user.name &#34;youname&#34; git config --global user.email &#34;youname@qq.com&#34; 配置ssh key ssh-keygen -m PEM -t ed25519 -C &#34;yourname@qq.com&#34; # id_ed25519.pub内容 粘贴到远端github的setting-&gt;SSH and GPG keys下 ssh -T git@github.com 配置github和公司仓库地址 cd ~/.ssh &amp;&amp; vim config Host github.com Hostname github.com Port 22 User git PreferredAuthentications publickey IdentityFile ~/.ssh/id_github Host e." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" /><meta property="article:section" content="docs" />
+
+
+
+<title>各种工具安装 | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="active">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>各种工具安装</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#彻底卸载禁用snap">彻底卸载禁用snap</a></li>
+    <li><a href="#oh-my-zsh">oh-my-zsh</a></li>
+    <li><a href="#git">git</a></li>
+    <li><a href="#node-npm-pnpm">node npm pnpm</a></li>
+    <li><a href="#npm源管理">npm源管理</a></li>
+    <li><a href="#eslint">eslint</a></li>
+    <li><a href="#docker-docker-compose">docker docker-compose</a></li>
+    <li><a href="#wsl2高级配置">wsl2高级配置</a></li>
+    <li><a href="#go">go</a></li>
+    <li><a href="#vscode通用配置">vscode通用配置</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="彻底卸载禁用snap">
+  彻底卸载禁用snap
+  <a class="anchor" href="#%e5%bd%bb%e5%ba%95%e5%8d%b8%e8%bd%bd%e7%a6%81%e7%94%a8snap">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo vim /etc/apt/preferences.d/nosnap.pref
+</span></span><span style="display:flex;"><span>https://www.cnblogs.com/learner-and-helper-YZY/p/17654961.html
+</span></span></code></pre></div><h2 id="oh-my-zsh">
+  oh-my-zsh
+  <a class="anchor" href="#oh-my-zsh">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo apt install zsh -y
+</span></span><span style="display:flex;"><span>sh -c <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><h2 id="git">
+  git
+  <a class="anchor" href="#git">#</a>
+</h2>
+<ul>
+<li>配置github用户</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git config --global user.name <span style="color:#e6db74">&#34;youname&#34;</span>
+</span></span><span style="display:flex;"><span>git config --global user.email <span style="color:#e6db74">&#34;youname@qq.com&#34;</span>
+</span></span></code></pre></div><ul>
+<li>配置ssh key</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>ssh-keygen -m PEM -t ed25519 -C <span style="color:#e6db74">&#34;yourname@qq.com&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># id_ed25519.pub内容 粘贴到远端github的setting-&gt;SSH and GPG keys下</span>
+</span></span><span style="display:flex;"><span>ssh -T git@github.com
+</span></span></code></pre></div><ul>
+<li>配置github和公司仓库地址</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cd ~/.ssh <span style="color:#f92672">&amp;&amp;</span> vim config
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-vim" data-lang="vim"><span style="display:flex;"><span><span style="color:#a6e22e">Host</span> <span style="color:#a6e22e">github</span>.<span style="color:#a6e22e">com</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Hostname</span> <span style="color:#a6e22e">github</span>.<span style="color:#a6e22e">com</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Port</span> <span style="color:#ae81ff">22</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">User</span> <span style="color:#a6e22e">git</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PreferredAuthentications</span> <span style="color:#a6e22e">publickey</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">IdentityFile</span> ~<span style="color:#e6db74">/.ssh/</span><span style="color:#a6e22e">id_github</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Host</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">coding</span>.<span style="color:#a6e22e">net</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Hostname</span> <span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">coding</span>.<span style="color:#a6e22e">net</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Port</span> <span style="color:#ae81ff">22</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">User</span> <span style="color:#a6e22e">git</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">PreferredAuthentications</span> <span style="color:#a6e22e">publickey</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">IdentityFile</span> ~<span style="color:#e6db74">/.ssh/</span><span style="color:#a6e22e">id_ed25519</span>
+</span></span></code></pre></div><h2 id="node-npm-pnpm">
+  node npm pnpm
+  <a class="anchor" href="#node-npm-pnpm">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 安装nvm,重启终端</span>
+</span></span><span style="display:flex;"><span>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+</span></span><span style="display:flex;"><span>nvm ls-remote
+</span></span><span style="display:flex;"><span>nvm install v20.10.0
+</span></span><span style="display:flex;"><span>nvm use v20.10.0
+</span></span><span style="display:flex;"><span>npm install -g pnpm
+</span></span></code></pre></div><h2 id="npm源管理">
+  npm源管理
+  <a class="anchor" href="#npm%e6%ba%90%e7%ae%a1%e7%90%86">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>npm install -g nrm open@8.4.2 --save
+</span></span><span style="display:flex;"><span>nrm use cnpm
+</span></span></code></pre></div><h2 id="eslint">
+  eslint
+  <a class="anchor" href="#eslint">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 项目目录下</span>
+</span></span><span style="display:flex;"><span>pnpm i eslint eslint-plugin-vue@latest @typescript-eslint/parser@latest @typescript-eslint/eslint-plugin@latest -D
+</span></span></code></pre></div><ul>
+<li>vscode安装eslint插件的配置</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;eslint.validate&#34;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;javascript&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;javascriptreact&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;vue&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;typescript&#34;</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;eslint.format.enable&#34;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;editor.codeActionsOnSave&#34;</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;source.fixAll&#34;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;eslint.autoFixOnSave&#34;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span></code></pre></div><ul>
+<li>.eslintrc.js(根目录下创建)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">parser</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;vue-eslint-parser&#39;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">parserOptions</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">parser</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;@typescript-eslint/parser&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ecmaVersion</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2020</span>
+</span></span><span style="display:flex;"><span>	},
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">extends</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;plugin:vue/vue3-recommended&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;plugin:@typescript-eslint/recommended&#39;</span>
+</span></span><span style="display:flex;"><span>	],
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">rules</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">quotes</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;error&#39;</span>, <span style="color:#e6db74">&#39;single&#39;</span>, { <span style="color:#e6db74">&#39;allowTemplateLiterals&#39;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> }],<span style="color:#75715e">// 强制使用一致的反勾号、双引号或单引号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">eqeqeq</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 要求使用 === 和 !==
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">semi</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;error&#39;</span>, <span style="color:#e6db74">&#39;never&#39;</span>], <span style="color:#75715e">// 要求或禁止使用分号代替 ASI
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;max-len&#39;</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;error&#39;</span>, <span style="color:#ae81ff">240</span>], <span style="color:#75715e">// 强制一行的最大长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;eol-last&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 要求或禁止文件末尾存在空行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;no-shadow&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 禁止变量声明与外层作用域的变量同名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;import/no-cycle&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 禁止一个模块导入一个有依赖路径的模块回到自己身上
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;arrow-parens&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 要求箭头函数的参数使用圆括号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;no-use-before-define&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 禁止在变量定义之前使用它们，则倾向于默认输出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;prefer-const&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;warn&#39;</span>, <span style="color:#75715e">// 要求使用 const 声明那些声明后不再被修改的变量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;global-require&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 要求 require() 出现在顶层模块作用域中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;one-var-declaration-per-line&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 要求或禁止在变量声明周围换行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;one-var&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 强制函数中的变量要么一起声明要么分开声明
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;object-curly-newline&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 强制大括号内换行符的一致性
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;default-case&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 要求 switch 语句中有 default 分支
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;no-trailing-spaces&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 禁用行尾空格
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;no-multi-spaces&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;no-unused-expressions&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 禁止出现未使用过的表达式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;no-underscore-dangle&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 禁止标识符中有悬空下划线
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;no-await-in-loop&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 禁止在循环中出现 await
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;import/no-unresolved&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>, <span style="color:#75715e">// 确保导入指向一个可以解析的文件/模块
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;space-before-function-paren&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;comma-dangle&#39;</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;error&#39;</span>, <span style="color:#e6db74">&#39;never&#39;</span>],<span style="color:#75715e">// 要求或禁止末尾逗号
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;@typescript-eslint/ban-ts-ignore&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/explicit-function-return-type&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/no-explicit-any&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/no-var-requires&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/no-empty-function&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;vue/custom-event-name-casing&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;no-use-before-define&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/no-use-before-define&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/ban-ts-comment&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/ban-types&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/no-non-null-assertion&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/explicit-module-boundary-types&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;off&#39;</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;@typescript-eslint/no-unused-vars&#39;</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#39;error&#39;</span>,
+</span></span><span style="display:flex;"><span>			{
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">argsIgnorePattern</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;^h$&#39;</span>,
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">varsIgnorePattern</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;^h$&#39;</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		],
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;vue/max-attributes-per-line&#39;</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;error&#39;</span>, {
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#39;singleline&#39;</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#e6db74">&#39;max&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>			},
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#39;multiline&#39;</span><span style="color:#f92672">:</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#e6db74">&#39;max&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}],
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;vue/first-attribute-linebreak&#39;</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;error&#39;</span>, {
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#39;singleline&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;beside&#39;</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#39;multiline&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;beside&#39;</span>
+</span></span><span style="display:flex;"><span>		}],
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;vue/html-closing-bracket-newline&#39;</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;error&#39;</span>, {
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#39;singleline&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;never&#39;</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#e6db74">&#39;multiline&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;never&#39;</span>
+</span></span><span style="display:flex;"><span>		}],
+</span></span><span style="display:flex;"><span>		<span style="color:#e6db74">&#39;vue/multi-word-component-names&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#75715e">//开启 关闭驼峰命名规则
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#e6db74">&#39;no-multiple-empty-lines&#39;</span><span style="color:#f92672">:</span> [<span style="color:#ae81ff">2</span>, {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">max</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>		}]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>.eslintignore(忽略扫描)</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>build/*.js
+</span></span><span style="display:flex;"><span>src/assets
+</span></span><span style="display:flex;"><span>public
+</span></span><span style="display:flex;"><span>dist
+</span></span><span style="display:flex;"><span>node_modules
+</span></span><span style="display:flex;"><span>README.md
+</span></span></code></pre></div><h2 id="docker-docker-compose">
+  docker docker-compose
+  <a class="anchor" href="#docker-docker-compose">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+</span></span><span style="display:flex;"><span>sudo mkdir -p /etc/docker
+</span></span><span style="display:flex;"><span>sudo vim /etc/docker/daemon.json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#34;registry-mirrors&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;https://registry.docker-cn.com&#34;</span><span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#34;iptables&#34;</span>: false
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sudo systemctl daemon-reload
+</span></span><span style="display:flex;"><span>sudo systemctl restart docker
+</span></span><span style="display:flex;"><span>sudo systemctl enable docker
+</span></span></code></pre></div><h2 id="wsl2高级配置">
+  wsl2高级配置
+  <a class="anchor" href="#wsl2%e9%ab%98%e7%ba%a7%e9%85%8d%e7%bd%ae">#</a>
+</h2>
+<ul>
+<li>win11用户下新建.wslconfig</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>[wsl2]
+</span></span><span style="display:flex;"><span>networkingMode=mirrored
+</span></span><span style="display:flex;"><span>dnsTunneling=true
+</span></span><span style="display:flex;"><span>firewall=true
+</span></span><span style="display:flex;"><span>autoProxy=true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[experimental]
+</span></span><span style="display:flex;"><span>sparseVhd=true
+</span></span><span style="display:flex;"><span>autoMemoryReclaim=dropcache
+</span></span></code></pre></div><h2 id="go">
+  go
+  <a class="anchor" href="#go">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>wget https://golang.google.cn/dl/go1.20.3.linux-amd64.tar.gz
+</span></span><span style="display:flex;"><span>rm -rf /usr/local/go <span style="color:#f92672">&amp;&amp;</span> tar -C /usr/local -xzf go1.20.3.linux-amd64.tar.gz
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># vim ~/.zshrc</span>
+</span></span><span style="display:flex;"><span>export GOPATH<span style="color:#f92672">=</span>/home/xiaohu/gopath
+</span></span><span style="display:flex;"><span>export GOBIN<span style="color:#f92672">=</span>/home/xiaohu/gopath/bin
+</span></span><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span>$PATH:$GOBIN:/usr/local/go/bin
+</span></span><span style="display:flex;"><span>export GOROOT<span style="color:#f92672">=</span>/usr/local/go
+</span></span><span style="display:flex;"><span>export GOPROXY<span style="color:#f92672">=</span>https://goproxy.io,direct
+</span></span><span style="display:flex;"><span>export GO111MODULE<span style="color:#f92672">=</span>on
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 重启终端</span>
+</span></span><span style="display:flex;"><span>go env
+</span></span></code></pre></div><h2 id="vscode通用配置">
+  vscode通用配置
+  <a class="anchor" href="#vscode%e9%80%9a%e7%94%a8%e9%85%8d%e7%bd%ae">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//通用
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;editor.fontSize&#34;</span>: <span style="color:#ae81ff">17</span>, <span style="color:#75715e">//字体大小
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;editor.tabSize&#34;</span>: <span style="color:#ae81ff">4</span>, <span style="color:#75715e">//缩进
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;editor.insertSpaces&#34;</span>: <span style="color:#66d9ef">false</span>, <span style="color:#75715e">//使用tab缩进
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;editor.formatOnSave&#34;</span>: <span style="color:#66d9ef">true</span>, <span style="color:#75715e">//是否保存前格式化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;files.autoSave&#34;</span>: <span style="color:#e6db74">&#34;afterDelay&#34;</span>, <span style="color:#75715e">//文件自动保存
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;editor.formatOnPaste&#34;</span>: <span style="color:#66d9ef">true</span>, <span style="color:#75715e">//粘贴自动格式化
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;files.trimTrailingWhitespace&#34;</span>: <span style="color:#66d9ef">true</span>, <span style="color:#75715e">//保存时是否删除行尾空格
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;editor.copyWithSyntaxHighlighting&#34;</span>: <span style="color:#66d9ef">false</span>, <span style="color:#75715e">//复制代码是否携带语法高亮
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;window.zoomLevel&#34;</span>: <span style="color:#ae81ff">-1</span>, <span style="color:#75715e">//terminal tabs样式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;editor.rulers&#34;</span>: [ <span style="color:#75715e">//标尺
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#ae81ff">120</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;workbench.colorTheme&#34;</span>: <span style="color:#e6db74">&#34;GitHub Dark&#34;</span>, <span style="color:#75715e">//theme
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;workbench.iconTheme&#34;</span>: <span style="color:#e6db74">&#34;vscode-icons&#34;</span>, <span style="color:#75715e">//文件图标
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;workbench.colorCustomizations&#34;</span>: { <span style="color:#75715e">//颜色覆盖
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">&#34;editorRuler.foreground&#34;</span>: <span style="color:#e6db74">&#34;#08fc31&#34;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//go
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;[go]&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;editor.wordWrap&#34;</span>: <span style="color:#e6db74">&#34;on&#34;</span>, <span style="color:#75715e">//折行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">&#34;editor.codeActionsOnSave&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;source.organizeImports&#34;</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;go.testFlags&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;-gcflags=all=-l&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;-v&#34;</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;go.alternateTools&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;go.inferGopath&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;go.autocompleteUnimportedPackages&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;go.gocodePackageLookupMode&#34;</span>: <span style="color:#e6db74">&#34;go&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;go.gotoSymbol.includeImports&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;go.useCodeSnippetsOnFunctionSuggest&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;go.useCodeSnippetsOnFunctionSuggestWithoutType&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;go.docsTool&#34;</span>: <span style="color:#e6db74">&#34;gogetdoc&#34;</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;go.useLanguageServer&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;go.formatTool&#34;</span>: <span style="color:#e6db74">&#34;goimports&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//vue
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;javascript.updateImportsOnFileMove.enabled&#34;</span>: <span style="color:#e6db74">&#34;always&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;typescript.updateImportsOnFileMove.enabled&#34;</span>: <span style="color:#e6db74">&#34;always&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//highlight
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;highlight-matching-tag.styles&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;opening&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;full&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;custom&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&#34;borderWidth&#34;</span>: <span style="color:#e6db74">&#34;1px&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&#34;borderStyle&#34;</span>: <span style="color:#e6db74">&#34;solid&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&#34;borderColor&#34;</span>: <span style="color:#e6db74">&#34;red&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">&#34;borderRadius&#34;</span>: <span style="color:#e6db74">&#34;5px&#34;</span>
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//gitlens
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;gitlens.defaultDateFormat&#34;</span>: <span style="color:#e6db74">&#34;YYYY-MM-DD HH:mm:ss&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//tabnine
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;tabnine.experimentalAutoImports&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;vsicons.dontShowNewVersionMessage&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;git.confirmSync&#34;</span>: <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//eslint
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">&#34;eslint.validate&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;javascript&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;javascriptreact&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;vue&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;typescript&#34;</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;eslint.format.enable&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;editor.codeActionsOnSave&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;source.fixAll&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;eslint.autoFixOnSave&#34;</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#彻底卸载禁用snap">彻底卸载禁用snap</a></li>
+    <li><a href="#oh-my-zsh">oh-my-zsh</a></li>
+    <li><a href="#git">git</a></li>
+    <li><a href="#node-npm-pnpm">node npm pnpm</a></li>
+    <li><a href="#npm源管理">npm源管理</a></li>
+    <li><a href="#eslint">eslint</a></li>
+    <li><a href="#docker-docker-compose">docker docker-compose</a></li>
+    <li><a href="#wsl2高级配置">wsl2高级配置</a></li>
+    <li><a href="#go">go</a></li>
+    <li><a href="#vscode通用配置">vscode通用配置</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Zap on Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/tags/zap/</link>
+    <description>Recent content in Zap on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 May 2024 13:47:42 +0800</lastBuildDate>
+    <atom:link href="https://xiaohubai.github.io/tags/zap/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>zap使用</title>
+      <link>https://xiaohubai.github.io/posts/zap/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/zap/</guid>
+      <description>第三方包 # go.uber.org/zap zap记录日志 # uber 开源的高性能日志库，面向高性能 package boot import ( &amp;#34;fmt&amp;#34; &amp;#34;path&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/xiaohubai/alpha/config&amp;#34; zaprotatelogs &amp;#34;github.com/lestrrat-go/file-rotatelogs&amp;#34; &amp;#34;go.uber.org/zap&amp;#34; &amp;#34;go.uber.org/zap/zapcore&amp;#34; ) var level zapcore.Level // Zap 日志组件 func Zap() (logger *zap.Logger) { level = zap.InfoLevel logger = zap.New(getEncoderCore()) logger.WithOptions(zap.AddCaller()) return logger } func getEncoderCore() (core zapcore.Core) { writer, err := GetWriteSyncer() // 使用file-rotatelogs进行日志分割 if err != nil { panic(fmt.Errorf(&amp;#34;Get Write Syncer Failed err:%v&amp;#34;, err.Error())) } return zapcore.NewCore(zapcore.NewJSONEncoder(getEncoderConfig()), writer, level) } func getEncoderConfig() (cfg zapcore.</description>
+    </item>
+  </channel>
+</rss>

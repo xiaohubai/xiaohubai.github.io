@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="OSI七层和TCP/IP四层？ # 第七层：应用层（Telnet,HTTP80,FTP,TFTP,NFS,SMTP,SNMP,DNS） 第六层：表示层 (定义数据格式、加密、代码转换) 第五层：会话层 (开始、控制和结束一个会话,接收数据何时结束) 第四次：传输层 (TCP，UDP) 第三层：网络层 (包传输进行定义IP、ICMP、IGMP、RIP、OSPF、BGP) 第二层：数据传输层 (单个链路上如何传输数据SLIP、CSLIP、PPP、ARP、RARP、MTU) 第一层：物理层 (传输介质) 第四层：应用层 第三层：传输层 第二层：应用层 第一层：网络接口层 http状态码 # // 2** 请求成功 200 请求成功执行。 201 (已创建)请求成功并且服务器创建了新的资源。 202 （已接受） 服务器已接受请求，但尚未处理 203 （非授权信息） 204 （无内容） 服务器成功处理了请求，但没有返回任何内容。 // 3** 重定向 301 （永久移动） 请求的网页已永久移动到新位置。 //4** 客户端错误 400 客户端错误。 401 （未授权） 请求要求身份验证。 403 （禁止访问） 服务器拒绝请求。 404 （未找到） 资源找不到，可以是 URL 或 RESTful 资源。 405 （方法禁用） 禁用请求中指定的方法。 408 （请求超时） 服务器等候请求时发生超时。 414 （请求的 URI 过长） // 5** 服务器错误 500 （服务器内部错误） 服务器遇到错误，无法完成请求。 501 （尚未实施） 服务器不具备完成请求的功能。 502 （错误网关） 服务器作为网关或代理，从上游服务器收到无效响应。 503 （服务不可用） 服务器目前无法使用 504 （网关超时） 服务器作为网关或代理，但是没有及时从上游服务器收到请求。 505 （HTTP 版本不受支持） 服务器不支持请求中所用的 HTTP 协议版本。 linux进程通信方式？ # 管道，有名管道 信号 消息队列 共享内存 信号量 套接字 socket 进程、线程、协程的区别 # 一般一个程序就是一个进程，如果一个进程不总是执行计算型任务，会导致cpu浪费，在cpu少的情况下是通过进程不停的上下文切换，实现同时运行多个进程。 进程拥有自己独立的堆和栈，既不共享堆，亦不共享栈，进程由操作系统调度。一个进程由一个或多个线程组成。 线程是一个进程中代码的不同执行路线；拥有自己独立的栈和共享的堆，进程间相互独立，但同一个进程内的各个线程之间共享着同样的代码和全局数据；多线程比多进程之间更容易共享数据，在上下文切换中线程一般比进程更高效。 协程是比线程更加轻量级的存在，由程序员自己写程序管理的轻量级线程。创建协程时，会从进程的堆中分配一段内存作为协程的栈。线程的栈一般是M级别，协程为K级别，go协程更夸张到2到4KB。 进程资源分配的基本单位，线程是执行的单位，多个线程共享进程资源。进程需要特殊的机制，管道，消息队列等。 线程之间可以通过共享内存方式通信，线程间通信相对简单。 线程切换开销较小，因为线程共享进程的资源，切换时不需要切换内存空间。 协程是用户态的轻量级线程，调度完全用户控制，协程的创建，切换销毁都在用户空间完成，不需要内核的参与，开销非常小。协程用于处理IO密集以及异步非阻塞的代码 可以将一个浏览器视为一个进程，每个打开的标签页或窗口视为一个线程，而在每个线程内部可以使用多个协程来处理不同的任务。这种比喻可以帮助理解进程、线程和协程之间的关系，以及它们在并发编程中的作用。 开多个线程和开多个协程会有什么区别 # 调度方式：线程的调度由操作系统内核实现，采用抢占式调度方式，依赖各种锁来确保线程安全。而协程的调度则由用户态的具体调度器进行，不需要内核的参与。 协程的切换不需要经过用户态与内核态的切换，且切换时只需要保存极少的状态值,线程的切换涉及到内核态的上下文切换，开销相对较大。 资源占用：协程属于用户态轻量级的线程，占用的内存较少。而线程需要操作系统为其分配独立的栈空间和其他系统资源，因此资源占用相对较多。 并发能力：协程依托于线程，可以在单线程中实现高并发。多个协程可由一个或多个线程管理，协程的调度发生在其所在的线程中。而线程的数量受限于系统的物理CPU核心数，因此并发能力相对受限。 协程的优势？ # 1.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="网络编程" />
+<meta property="og:description" content="OSI七层和TCP/IP四层？ # 第七层：应用层（Telnet,HTTP80,FTP,TFTP,NFS,SMTP,SNMP,DNS） 第六层：表示层 (定义数据格式、加密、代码转换) 第五层：会话层 (开始、控制和结束一个会话,接收数据何时结束) 第四次：传输层 (TCP，UDP) 第三层：网络层 (包传输进行定义IP、ICMP、IGMP、RIP、OSPF、BGP) 第二层：数据传输层 (单个链路上如何传输数据SLIP、CSLIP、PPP、ARP、RARP、MTU) 第一层：物理层 (传输介质) 第四层：应用层 第三层：传输层 第二层：应用层 第一层：网络接口层 http状态码 # // 2** 请求成功 200 请求成功执行。 201 (已创建)请求成功并且服务器创建了新的资源。 202 （已接受） 服务器已接受请求，但尚未处理 203 （非授权信息） 204 （无内容） 服务器成功处理了请求，但没有返回任何内容。 // 3** 重定向 301 （永久移动） 请求的网页已永久移动到新位置。 //4** 客户端错误 400 客户端错误。 401 （未授权） 请求要求身份验证。 403 （禁止访问） 服务器拒绝请求。 404 （未找到） 资源找不到，可以是 URL 或 RESTful 资源。 405 （方法禁用） 禁用请求中指定的方法。 408 （请求超时） 服务器等候请求时发生超时。 414 （请求的 URI 过长） // 5** 服务器错误 500 （服务器内部错误） 服务器遇到错误，无法完成请求。 501 （尚未实施） 服务器不具备完成请求的功能。 502 （错误网关） 服务器作为网关或代理，从上游服务器收到无效响应。 503 （服务不可用） 服务器目前无法使用 504 （网关超时） 服务器作为网关或代理，但是没有及时从上游服务器收到请求。 505 （HTTP 版本不受支持） 服务器不支持请求中所用的 HTTP 协议版本。 linux进程通信方式？ # 管道，有名管道 信号 消息队列 共享内存 信号量 套接字 socket 进程、线程、协程的区别 # 一般一个程序就是一个进程，如果一个进程不总是执行计算型任务，会导致cpu浪费，在cpu少的情况下是通过进程不停的上下文切换，实现同时运行多个进程。 进程拥有自己独立的堆和栈，既不共享堆，亦不共享栈，进程由操作系统调度。一个进程由一个或多个线程组成。 线程是一个进程中代码的不同执行路线；拥有自己独立的栈和共享的堆，进程间相互独立，但同一个进程内的各个线程之间共享着同样的代码和全局数据；多线程比多进程之间更容易共享数据，在上下文切换中线程一般比进程更高效。 协程是比线程更加轻量级的存在，由程序员自己写程序管理的轻量级线程。创建协程时，会从进程的堆中分配一段内存作为协程的栈。线程的栈一般是M级别，协程为K级别，go协程更夸张到2到4KB。 进程资源分配的基本单位，线程是执行的单位，多个线程共享进程资源。进程需要特殊的机制，管道，消息队列等。 线程之间可以通过共享内存方式通信，线程间通信相对简单。 线程切换开销较小，因为线程共享进程的资源，切换时不需要切换内存空间。 协程是用户态的轻量级线程，调度完全用户控制，协程的创建，切换销毁都在用户空间完成，不需要内核的参与，开销非常小。协程用于处理IO密集以及异步非阻塞的代码 可以将一个浏览器视为一个进程，每个打开的标签页或窗口视为一个线程，而在每个线程内部可以使用多个协程来处理不同的任务。这种比喻可以帮助理解进程、线程和协程之间的关系，以及它们在并发编程中的作用。 开多个线程和开多个协程会有什么区别 # 调度方式：线程的调度由操作系统内核实现，采用抢占式调度方式，依赖各种锁来确保线程安全。而协程的调度则由用户态的具体调度器进行，不需要内核的参与。 协程的切换不需要经过用户态与内核态的切换，且切换时只需要保存极少的状态值,线程的切换涉及到内核态的上下文切换，开销相对较大。 资源占用：协程属于用户态轻量级的线程，占用的内存较少。而线程需要操作系统为其分配独立的栈空间和其他系统资源，因此资源占用相对较多。 并发能力：协程依托于线程，可以在单线程中实现高并发。多个协程可由一个或多个线程管理，协程的调度发生在其所在的线程中。而线程的数量受限于系统的物理CPU核心数，因此并发能力相对受限。 协程的优势？ # 1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" /><meta property="article:section" content="docs" />
+
+
+
+<title>网络编程 | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle" checked />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="active">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>网络编程</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#osi七层和tcpip四层">OSI七层和TCP/IP四层？</a></li>
+    <li><a href="#http状态码">http状态码</a></li>
+    <li><a href="#linux进程通信方式">linux进程通信方式？</a></li>
+    <li><a href="#进程线程协程的区别">进程、线程、协程的区别</a></li>
+    <li><a href="#开多个线程和开多个协程会有什么区别">开多个线程和开多个协程会有什么区别</a></li>
+    <li><a href="#协程的优势">协程的优势？</a></li>
+    <li><a href="#协程的数据结构是什么保存了哪些东西">协程的数据结构是什么，保存了哪些东西</a></li>
+    <li><a href="#进程五种状态">进程五种状态</a></li>
+    <li><a href="#软连接和硬链接区别">软连接和硬链接区别</a></li>
+    <li><a href="#tcp三次握手">tcp三次握手</a></li>
+    <li><a href="#tcp四次挥手">tcp四次挥手</a>
+      <ul>
+        <li><a href="#为什么是四次">为什么是四次？</a></li>
+        <li><a href="#time_wait">time_wait?</a></li>
+        <li><a href="#close_wait">close_wait</a></li>
+      </ul>
+    </li>
+    <li><a href="#网络编程的一般步骤">网络编程的一般步骤</a></li>
+    <li><a href="#滑动窗口机制">滑动窗口机制</a></li>
+    <li><a href="#http协议">http协议</a></li>
+    <li><a href="#线头阻塞">线头阻塞</a></li>
+    <li><a href="#websocket-和-http-有什么区别">websocket 和 http 有什么区别？</a></li>
+    <li><a href="#rpc和http请求有什么区别">RPC和HTTP请求有什么区别？</a></li>
+    <li><a href="#服务调用服务有哪些方式">服务调用服务有哪些方式</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="osi七层和tcpip四层">
+  OSI七层和TCP/IP四层？
+  <a class="anchor" href="#osi%e4%b8%83%e5%b1%82%e5%92%8ctcpip%e5%9b%9b%e5%b1%82">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">第七层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">应用层</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">Telnet</span>,<span style="color:#a6e22e">HTTP80</span>,<span style="color:#a6e22e">FTP</span>,<span style="color:#a6e22e">TFTP</span>,<span style="color:#a6e22e">NFS</span>,<span style="color:#a6e22e">SMTP</span>,<span style="color:#a6e22e">SNMP</span>,<span style="color:#a6e22e">DNS</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第六层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">表示层</span> (<span style="color:#a6e22e">定义数据格式</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">加密</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">代码转换</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第五层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">会话层</span> (<span style="color:#a6e22e">开始</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">控制和结束一个会话</span>,<span style="color:#a6e22e">接收数据何时结束</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第四次</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">传输层</span> (<span style="color:#a6e22e">TCP</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">UDP</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第三层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">网络层</span> (<span style="color:#a6e22e">包传输进行定义IP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">ICMP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">IGMP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">RIP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">OSPF</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">BGP</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第二层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">数据传输层</span> (<span style="color:#a6e22e">单个链路上如何传输数据SLIP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">CSLIP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">PPP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">ARP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">RARP</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">MTU</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第一层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">物理层</span> (<span style="color:#a6e22e">传输介质</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第四层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">应用层</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第三层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">传输层</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第二层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">应用层</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第一层</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">网络接口层</span>
+</span></span></code></pre></div><h2 id="http状态码">
+  http状态码
+  <a class="anchor" href="#http%e7%8a%b6%e6%80%81%e7%a0%81">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// 2** 请求成功
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#ae81ff">200</span> <span style="color:#a6e22e">请求成功执行</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">201</span> (<span style="color:#a6e22e">已创建</span>)<span style="color:#a6e22e">请求成功并且服务器创建了新的资源</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">202</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">已接受</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器已接受请求</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但尚未处理</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">203</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">非授权信息</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">204</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">无内容</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器成功处理了请求</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但没有返回任何内容</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 3** 重定向
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#ae81ff">301</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">永久移动</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">请求的网页已永久移动到新位置</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//4**  客户端错误
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#ae81ff">400</span>  <span style="color:#a6e22e">客户端错误</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">401</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">未授权</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">请求要求身份验证</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">403</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">禁止访问</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器拒绝请求</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">404</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">未找到</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">资源找不到</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可以是</span> <span style="color:#a6e22e">URL</span> <span style="color:#a6e22e">或</span> <span style="color:#a6e22e">RESTful</span> <span style="color:#a6e22e">资源</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">405</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">方法禁用</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">禁用请求中指定的方法</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">408</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">请求超时</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器等候请求时发生超时</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">414</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">请求的</span> <span style="color:#a6e22e">URI</span> <span style="color:#a6e22e">过长</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 5** 服务器错误
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#ae81ff">500</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">服务器内部错误</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器遇到错误</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">无法完成请求</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">501</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">尚未实施</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器不具备完成请求的功能</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">502</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">错误网关</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器作为网关或代理</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">从上游服务器收到无效响应</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">503</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">服务不可用</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器目前无法使用</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">504</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">网关超时</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器作为网关或代理</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但是没有及时从上游服务器收到请求</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">505</span> <span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">HTTP</span> <span style="color:#a6e22e">版本不受支持</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">服务器不支持请求中所用的</span> <span style="color:#a6e22e">HTTP</span> <span style="color:#a6e22e">协议版本</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="linux进程通信方式">
+  linux进程通信方式？
+  <a class="anchor" href="#linux%e8%bf%9b%e7%a8%8b%e9%80%9a%e4%bf%a1%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<pre tabindex="0"><code>管道，有名管道
+信号
+消息队列
+共享内存
+信号量
+套接字
+socket
+</code></pre><h2 id="进程线程协程的区别">
+  进程、线程、协程的区别
+  <a class="anchor" href="#%e8%bf%9b%e7%a8%8b%e7%ba%bf%e7%a8%8b%e5%8d%8f%e7%a8%8b%e7%9a%84%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">一般一个程序就是一个进程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果一个进程不总是执行计算型任务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会导致cpu浪费</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在cpu少的情况下是通过进程不停的上下文切换</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">实现同时运行多个进程</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">进程拥有自己独立的堆和栈</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">既不共享堆</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">亦不共享栈</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">进程由操作系统调度</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">一个进程由一个或多个线程组成</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">线程是一个进程中代码的不同执行路线</span><span style="color:#960050;background-color:#1e0010">；</span><span style="color:#a6e22e">拥有自己独立的栈和共享的堆</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">进程间相互独立</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但同一个进程内的各个线程之间共享着同样的代码和全局数据</span><span style="color:#960050;background-color:#1e0010">；</span><span style="color:#a6e22e">多线程比多进程之间更容易共享数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在上下文切换中线程一般比进程更高效</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">协程是比线程更加轻量级的存在</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">由程序员自己写程序管理的轻量级线程</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">创建协程时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会从进程的堆中分配一段内存作为协程的栈</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">线程的栈一般是M级别</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">协程为K级别</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">go协程更夸张到2到4KB</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">进程资源分配的基本单位</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">线程是执行的单位</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">多个线程共享进程资源</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">进程需要特殊的机制</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">管道</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">消息队列等</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">线程之间可以通过共享内存方式通信</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">线程间通信相对简单</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">线程切换开销较小</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">因为线程共享进程的资源</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">切换时不需要切换内存空间</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">协程是用户态的轻量级线程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">调度完全用户控制</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">协程的创建</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">切换销毁都在用户空间完成</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不需要内核的参与</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">开销非常小</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">协程用于处理IO密集以及异步非阻塞的代码</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">可以将一个浏览器视为一个进程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">每个打开的标签页或窗口视为一个线程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而在每个线程内部可以使用多个协程来处理不同的任务</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">这种比喻可以帮助理解进程</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">线程和协程之间的关系</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">以及它们在并发编程中的作用</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="开多个线程和开多个协程会有什么区别">
+  开多个线程和开多个协程会有什么区别
+  <a class="anchor" href="#%e5%bc%80%e5%a4%9a%e4%b8%aa%e7%ba%bf%e7%a8%8b%e5%92%8c%e5%bc%80%e5%a4%9a%e4%b8%aa%e5%8d%8f%e7%a8%8b%e4%bc%9a%e6%9c%89%e4%bb%80%e4%b9%88%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>调度方式：线程的调度由操作系统内核实现，采用抢占式调度方式，依赖各种锁来确保线程安全。而协程的调度则由用户态的具体调度器进行，不需要内核的参与。
+协程的切换不需要经过用户态与内核态的切换，且切换时只需要保存极少的状态值,线程的切换涉及到内核态的上下文切换，开销相对较大。
+资源占用：协程属于用户态轻量级的线程，占用的内存较少。而线程需要操作系统为其分配独立的栈空间和其他系统资源，因此资源占用相对较多。
+并发能力：协程依托于线程，可以在单线程中实现高并发。多个协程可由一个或多个线程管理，协程的调度发生在其所在的线程中。而线程的数量受限于系统的物理CPU核心数，因此并发能力相对受限。
+</code></pre><h2 id="协程的优势">
+  协程的优势？
+  <a class="anchor" href="#%e5%8d%8f%e7%a8%8b%e7%9a%84%e4%bc%98%e5%8a%bf">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ae81ff">1.</span><span style="color:#a6e22e">节省cpu</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">避免系统内核级的线程频繁切换</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">造成cpu资源浪费</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">协程是用户态的线程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">程序员可以自行控制协程的创建和销毁</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">极大程度避免系统级线程上下文切换造成的资源浪费</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.</span><span style="color:#a6e22e">节约内存</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">在64位linux中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">一个线程需要分配8M栈内存和64M堆内存</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而协程模式下可以轻松创建几十万协程</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">实现高并发</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3.</span><span style="color:#a6e22e">稳定性</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">线程之间通过内存共享数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样导致了任何一个线程出错</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">进程的所有线程都会跟踪崩溃</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">4.</span><span style="color:#a6e22e">开发效率</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">使用协程开发程序中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可以很方便的将耗时的IO操作异步化</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="协程的数据结构是什么保存了哪些东西">
+  协程的数据结构是什么，保存了哪些东西
+  <a class="anchor" href="#%e5%8d%8f%e7%a8%8b%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e6%98%af%e4%bb%80%e4%b9%88%e4%bf%9d%e5%ad%98%e4%ba%86%e5%93%aa%e4%ba%9b%e4%b8%9c%e8%a5%bf">#</a>
+</h2>
+<pre tabindex="0"><code>1.
+栈（Stack）：用于保存协程执行时的局部变量、函数调用信息等。每个协程都有自己的栈空间，用于存储执行时所需的数据。
+2.
+指令指针（PC）：用于指示当前协程执行的位置，即下一条要执行的指令在代码中的位置。
+3.
+协程状态（Status）：用于标识协程的状态，比如运行、阻塞、就绪等。
+4.
+栈的大小（Stack Size）：用于记录协程栈的大小，以便在需要时进行栈的扩容或缩减。
+5.
+上下文信息（Context）：包括协程的调度信息、运行时环境等。
+</code></pre><h2 id="进程五种状态">
+  进程五种状态
+  <a class="anchor" href="#%e8%bf%9b%e7%a8%8b%e4%ba%94%e7%a7%8d%e7%8a%b6%e6%80%81">#</a>
+</h2>
+<pre tabindex="0"><code>创建、就绪、运行、终止、阻塞
+</code></pre><h2 id="软连接和硬链接区别">
+  软连接和硬链接区别
+  <a class="anchor" href="#%e8%bd%af%e8%bf%9e%e6%8e%a5%e5%92%8c%e7%a1%ac%e9%93%be%e6%8e%a5%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>ln 硬链接：ln命令不能对目录创建硬链接,
+ln -s 软连接：一个快捷方式，删除软链接文件,对源文件及硬链接文件无任何影响
+</code></pre><h2 id="tcp三次握手">
+  tcp三次握手
+  <a class="anchor" href="#tcp%e4%b8%89%e6%ac%a1%e6%8f%a1%e6%89%8b">#</a>
+</h2>
+<pre tabindex="0"><code>第一次握手（SYN）：
+	客户端发送一个特殊的 TCP 报文段，其中 SYN（同步）标志位被置为 1，表示客户端请求建立连接。
+	客户端会选择一个初始序列号（假设为 client_num），并将此编号放置在序号字段中。
+	这个报文段会被封装在一个 IP 数据报中发送给服务器。
+
+第二次握手（SYN-ACK）：
+	服务器接收到客户端发送的 SYN 报文段后，会为该 TCP 连接分配缓存和变量，并发送允许连接的确认报文段
+	在允许连接的报文中，SYN 标志位仍被置为 1，确认号字段填的是 client_num + 1 的值。
+	服务器也会选取一个 server_num 存放到序号字段中，这个报文段称为 SYN-ACK 报文段
+第三次握手（ACK）：
+	客户端接收到服务器发送的 SYN-ACK 报文段后，最后也要向服务器发送一个确认报文段。
+	这个报文段和前两个不一样，SYN 标志位置 0，在确认号字段中填上 server_num + 1 的值，并且这个报文段可以携带数据。
+</code></pre><h2 id="tcp四次挥手">
+  tcp四次挥手
+  <a class="anchor" href="#tcp%e5%9b%9b%e6%ac%a1%e6%8c%a5%e6%89%8b">#</a>
+</h2>
+<pre tabindex="0"><code>客户端 TCP 会向服务器发送一个特殊的报文段，该报文段的 FIN 标志位会被置 1
+服务器会向客户端发送一个确认报文段。
+然后服务器也会客户端发送一个 FIN 标志位为 1 的终止报文段
+随后客户端回送一个确认报文段，服务器立即断开连接
+</code></pre><h3 id="为什么是四次">
+  为什么是四次？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e6%98%af%e5%9b%9b%e6%ac%a1">#</a>
+</h3>
+<pre tabindex="0"><code>TCP 协议是全双工的，也就是说客户端和服务端都可以发起断开连接。两边各发起一次断开连接的申请，加上各自的两次确认，看起来就像执行了四次挥手。
+</code></pre><h3 id="time_wait">
+  time_wait?
+  <a class="anchor" href="#time_wait">#</a>
+</h3>
+<pre tabindex="0"><code>客户端最后向服务器发送的确认 ACK 是有可能丢失的，当出现超时，服务端会再次发送 FIN 报文段，如果客户端已经关闭了就收不到了
+</code></pre><h3 id="close_wait">
+  close_wait
+  <a class="anchor" href="#close_wait">#</a>
+</h3>
+<pre tabindex="0"><code>大量 CLOSE_WAIT 表示程序出现了问题，对方的 socket 已经关闭连接，而我
+方忙于读或写没有及时关闭连接
+</code></pre><h2 id="网络编程的一般步骤">
+  网络编程的一般步骤
+  <a class="anchor" href="#%e7%bd%91%e7%bb%9c%e7%bc%96%e7%a8%8b%e7%9a%84%e4%b8%80%e8%88%ac%e6%ad%a5%e9%aa%a4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//对于TCP连接：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">Server端</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">create</span> <span style="color:#f92672">--</span> <span style="color:#a6e22e">bind</span> <span style="color:#f92672">--</span> <span style="color:#a6e22e">listen</span><span style="color:#f92672">--</span> <span style="color:#a6e22e">accept</span><span style="color:#f92672">--</span> <span style="color:#a6e22e">recv</span><span style="color:#f92672">/</span><span style="color:#a6e22e">send</span><span style="color:#f92672">--</span> <span style="color:#a6e22e">close</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Client端</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">create</span><span style="color:#f92672">-------</span> <span style="color:#a6e22e">conncet</span><span style="color:#f92672">------</span><span style="color:#a6e22e">send</span><span style="color:#f92672">/</span><span style="color:#a6e22e">recv</span><span style="color:#f92672">------</span><span style="color:#a6e22e">close</span>.
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//对于UDP连接
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">Server端</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">create</span><span style="color:#f92672">----</span><span style="color:#a6e22e">bind</span> <span style="color:#f92672">----</span><span style="color:#a6e22e">recvfrom</span><span style="color:#f92672">/</span><span style="color:#a6e22e">sendto</span><span style="color:#f92672">----</span><span style="color:#a6e22e">close</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Client端</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">create</span><span style="color:#f92672">----</span> <span style="color:#a6e22e">sendto</span><span style="color:#f92672">/</span><span style="color:#a6e22e">recvfrom</span><span style="color:#f92672">----</span><span style="color:#a6e22e">close</span>
+</span></span></code></pre></div><h2 id="滑动窗口机制">
+  滑动窗口机制
+  <a class="anchor" href="#%e6%bb%91%e5%8a%a8%e7%aa%97%e5%8f%a3%e6%9c%ba%e5%88%b6">#</a>
+</h2>
+<pre tabindex="0"><code>确立收发的边界，能让发送方知道已经发送了多少（已确认）、尚未确认的字节数、尚待发送的字节数；让接收方知道（已经确认收到的字节数）
+</code></pre><h2 id="http协议">
+  http协议
+  <a class="anchor" href="#http%e5%8d%8f%e8%ae%ae">#</a>
+</h2>
+<pre tabindex="0"><code>http1.0 ：短链接，每次请求结束后，就会断开tcp连接
+http1.1:默认持久连接，只要客户端服务端没有断开tcp连接，就一直保持连接，可以发送多次HTTP请求。
+http1.1有一个管线化理论，默认是关闭的，管线化是串行的，即一个响应必须完全返回后，下一个请求才会开始传输。
+http1.1 支持断点续传，利用http消息头使用分块传输编码，将实体主体分块进行传输
+http/2:不再以文本的方式传输，采用「二进制分帧层」，，对头部进行了「压缩」，支持「流控」，最主要就是HTTP/2是支持「多路复用」的（通过单一的TCP连接「并行」发起多个的请求和响应消息）
+HTTP/2多路复用则是利用「分帧」数据流，把HTTP协议分解为「互不依赖」的帧（为每个帧「标序」发送，接收回来的时候按序重组），进而可以「乱序」发送避免「一定程度上」的队首阻塞问题
+</code></pre><h2 id="线头阻塞">
+  线头阻塞
+  <a class="anchor" href="#%e7%ba%bf%e5%a4%b4%e9%98%bb%e5%a1%9e">#</a>
+</h2>
+<pre tabindex="0"><code>无论是HTTP1.1还是HTTP/2，response响应的「处理顺序」总是需要跟request请求顺序保持一致的。假如某个请求的response响应慢了，还是同样会有阻塞;受限于HTTP底层的传输协议是TCP,没办法完全解决
+</code></pre><h2 id="websocket-和-http-有什么区别">
+  websocket 和 http 有什么区别？
+  <a class="anchor" href="#websocket-%e5%92%8c-http-%e6%9c%89%e4%bb%80%e4%b9%88%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>HTTP（超文本传输协议）：无状态的，每次请求都需要建立连接、发送请求、接收响应，然后关闭连接。通常是由客户端发起，服务器响应后即刻关闭连接，因此无法实现服务器主动向客户端推送数据。
+
+WebSocket：全双工通信协议，允许客户端和服务器之间进行双向通信，实现了服务器主动向客户端推送数据的功能。保持长连接，双方可以随时发送和接收数据，而无需频繁地建立和关闭连接。通信开销更小，因为它使用较小的头部信息，并且避免了建立和关闭连接的开销。
+</code></pre><h2 id="rpc和http请求有什么区别">
+  RPC和HTTP请求有什么区别？
+  <a class="anchor" href="#rpc%e5%92%8chttp%e8%af%b7%e6%b1%82%e6%9c%89%e4%bb%80%e4%b9%88%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>RPC是远程调用另一台计算机（服务器）上的程序或函数。HTTP是一种网络协议，用于在互联网上传输各种类型的数据，最常用于传输Web页面和相关资源。
+
+RPC跨越了传输层和应用层，而HTTP基于TCP/IP协议进行传输。
+
+RPC支持同步和异步调用方式，可以更加灵活地处理并发请求。HTTP的请求响应通常是同步的
+
+RPC请求的数据封装相对简洁，只包含必要的信息。HTTP请求需要封装在HTTP协议中，包含请求行、请求头、请求体等部分。
+
+RPC通常与编程语言相关，需要服务调用方和服务提供方使用统一的RPC框架。HTTP则与编程语言无关，只需要遵循REST规范即可。
+</code></pre><h2 id="服务调用服务有哪些方式">
+  服务调用服务有哪些方式
+  <a class="anchor" href="#%e6%9c%8d%e5%8a%a1%e8%b0%83%e7%94%a8%e6%9c%8d%e5%8a%a1%e6%9c%89%e5%93%aa%e4%ba%9b%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<pre tabindex="0"><code>RESTful API,RPC调用,消息队列,WebSocket,服务网关
+</code></pre></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#osi七层和tcpip四层">OSI七层和TCP/IP四层？</a></li>
+    <li><a href="#http状态码">http状态码</a></li>
+    <li><a href="#linux进程通信方式">linux进程通信方式？</a></li>
+    <li><a href="#进程线程协程的区别">进程、线程、协程的区别</a></li>
+    <li><a href="#开多个线程和开多个协程会有什么区别">开多个线程和开多个协程会有什么区别</a></li>
+    <li><a href="#协程的优势">协程的优势？</a></li>
+    <li><a href="#协程的数据结构是什么保存了哪些东西">协程的数据结构是什么，保存了哪些东西</a></li>
+    <li><a href="#进程五种状态">进程五种状态</a></li>
+    <li><a href="#软连接和硬链接区别">软连接和硬链接区别</a></li>
+    <li><a href="#tcp三次握手">tcp三次握手</a></li>
+    <li><a href="#tcp四次挥手">tcp四次挥手</a>
+      <ul>
+        <li><a href="#为什么是四次">为什么是四次？</a></li>
+        <li><a href="#time_wait">time_wait?</a></li>
+        <li><a href="#close_wait">close_wait</a></li>
+      </ul>
+    </li>
+    <li><a href="#网络编程的一般步骤">网络编程的一般步骤</a></li>
+    <li><a href="#滑动窗口机制">滑动窗口机制</a></li>
+    <li><a href="#http协议">http协议</a></li>
+    <li><a href="#线头阻塞">线头阻塞</a></li>
+    <li><a href="#websocket-和-http-有什么区别">websocket 和 http 有什么区别？</a></li>
+    <li><a href="#rpc和http请求有什么区别">RPC和HTTP请求有什么区别？</a></li>
+    <li><a href="#服务调用服务有哪些方式">服务调用服务有哪些方式</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

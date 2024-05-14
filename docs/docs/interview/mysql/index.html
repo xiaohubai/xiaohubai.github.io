@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="数据库 # 关系型和非关系型数据库的区别？ # 关系型数据库 采用关系模型组织数据 保持数据的一致性 数据更新开销比较小 支持复杂查询(带where子句的查询) 非关系型数据库 无需经过sql层的解析，读写效率高 基于键值对，读写性能高，易于扩展 支持多种类型数据的存储，如图片、文档 扩展性强，适合数据量大高可用的日志系统，地理位置存储系统 详细说一下一条 MySQL 语句执行的步骤？ # 客户端请求-&gt;连接器（验证身份，给与权限） 查询缓存（存在缓存直接返回，不存在计息往后执行） 分析器（对sql进行词法分析和语法分析） 优化器（对执行的sql优化选择最优的执行方案） 执行器（先看用户是否有执行权限）-&gt;去引擎层获取数据返回（如开启查询缓存，则缓存查询结果） 怎么理解数据库的索引？ # 索引类似于书籍的目录,通过使用索引，数据库系统可以在执行查询时更快地定位到符合特定条件的数据行，从而提高查询性能。不必全表扫描 索引并非没有代价的。它们需要额外的存储空间，并且在插入、更新和删除数据时需要维护，这可能会导致一些性能开销 MySQL 索引的优缺点？ # 提高数据查询的效率，就像书的目录一样 创建唯一性索引，可以保证数据表每一行记录的唯一性 帮助引擎层避免排序和临时表 将随机io变为顺序io，加速表和表之间的连接 创建、维护索引需要消耗时间，对表的数据进行增加、删除 修改时索引也要动态维护，会降低这些执行的效率 索引也是需要占物理空间 索引的三种常见底层数据结构以及优缺点 # 哈希表 适用于等值查询的场景，不适合范围查询 有序数组 适用于静态存储引擎，等值和范围查询性能好，但更新数据成本高 搜索树 索引的常见类型以及它是如何发挥作用的？ # 根据叶子节点的内容，索引分为主键索引和非主键索引 主键索引的叶子节点存的整行数据，在InnoDB里也被称为聚簇索引。 非主键索引叶子节点存的主键的值，在InnoDB里也被称为二级索引。 什么时聚簇索引何时用聚簇非聚簇索引？ # 聚簇索引：将数据存储与索引放到了一块，找到索引也就找到了数据 非聚簇索引：将数据存储和索引结构分开，索引结构的叶子节点指向数据对应行， 索引的几种类型？ # 主键索引：数据列不允许重复，不允许为NULL,一个表只能有一个主键 唯一索引：数据列不允许重复，允许为NULL,一个表允许多个列创建唯一索引 普通索引：没有唯一性限制，允许为NULL 全文索引：效率上是模糊查询的N倍 MySQL 存储引擎 MyISAM 与 InnoDB 区别 # 1.锁粒度方面：由于锁粒度不同，InnoDB 比 MyISAM 支持更高的并发;InnoDB 的锁粒度为行锁、MyISAM 的锁粒度为表锁、行锁需要对每一行进行加锁， 2.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="Mysql" />
+<meta property="og:description" content="数据库 # 关系型和非关系型数据库的区别？ # 关系型数据库 采用关系模型组织数据 保持数据的一致性 数据更新开销比较小 支持复杂查询(带where子句的查询) 非关系型数据库 无需经过sql层的解析，读写效率高 基于键值对，读写性能高，易于扩展 支持多种类型数据的存储，如图片、文档 扩展性强，适合数据量大高可用的日志系统，地理位置存储系统 详细说一下一条 MySQL 语句执行的步骤？ # 客户端请求-&gt;连接器（验证身份，给与权限） 查询缓存（存在缓存直接返回，不存在计息往后执行） 分析器（对sql进行词法分析和语法分析） 优化器（对执行的sql优化选择最优的执行方案） 执行器（先看用户是否有执行权限）-&gt;去引擎层获取数据返回（如开启查询缓存，则缓存查询结果） 怎么理解数据库的索引？ # 索引类似于书籍的目录,通过使用索引，数据库系统可以在执行查询时更快地定位到符合特定条件的数据行，从而提高查询性能。不必全表扫描 索引并非没有代价的。它们需要额外的存储空间，并且在插入、更新和删除数据时需要维护，这可能会导致一些性能开销 MySQL 索引的优缺点？ # 提高数据查询的效率，就像书的目录一样 创建唯一性索引，可以保证数据表每一行记录的唯一性 帮助引擎层避免排序和临时表 将随机io变为顺序io，加速表和表之间的连接 创建、维护索引需要消耗时间，对表的数据进行增加、删除 修改时索引也要动态维护，会降低这些执行的效率 索引也是需要占物理空间 索引的三种常见底层数据结构以及优缺点 # 哈希表 适用于等值查询的场景，不适合范围查询 有序数组 适用于静态存储引擎，等值和范围查询性能好，但更新数据成本高 搜索树 索引的常见类型以及它是如何发挥作用的？ # 根据叶子节点的内容，索引分为主键索引和非主键索引 主键索引的叶子节点存的整行数据，在InnoDB里也被称为聚簇索引。 非主键索引叶子节点存的主键的值，在InnoDB里也被称为二级索引。 什么时聚簇索引何时用聚簇非聚簇索引？ # 聚簇索引：将数据存储与索引放到了一块，找到索引也就找到了数据 非聚簇索引：将数据存储和索引结构分开，索引结构的叶子节点指向数据对应行， 索引的几种类型？ # 主键索引：数据列不允许重复，不允许为NULL,一个表只能有一个主键 唯一索引：数据列不允许重复，允许为NULL,一个表允许多个列创建唯一索引 普通索引：没有唯一性限制，允许为NULL 全文索引：效率上是模糊查询的N倍 MySQL 存储引擎 MyISAM 与 InnoDB 区别 # 1.锁粒度方面：由于锁粒度不同，InnoDB 比 MyISAM 支持更高的并发;InnoDB 的锁粒度为行锁、MyISAM 的锁粒度为表锁、行锁需要对每一行进行加锁， 2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/interview/mysql/" /><meta property="article:section" content="docs" />
+
+
+
+<title>Mysql | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/interview/mysql/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle" checked />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="active">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Mysql</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#关系型和非关系型数据库的区别">关系型和非关系型数据库的区别？</a></li>
+    <li><a href="#详细说一下一条-mysql-语句执行的步骤">详细说一下一条 MySQL 语句执行的步骤？</a></li>
+    <li><a href="#怎么理解数据库的索引">怎么理解数据库的索引？</a></li>
+    <li><a href="#mysql-索引的优缺点">MySQL 索引的优缺点？</a></li>
+    <li><a href="#索引的三种常见底层数据结构以及优缺点">索引的三种常见底层数据结构以及优缺点</a></li>
+    <li><a href="#索引的常见类型以及它是如何发挥作用的">索引的常见类型以及它是如何发挥作用的？</a></li>
+    <li><a href="#什么时聚簇索引何时用聚簇非聚簇索引">什么时聚簇索引何时用聚簇非聚簇索引？</a></li>
+    <li><a href="#索引的几种类型">索引的几种类型？</a></li>
+    <li><a href="#mysql-存储引擎-myisam-与-innodb-区别">MySQL 存储引擎 MyISAM 与 InnoDB 区别</a></li>
+    <li><a href="#myisam-和-innodb-实现-b-树索引方式的区别是什么">MyISAM 和 InnoDB 实现 B 树索引方式的区别是什么？</a></li>
+    <li><a href="#b树和b树有什么区别">B树和B+树有什么区别</a></li>
+    <li><a href="#union-union-all-区别">union union all 区别？</a></li>
+    <li><a href="#innodb-为什么设计-b-树索引">InnoDB 为什么设计 B+ 树索引？</a></li>
+    <li><a href="#为什么选择b数">为什么选择B+数</a></li>
+    <li><a href="#为什么用b树不用b树">为什么用b+树不用b树</a></li>
+    <li><a href="#幻读是怎么解决的">幻读是怎么解决的</a></li>
+    <li><a href="#redoundo的作用和实现">redo，undo的作用和实现</a></li>
+    <li><a href="#普通索引还是唯一索引">普通索引还是唯一索引？</a></li>
+    <li><a href="#什么是覆盖索引和索引下推">什么是覆盖索引和索引下推？</a></li>
+    <li><a href="#什么是索引">什么是索引？</a></li>
+    <li><a href="#哪些操作会导致索引失效">哪些操作会导致索引失效？</a></li>
+    <li><a href="#字符串加索引">字符串加索引?</a></li>
+    <li><a href="#mysql-的-change-buffer-是什么">MySQL 的 change buffer 是什么？</a></li>
+    <li><a href="#mysql-是如何判断一行扫描数的">MySQL 是如何判断一行扫描数的？</a></li>
+    <li><a href="#mysql-的-redo-log-和-binlog-区别">MySQL 的 redo log 和 binlog 区别？</a></li>
+    <li><a href="#为什么需要-redo-log">为什么需要 redo log？</a></li>
+    <li><a href="#为什么-redo-log-具有-crash-safe-的能力是-binlog-无法替代的">为什么 redo log 具有 crash-safe 的能力，是 binlog 无法替代的？</a></li>
+    <li><a href="#当数据库-crash-后如何恢复未刷盘的数据到内存中">当数据库 crash 后，如何恢复未刷盘的数据到内存中？</a></li>
+    <li><a href="#redo-log-写入方式">redo log 写入方式？</a></li>
+    <li><a href="#redo-log-的执行流程">redo log 的执行流程?</a></li>
+    <li><a href="#inlog-的概念是什么起到什么作用-可以保证-crash-safe-吗">inlog 的概念是什么，起到什么作用， 可以保证 crash-safe 吗?</a></li>
+    <li><a href="#什么是两阶段提交">什么是两阶段提交？</a></li>
+    <li><a href="#mysql-怎么知道-binlog-是完整的">MySQL 怎么知道 binlog 是完整的?</a></li>
+    <li><a href="#什么是-wal-技术有什么优点">什么是 WAL 技术，有什么优点？</a></li>
+    <li><a href="#binlog-日志的三种格式">binlog 日志的三种格式</a></li>
+    <li><a href="#原本可以执行得很快的-sql-语句执行速度却比预期的慢很多原因是什么如何解决">原本可以执行得很快的 SQL 语句，执行速度却比预期的慢很多，原因是什么？如何解决？</a></li>
+    <li><a href="#innodb-数据页结构">InnoDB 数据页结构?</a></li>
+    <li><a href="#mysql-是如何保证数据不丢失的">MySQL 是如何保证数据不丢失的？</a></li>
+    <li><a href="#误删数据怎么办">误删数据怎么办？</a></li>
+    <li><a href="#droptruncate-和-delete-的区别">drop、truncate 和 delete 的区别</a></li>
+    <li><a href="#在-mysql-中有两个-kill-命令">在 MySQL 中有两个 kill 命令?</a></li>
+    <li><a href="#如何理解-mysql-的边读边发">如何理解 MySQL 的边读边发</a></li>
+    <li><a href="#mysql-的大表查询为什么不会爆内存">MySQL 的大表查询为什么不会爆内存？</a></li>
+    <li><a href="#mysql-临时表的用法和特性">MySQL 临时表的用法和特性?</a></li>
+    <li><a href="#sql优化经验">sql优化经验</a></li>
+    <li><a href="#mysql-存储引擎介绍innodbmyisammemory">MySQL 存储引擎介绍（InnoDB、MyISAM、MEMORY）?</a></li>
+    <li><a href="#都说-innodb-好那还要不要使用-memory-引擎">都说 InnoDB 好，那还要不要使用 MEMORY 引擎？</a></li>
+    <li><a href="#如果数据库误操作-如何执行数据恢复">如果数据库误操作, 如何执行数据恢复?</a></li>
+    <li><a href="#mysql-是如何保证主备同步">MySQL 是如何保证主备同步？</a></li>
+    <li><a href="#什么是主备延迟">什么是主备延迟?</a></li>
+    <li><a href="#为什么要有多线程复制策略">为什么要有多线程复制策略？</a></li>
+    <li><a href="#mysql-的并行策略有哪些">MySQL 的并行策略有哪些？</a></li>
+    <li><a href="#mysql的一主一备和一主多从有什么区别">MySQL的一主一备和一主多从有什么区别？</a></li>
+    <li><a href="#主库出问题如何解决">主库出问题如何解决?</a></li>
+    <li><a href="#mysql的并发链接和并发查询有什么区别">MySQL的并发链接和并发查询有什么区别？</a></li>
+    <li><a href="#短时间提高-mysql-性能的方法">、短时间提高 MySQL 性能的方法?</a></li>
+    <li><a href="#为什么-mysql-自增主键-id-不连续">为什么 MySQL 自增主键 ID 不连续？</a></li>
+    <li><a href="#innodb-为什么要用自增-id-作为主键">InnoDB 为什么要用自增 ID 作为主键？</a></li>
+    <li><a href="#如何最快的复制一张表">如何最快的复制一张表？</a></li>
+    <li><a href="#grant-和-flush-privileges语句">grant 和 flush privileges语句?</a></li>
+    <li><a href="#要不要使用分区表">要不要使用分区表？</a></li>
+    <li><a href="#join-用法">join 用法?</a></li>
+    <li><a href="#mysql-的锁">MySQL 的锁?</a></li>
+    <li><a href="#mysql-什么情况触发表锁什么情况触发行锁">mysql 什么情况触发表锁，什么情况触发行锁</a></li>
+    <li><a href="#事务四个隔离级别">事务四个隔离级别？</a></li>
+    <li><a href="#脏读-不可重复读-幻读">脏读 不可重复读 幻读</a></li>
+    <li><a href="#什么是事务">什么是事务</a></li>
+    <li><a href="#死锁-乐观锁-悲观锁-共享锁-排他锁">死锁 乐观锁 悲观锁 共享锁 排他锁？</a></li>
+    <li><a href="#死锁产生的4个必要条件">死锁产生的4个必要条件？</a></li>
+    <li><a href="#什么时候使用乐观锁-悲观锁">什么时候使用乐观锁 悲观锁？</a></li>
+    <li><a href="#为什么-mysql-会抖一下">为什么 MySQL 会抖一下？</a></li>
+    <li><a href="#char-varchar-区别">char varchar 区别？</a></li>
+    <li><a href="#为什么删除了表表文件的大小还是没变">为什么删除了表，表文件的大小还是没变？</a></li>
+    <li><a href="#count实现方式以及各种-count-对比">count(*)实现方式以及各种 count 对比?</a></li>
+    <li><a href="#百万级别或以上的数据如何删除">百万级别或以上的数据如何删除</a></li>
+    <li><a href="#什么是最左匹配原则">什么是最左匹配原则</a></li>
+    <li><a href="#100亿的数据找出前10大的数内存有限">100亿的数据找出前10大的数，内存有限</a></li>
+    <li><a href="#用过gorm如果一张上百万的数据的表要新建一个字段的索引如何保证线上的服务尽量少的被影响">用过gorm，如果一张上百万的数据的表，要新建一个字段的索引，如何保证线上的服务尽量少的被影响</a></li>
+    <li><a href="#heading"></a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="数据库">
+  数据库
+  <a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%ba%93">#</a>
+</h1>
+<h2 id="关系型和非关系型数据库的区别">
+  关系型和非关系型数据库的区别？
+  <a class="anchor" href="#%e5%85%b3%e7%b3%bb%e5%9e%8b%e5%92%8c%e9%9d%9e%e5%85%b3%e7%b3%bb%e5%9e%8b%e6%95%b0%e6%8d%ae%e5%ba%93%e7%9a%84%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<ul>
+<li>关系型数据库</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">采用关系模型组织数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">保持数据的一致性</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">数据更新开销比较小</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">支持复杂查询</span>(<span style="color:#960050;background-color:#1e0010">带</span>where子句的查询)
+</span></span></code></pre></div><ul>
+<li>非关系型数据库</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">无需经过</span>sql层的解析<span style="color:#960050;background-color:#1e0010">，读写效率高</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">基于键值对，读写性能高，易于扩展</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">支持多种类型数据的存储，如图片、文档</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">扩展性强，适合数据量大高可用的日志系统，地理位置存储系统</span>
+</span></span></code></pre></div><h2 id="详细说一下一条-mysql-语句执行的步骤">
+  详细说一下一条 MySQL 语句执行的步骤？
+  <a class="anchor" href="#%e8%af%a6%e7%bb%86%e8%af%b4%e4%b8%80%e4%b8%8b%e4%b8%80%e6%9d%a1-mysql-%e8%af%ad%e5%8f%a5%e6%89%a7%e8%a1%8c%e7%9a%84%e6%ad%a5%e9%aa%a4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">客户端请求</span><span style="color:#f92672">-&gt;</span><span style="color:#960050;background-color:#1e0010">连接器（验证身份，给与权限）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">查询缓存（存在缓存直接返回，不存在计息往后执行）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">分析器（对</span>sql进行词法分析和语法分析<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">优化器（对执行的</span>sql优化选择最优的执行方案<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">执行器（先看用户是否有执行权限）</span><span style="color:#f92672">-&gt;</span><span style="color:#960050;background-color:#1e0010">去引擎层获取数据返回（如开启查询缓存，则缓存查询结果）</span>
+</span></span></code></pre></div><h2 id="怎么理解数据库的索引">
+  怎么理解数据库的索引？
+  <a class="anchor" href="#%e6%80%8e%e4%b9%88%e7%90%86%e8%a7%a3%e6%95%b0%e6%8d%ae%e5%ba%93%e7%9a%84%e7%b4%a2%e5%bc%95">#</a>
+</h2>
+<pre tabindex="0"><code>索引类似于书籍的目录,通过使用索引，数据库系统可以在执行查询时更快地定位到符合特定条件的数据行，从而提高查询性能。不必全表扫描
+
+索引并非没有代价的。它们需要额外的存储空间，并且在插入、更新和删除数据时需要维护，这可能会导致一些性能开销
+</code></pre><h2 id="mysql-索引的优缺点">
+  MySQL 索引的优缺点？
+  <a class="anchor" href="#mysql-%e7%b4%a2%e5%bc%95%e7%9a%84%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">提高数据查询的效率</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就像书的目录一样</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">创建唯一性索引</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可以保证数据表每一行记录的唯一性</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">帮助引擎层避免排序和临时表</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">将随机io变为顺序io</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">加速表和表之间的连接</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">创建</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">维护索引需要消耗时间</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对表的数据进行增加</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">删除</span> <span style="color:#a6e22e">修改时索引也要动态维护</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会降低这些执行的效率</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">索引也是需要占物理空间</span>
+</span></span></code></pre></div><h2 id="索引的三种常见底层数据结构以及优缺点">
+  索引的三种常见底层数据结构以及优缺点
+  <a class="anchor" href="#%e7%b4%a2%e5%bc%95%e7%9a%84%e4%b8%89%e7%a7%8d%e5%b8%b8%e8%a7%81%e5%ba%95%e5%b1%82%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e4%bb%a5%e5%8f%8a%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h2>
+<ul>
+<li>哈希表</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">适用于等值查询的场景</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不适合范围查询</span>
+</span></span></code></pre></div><ul>
+<li>有序数组</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">适用于静态存储引擎</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">等值和范围查询性能好</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但更新数据成本高</span>
+</span></span></code></pre></div><ul>
+<li>搜索树</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"></code></pre></div><h2 id="索引的常见类型以及它是如何发挥作用的">
+  索引的常见类型以及它是如何发挥作用的？
+  <a class="anchor" href="#%e7%b4%a2%e5%bc%95%e7%9a%84%e5%b8%b8%e8%a7%81%e7%b1%bb%e5%9e%8b%e4%bb%a5%e5%8f%8a%e5%ae%83%e6%98%af%e5%a6%82%e4%bd%95%e5%8f%91%e6%8c%a5%e4%bd%9c%e7%94%a8%e7%9a%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">根据叶子节点的内容</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">索引分为主键索引和非主键索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">主键索引的叶子节点存的整行数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在InnoDB里也被称为聚簇索引</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">非主键索引叶子节点存的主键的值</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在InnoDB里也被称为二级索引</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="什么时聚簇索引何时用聚簇非聚簇索引">
+  什么时聚簇索引何时用聚簇非聚簇索引？
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%97%b6%e8%81%9a%e7%b0%87%e7%b4%a2%e5%bc%95%e4%bd%95%e6%97%b6%e7%94%a8%e8%81%9a%e7%b0%87%e9%9d%9e%e8%81%9a%e7%b0%87%e7%b4%a2%e5%bc%95">#</a>
+</h2>
+<pre tabindex="0"><code>聚簇索引：将数据存储与索引放到了一块，找到索引也就找到了数据
+非聚簇索引：将数据存储和索引结构分开，索引结构的叶子节点指向数据对应行，
+</code></pre><h2 id="索引的几种类型">
+  索引的几种类型？
+  <a class="anchor" href="#%e7%b4%a2%e5%bc%95%e7%9a%84%e5%87%a0%e7%a7%8d%e7%b1%bb%e5%9e%8b">#</a>
+</h2>
+<pre tabindex="0"><code>主键索引：数据列不允许重复，不允许为NULL,一个表只能有一个主键
+唯一索引：数据列不允许重复，允许为NULL,一个表允许多个列创建唯一索引
+普通索引：没有唯一性限制，允许为NULL
+全文索引：效率上是模糊查询的N倍
+</code></pre><h2 id="mysql-存储引擎-myisam-与-innodb-区别">
+  MySQL 存储引擎 MyISAM 与 InnoDB 区别
+  <a class="anchor" href="#mysql-%e5%ad%98%e5%82%a8%e5%bc%95%e6%93%8e-myisam-%e4%b8%8e-innodb-%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>1.锁粒度方面：由于锁粒度不同，InnoDB 比 MyISAM 支持更高的并发;InnoDB
+的锁粒度为行锁、MyISAM 的锁粒度为表锁、行锁需要对每一行进行加锁，
+2.可恢复性上：由于 InnoDB 是有事务日志的，所以在产生由于数据库崩溃等
+条件后，可以根据日志文件进行恢复。而 MyISAM 则没有事务日志。
+3.查询性能上:MylSAM 要优于 InnoDB 因为 InnoDB 在查询过程中，是需要维护
+数据缓存，而且查询过程是先定位到行所在的数据块，然后在从数据块中定位到要查找的行;而 MyISAM 可以直接定位到数据所在的内存地址，可以
+直接找到数据。
+4.表结构文件上:MyISAM 的表结构文件包括:frm(表结构定义),.MYI(索引),.MYD(数据);而 InnoDB 的表数据文件为:ibd 和 frm(表结构定义)。
+</code></pre><h2 id="myisam-和-innodb-实现-b-树索引方式的区别是什么">
+  MyISAM 和 InnoDB 实现 B 树索引方式的区别是什么？
+  <a class="anchor" href="#myisam-%e5%92%8c-innodb-%e5%ae%9e%e7%8e%b0-b-%e6%a0%91%e7%b4%a2%e5%bc%95%e6%96%b9%e5%bc%8f%e7%9a%84%e5%8c%ba%e5%88%ab%e6%98%af%e4%bb%80%e4%b9%88">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">InnoDB</span> <span style="color:#a6e22e">存储引擎</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">B</span><span style="color:#f92672">+</span> <span style="color:#a6e22e">树索引的叶子节点保存数据本身</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其数据文件本身就是索引文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">MyISAM</span> <span style="color:#a6e22e">存储引擎</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">B</span><span style="color:#f92672">+</span> <span style="color:#a6e22e">树索引的叶子节点保存数据的物理地址</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">叶节点的</span> <span style="color:#a6e22e">data</span> <span style="color:#a6e22e">域存放的是数据记录的地址</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">索引文件和数据文件是分离的</span>.
+</span></span></code></pre></div><h2 id="b树和b树有什么区别">
+  B树和B+树有什么区别
+  <a class="anchor" href="#b%e6%a0%91%e5%92%8cb%e6%a0%91%e6%9c%89%e4%bb%80%e4%b9%88%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>B树中，每个节点既可以存储数据，也可以存储子节点的指针,B+树中，非叶子节点只存储子节点的指针，不存储数据，所有的数据都存储在叶子节点中
+
+在B树中，叶子节点之间不一定需要连接，因为数据可以存储在非叶子节点中。
+B+树中，所有的叶子节点都通过指针连接在一起，形成一个有序链表，便于范围查询。
+
+B树中，由于数据可以存储在非叶子节点中，因此查找数据时可能需要在非叶子节点和叶子节点之间进行多次查找。
+B+树中，由于数据只存储在叶子节点中，因此查找数据时只需要在叶子节点中进行查找，可以减少查找的次数。
+</code></pre><h2 id="union-union-all-区别">
+  union union all 区别？
+  <a class="anchor" href="#union-union-all-%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>union连接的sql列必须一致
+union 多个相同的行会合并，合并有耗时
+union all 允许重复
+</code></pre><h2 id="innodb-为什么设计-b-树索引">
+  InnoDB 为什么设计 B+ 树索引？
+  <a class="anchor" href="#innodb-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%ae%be%e8%ae%a1-b-%e6%a0%91%e7%b4%a2%e5%bc%95">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">InnoDB</span> <span style="color:#a6e22e">需要执行的场景和功能需要在特定查询上拥有较强的性能</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">CPU</span> <span style="color:#a6e22e">将磁盘上的数据加载到内存中需要花费大量时间</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="为什么选择b数">
+  为什么选择B+数
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%80%89%e6%8b%a9b%e6%95%b0">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">哈希索引虽然能提供O</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">复杂度查询</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但对范围查询和排序却无法很好的支持</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">最终会导致全表扫描</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">B</span> <span style="color:#a6e22e">树能够在非叶子节点存储数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但会导致在查询连续数据可能带来更多的随机</span> <span style="color:#a6e22e">IO</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">而</span> <span style="color:#a6e22e">B</span><span style="color:#f92672">+</span> <span style="color:#a6e22e">树的所有叶节点可以通过指针来相互连接</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">减少顺序遍历带来的随机</span> <span style="color:#a6e22e">IO</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="为什么用b树不用b树">
+  为什么用b+树不用b树
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e7%94%a8b%e6%a0%91%e4%b8%8d%e7%94%a8b%e6%a0%91">#</a>
+</h2>
+<h2 id="幻读是怎么解决的">
+  幻读是怎么解决的
+  <a class="anchor" href="#%e5%b9%bb%e8%af%bb%e6%98%af%e6%80%8e%e4%b9%88%e8%a7%a3%e5%86%b3%e7%9a%84">#</a>
+</h2>
+<h2 id="redoundo的作用和实现">
+  redo，undo的作用和实现
+  <a class="anchor" href="#redoundo%e7%9a%84%e4%bd%9c%e7%94%a8%e5%92%8c%e5%ae%9e%e7%8e%b0">#</a>
+</h2>
+<h2 id="普通索引还是唯一索引">
+  普通索引还是唯一索引？
+  <a class="anchor" href="#%e6%99%ae%e9%80%9a%e7%b4%a2%e5%bc%95%e8%bf%98%e6%98%af%e5%94%af%e4%b8%80%e7%b4%a2%e5%bc%95">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">由于唯一索引用不上change</span> <span style="color:#a6e22e">buffer的优化机制</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果业务可以接收</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">从性能上建议优先非唯一索引</span>
+</span></span></code></pre></div><h2 id="什么是覆盖索引和索引下推">
+  什么是覆盖索引和索引下推？
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e8%a6%86%e7%9b%96%e7%b4%a2%e5%bc%95%e5%92%8c%e7%b4%a2%e5%bc%95%e4%b8%8b%e6%8e%a8">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// 覆盖索引：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">在某个查询里面</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">索引</span> <span style="color:#a6e22e">k</span> <span style="color:#a6e22e">已经</span><span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">覆盖了</span><span style="color:#960050;background-color:#1e0010">”</span><span style="color:#a6e22e">我们的查询需求</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">称为覆盖索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">覆盖索引可以减少树的搜索次数</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">显著提升查询性能</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以使用覆盖索引是一个常用的性能优化手段</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//索引下推：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">MySQL</span> <span style="color:#ae81ff">5.6</span> <span style="color:#a6e22e">引入的索引下推优化</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">index</span> <span style="color:#a6e22e">condition</span> <span style="color:#a6e22e">pushdown</span>)<span style="color:#960050;background-color:#1e0010">，</span> <span style="color:#a6e22e">可以在索引遍历过程中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对索引中包含的字段先做判断</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">直接过滤掉不满足条件的记录</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">减少回表次数</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="什么是索引">
+  什么是索引？
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e7%b4%a2%e5%bc%95">#</a>
+</h2>
+<pre tabindex="0"><code>索引是一种特殊的文件，它包含着对数据表里所有记录的引用指针。相当于目录，为了查找书中的内容，通过对内容建立索引形成目录。
+</code></pre><h2 id="哪些操作会导致索引失效">
+  哪些操作会导致索引失效？
+  <a class="anchor" href="#%e5%93%aa%e4%ba%9b%e6%93%8d%e4%bd%9c%e4%bc%9a%e5%af%bc%e8%87%b4%e7%b4%a2%e5%bc%95%e5%a4%b1%e6%95%88">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">对索引使用左或者左右模糊匹配</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">也就是</span> <span style="color:#a6e22e">like</span> <span style="color:#f92672">%</span><span style="color:#a6e22e">xx</span> <span style="color:#a6e22e">或者</span> <span style="color:#a6e22e">like</span> <span style="color:#f92672">%</span><span style="color:#a6e22e">xx</span><span style="color:#f92672">%</span> <span style="color:#a6e22e">这两种方式都会造成索引失效</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">对索引进行函数</span><span style="color:#f92672">/</span><span style="color:#a6e22e">对索引进行表达式计算</span>,<span style="color:#a6e22e">因为索引保持的是索引字段的原始值</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而不是经过函数计算的值</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">自然就没办法走索引</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">对索引进行隐式转换相当于使用了新函数</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">WHERE</span> <span style="color:#a6e22e">子句中的</span> <span style="color:#a6e22e">OR语句</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只要有条件列不是索引列</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就会进行全表扫描</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="字符串加索引">
+  字符串加索引?
+  <a class="anchor" href="#%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%8a%a0%e7%b4%a2%e5%bc%95">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">直接创建完整索引</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样可能会比较占用空间</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">创建前缀索引</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">节省空间</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但会增加查询扫描次数</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并且不能使用覆盖索引</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">倒序存储</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">再创建前缀索引</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">用于绕过字符串本身前缀的区分度不够的问题</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">创建</span> <span style="color:#a6e22e">hash</span> <span style="color:#a6e22e">字段索引</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">查询性能稳定</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">有额外的存储和计算消耗</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">跟第三种方式一样</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">都不支持范围扫描</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="mysql-的-change-buffer-是什么">
+  MySQL 的 change buffer 是什么？
+  <a class="anchor" href="#mysql-%e7%9a%84-change-buffer-%e6%98%af%e4%bb%80%e4%b9%88">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">当需要更新一个数据页时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果数据页在内存中就直接更新</span><span style="color:#960050;background-color:#1e0010">；</span><span style="color:#a6e22e">而如果这个数据页还没有在内存中的话</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在不影响数据一致性的前提下</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">InnoDB</span> <span style="color:#a6e22e">会将这些更新操作缓存在</span> <span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">中</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">这样就不需要从磁盘中读入这个数据页了</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在下次查询需要访问这个数据页的时候</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">将数据页读入内存</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">然后执行</span> <span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">中与这个页有关的操作</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">通过这种方式就能保证这个数据逻辑的正确性</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">注意唯一索引的更新就不能使用</span> <span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">实际上也只有普通索引可以使用</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">适用场景</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> <span style="color:#a6e22e">对于写多读少的业务来说</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">页面在写完以后马上被访问到的概率比较小</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">此时</span> <span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">的使用效果最好</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">这种业务模型常见的就是账单类</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">日志类的系统</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> <span style="color:#a6e22e">反过来</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">假设一个业务的更新模式是写入之后马上会做查询</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">那么即使满足了条件</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">将更新先记录在</span> <span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但之后由于马上要访问这个数据页</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会立即触发</span> <span style="color:#a6e22e">merge</span> <span style="color:#a6e22e">过程</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">这样随机访问</span> <span style="color:#a6e22e">IO</span> <span style="color:#a6e22e">的次数不会减少</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">反而增加了</span> <span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">的维护代价</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="mysql-是如何判断一行扫描数的">
+  MySQL 是如何判断一行扫描数的？
+  <a class="anchor" href="#mysql-%e6%98%af%e5%a6%82%e4%bd%95%e5%88%a4%e6%96%ad%e4%b8%80%e8%a1%8c%e6%89%ab%e6%8f%8f%e6%95%b0%e7%9a%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">在真正开始执行语句之前</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并不能精确地知道满足这个条件的记录有多少条</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">而只能根据统计信息来估算记录数</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">这个统计信息就是索引的</span><span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">区分度</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="mysql-的-redo-log-和-binlog-区别">
+  MySQL 的 redo log 和 binlog 区别？
+  <a class="anchor" href="#mysql-%e7%9a%84-redo-log-%e5%92%8c-binlog-%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<ul>
+<li>redo log</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#a6e22e">作用</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">用于崩溃恢复</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">实现方式</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">innodb存储引擎实现</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">记录方式</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">循环写的方式记录</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">写到结尾时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会回到开头循环写记录</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">文件大小</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">固定的</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">crash</span><span style="color:#f92672">-</span><span style="color:#a6e22e">safe能力</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">具有</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">日志类型</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">逻辑日志</span>
+</span></span></code></pre></div><ul>
+<li>binlog</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span> <span style="color:#a6e22e">作用</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">主从复制和数据恢复</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">实现方式</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">server层实现</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所有的存储引擎都可以使用binlog日志</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">记录方式</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">通过追加的方式记录</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">当文件尺寸大于给定的配置值后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">后续的日志会记录到新的文件上</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">文件大小</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">通过配置参数max_binlog_size设置每个binlog文件大小</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">crash</span><span style="color:#f92672">-</span><span style="color:#a6e22e">safe能力</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">没有</span>
+</span></span><span style="display:flex;"><span> <span style="color:#a6e22e">日志类型</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">物理日志</span>
+</span></span></code></pre></div><h2 id="为什么需要-redo-log">
+  为什么需要 redo log？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81-redo-log">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">主要用于</span> <span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">异常重启后的一种数据恢复手段</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">确保了数据的一致性</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">其实是为了配合</span> <span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">的</span> <span style="color:#a6e22e">WAL</span> <span style="color:#a6e22e">机制</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">因为</span> <span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">进行更新操作</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">为了能够快速响应</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以采用了异步写回磁盘的技术</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">写入内存后就返回</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">但是这样</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会存在</span> <span style="color:#a6e22e">crash后</span> <span style="color:#a6e22e">内存数据丢失的隐患</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">具备</span> <span style="color:#a6e22e">crash</span> <span style="color:#a6e22e">safe</span> <span style="color:#a6e22e">的能力</span>
+</span></span></code></pre></div><h2 id="为什么-redo-log-具有-crash-safe-的能力是-binlog-无法替代的">
+  为什么 redo log 具有 crash-safe 的能力，是 binlog 无法替代的？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88-redo-log-%e5%85%b7%e6%9c%89-crash-safe-%e7%9a%84%e8%83%bd%e5%8a%9b%e6%98%af-binlog-%e6%97%a0%e6%b3%95%e6%9b%bf%e4%bb%a3%e7%9a%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">第一点</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">可确保</span> <span style="color:#a6e22e">innoDB</span> <span style="color:#a6e22e">判断哪些数据已经刷盘</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">哪些数据还没有</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">和</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">有一个很大的区别就是</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">一个是循环写</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">一个是追加写</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">也就是说</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">只会记录未刷盘的日志</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">已经刷入磁盘的数据都会从</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">这个有限大小的日志文件里删除</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">是追加日志</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">保存的是全量的日志</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">当数据库</span> <span style="color:#a6e22e">crash</span> <span style="color:#a6e22e">后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">想要恢复未刷盘但已经写入</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">和</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">的数据到内存时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">是无法恢复的</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">虽然</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">拥有全量的日志</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但没有一个标志让</span> <span style="color:#a6e22e">innoDB</span> <span style="color:#a6e22e">判断哪些数据已经刷盘</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">哪些数据还没有</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">但</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">不一样</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只要刷入磁盘的数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">都会从</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">中抹掉</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">因为是循环写</span><span style="color:#960050;background-color:#1e0010">！</span><span style="color:#a6e22e">数据库重启后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">直接把</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">中的数据都恢复至内存就可以了</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第二点</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">如果</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">写入失败</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">说明此次操作失败</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务也不可能提交</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">每次更新操作完成后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就一定会写入日志</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果写入失败</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">说明此次操作失败</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务也不可能提交</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">内部结构是基于页的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">记录了这个页的字段值变化</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只要crash后读取redo</span> <span style="color:#a6e22e">log进行重放</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就可以恢复数据</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">这就是为什么</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">具有</span> <span style="color:#a6e22e">crash</span><span style="color:#f92672">-</span><span style="color:#a6e22e">safe</span> <span style="color:#a6e22e">的能力</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">不具备</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="当数据库-crash-后如何恢复未刷盘的数据到内存中">
+  当数据库 crash 后，如何恢复未刷盘的数据到内存中？
+  <a class="anchor" href="#%e5%bd%93%e6%95%b0%e6%8d%ae%e5%ba%93-crash-%e5%90%8e%e5%a6%82%e4%bd%95%e6%81%a2%e5%a4%8d%e6%9c%aa%e5%88%b7%e7%9b%98%e7%9a%84%e6%95%b0%e6%8d%ae%e5%88%b0%e5%86%85%e5%ad%98%e4%b8%ad">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">写入</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">虽然做了</span> <span style="color:#a6e22e">fsync</span> <span style="color:#a6e22e">但未</span> <span style="color:#a6e22e">commit</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">未</span> <span style="color:#a6e22e">fsync</span> <span style="color:#a6e22e">到磁盘</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这部分数据丢失</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">写入</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">fsync</span> <span style="color:#a6e22e">未</span> <span style="color:#a6e22e">commit</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">已经</span> <span style="color:#a6e22e">fsync</span> <span style="color:#a6e22e">到磁盘</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">先从</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">恢复</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">再从</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">恢复</span> <span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">change</span> <span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">写入</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">和</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">都已经</span> <span style="color:#a6e22e">fsync</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">直接从</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">里恢复</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="redo-log-写入方式">
+  redo log 写入方式？
+  <a class="anchor" href="#redo-log-%e5%86%99%e5%85%a5%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log包括两部分内容</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">分别是内存中的日志缓冲</span>(<span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">buffer</span>)<span style="color:#a6e22e">和磁盘上的日志文件</span>(<span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">file</span>)<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">每执行一条</span> <span style="color:#a6e22e">DML</span> <span style="color:#a6e22e">语句</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会先把记录写入</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">buffer</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">用户空间</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">再保存到内核空间的缓冲区</span> <span style="color:#a6e22e">OS</span><span style="color:#f92672">-</span><span style="color:#a6e22e">buffer</span> <span style="color:#a6e22e">中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">后续某个时间点再一次性将多个操作记录写到</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">file</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">刷盘</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">这种先写日志</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">再写磁盘的技术</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就是WAL</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">可以发现</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">buffer写入到redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">file</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">是经过OS</span> <span style="color:#a6e22e">buffer中转的</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">其实可以通过参数innodb_flush_log_at_trx_commit进行配置</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">参数值含义如下</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">称为延迟写</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务提交时不会将redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">buffer中日志写入到OS</span> <span style="color:#a6e22e">buffer</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而是每秒写入OS</span> <span style="color:#a6e22e">buffer并调用写入到redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">file中</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">称为实时写</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">实时刷</span><span style="color:#960050;background-color:#1e0010">”，</span><span style="color:#a6e22e">事务每次提交都会将redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">buffer中的日志写入OS</span> <span style="color:#a6e22e">buffer并保存到redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">file中</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">称为实时写</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">延迟刷</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">每次事务提交写入到OS</span> <span style="color:#a6e22e">buffer</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">然后是每秒将日志写入到redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">file</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="redo-log-的执行流程">
+  redo log 的执行流程?
+  <a class="anchor" href="#redo-log-%e7%9a%84%e6%89%a7%e8%a1%8c%e6%b5%81%e7%a8%8b">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//update T set a =1 where id =666
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">客户端将请求语句</span> <span style="color:#a6e22e">update</span> <span style="color:#a6e22e">T</span> <span style="color:#a6e22e">set</span> <span style="color:#a6e22e">a</span> =<span style="color:#ae81ff">1</span> <span style="color:#a6e22e">where</span> <span style="color:#a6e22e">id</span> =<span style="color:#ae81ff">666</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">发往</span> <span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">Server</span> <span style="color:#a6e22e">层</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">Server</span> <span style="color:#a6e22e">层接收到</span> <span style="color:#a6e22e">SQL</span> <span style="color:#a6e22e">请求后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对其进行分析</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">优化</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">执行等处理工作</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">将生成的</span> <span style="color:#a6e22e">SQL</span> <span style="color:#a6e22e">执行计划发到</span> <span style="color:#a6e22e">InnoDB</span> <span style="color:#a6e22e">存储引擎层执行</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">InnoDB</span> <span style="color:#a6e22e">存储引擎层将a修改为1的这个操作记录到内存中</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">记录到内存以后会修改</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">的记录</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会在添加一行记录</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其内容是需要在哪个数据页上做什么修改</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">此后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">将事务的状态设置为</span> <span style="color:#a6e22e">prepare</span> <span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">说明已经准备好提交事务了</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">等到</span> <span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">Server</span> <span style="color:#a6e22e">层处理完事务以后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会将事务的状态设置为</span> <span style="color:#a6e22e">commit</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">也就是提交该事务</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">在收到事务提交的请求以后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">会把刚才写入内存中的操作记录写入到磁盘中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">从而完成整个日志的记录过程</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="inlog-的概念是什么起到什么作用-可以保证-crash-safe-吗">
+  inlog 的概念是什么，起到什么作用， 可以保证 crash-safe 吗?
+  <a class="anchor" href="#inlog-%e7%9a%84%e6%a6%82%e5%bf%b5%e6%98%af%e4%bb%80%e4%b9%88%e8%b5%b7%e5%88%b0%e4%bb%80%e4%b9%88%e4%bd%9c%e7%94%a8-%e5%8f%af%e4%bb%a5%e4%bf%9d%e8%af%81-crash-safe-%e5%90%97">#</a>
+</h2>
+<pre tabindex="0"><code>binlog 是归档日志，属于 MySQL Server 层的日志。可以实现主从复制和数据恢复两个作用。
+当需要恢复数据时，可以取出某个时间范围内的 binlog 进行重放恢复。
+但是 binlog 不可以做 crash safe，因为 crash 之前，binlog 可能没有写入完全 MySQL 就挂了。所以需要配合 redo log 才可以进行 crash safe。
+</code></pre><h2 id="什么是两阶段提交">
+  什么是两阶段提交？
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e4%b8%a4%e9%98%b6%e6%ae%b5%e6%8f%90%e4%ba%a4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">将</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">的写入拆成了两个步骤</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">prepare</span> <span style="color:#a6e22e">和</span> <span style="color:#a6e22e">commit</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">中间再穿插写入binlog</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这就是</span><span style="color:#e6db74">&#34;两阶段提交&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">为什么需要两阶段提交呢</span><span style="color:#960050;background-color:#1e0010">?</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">如果不用两阶段提交的话</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可能会出现这样情况</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">先写</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">crash</span> <span style="color:#a6e22e">后</span> <span style="color:#a6e22e">bin</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">备份恢复时少了一次更新</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">与当前数据不一致</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">先写</span> <span style="color:#a6e22e">bin</span> <span style="color:#a6e22e">log</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">crash</span> <span style="color:#a6e22e">后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">由于</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">没写入</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务无效</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以后续</span> <span style="color:#a6e22e">bin</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">备份恢复时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">数据不一致</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">两阶段提交就是为了保证</span> <span style="color:#a6e22e">redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">和</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">数据的安全一致性</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">只有在这两个日志文件逻辑上高度一致了才能放心的使用</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">在恢复数据时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redolog</span> <span style="color:#a6e22e">状态为</span> <span style="color:#a6e22e">commit</span> <span style="color:#a6e22e">则说明</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">也成功</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">直接恢复数据</span><span style="color:#960050;background-color:#1e0010">；</span><span style="color:#a6e22e">如果</span> <span style="color:#a6e22e">redolog</span> <span style="color:#a6e22e">是</span> <span style="color:#a6e22e">prepare</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">则需要查询对应的</span> <span style="color:#a6e22e">binlog事务是否成功</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">决定是回滚还是执行</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="mysql-怎么知道-binlog-是完整的">
+  MySQL 怎么知道 binlog 是完整的?
+  <a class="anchor" href="#mysql-%e6%80%8e%e4%b9%88%e7%9f%a5%e9%81%93-binlog-%e6%98%af%e5%ae%8c%e6%95%b4%e7%9a%84">#</a>
+</h2>
+<pre tabindex="0"><code>一个事务的 binlog 是有完整格式的：
+statement 格式的 binlog，最后会有 COMMIT；
+row 格式的 binlog，最后会有一个 XID event。
+</code></pre><h2 id="什么是-wal-技术有什么优点">
+  什么是 WAL 技术，有什么优点？
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af-wal-%e6%8a%80%e6%9c%af%e6%9c%89%e4%bb%80%e4%b9%88%e4%bc%98%e7%82%b9">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">WAL</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">中文全称是</span> <span style="color:#a6e22e">Write</span><span style="color:#f92672">-</span><span style="color:#a6e22e">Ahead</span> <span style="color:#a6e22e">Logging</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">它的关键点就是日志先写内存</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">再写磁盘</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">执行更新操作后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在真正把数据写入到磁盘前</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">先记录日志</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">好处是不用每一次操作都实时把数据写盘</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就算</span> <span style="color:#a6e22e">crash</span> <span style="color:#a6e22e">后也可以通过redo</span> <span style="color:#a6e22e">log</span> <span style="color:#a6e22e">恢复</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以能够实现快速响应</span> <span style="color:#a6e22e">SQL</span> <span style="color:#a6e22e">语句</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="binlog-日志的三种格式">
+  binlog 日志的三种格式
+  <a class="anchor" href="#binlog-%e6%97%a5%e5%bf%97%e7%9a%84%e4%b8%89%e7%a7%8d%e6%a0%bc%e5%bc%8f">#</a>
+</h2>
+<ul>
+<li>Statement格式:基于SQL语句的复制((statement-based replication,SBR))</li>
+</ul>
+<pre tabindex="0"><code>每一条会修改数据的 SQL 都会记录在 binlog 中
+优点：不需要记录每一行的变化，减少了binlog日志量，节约了IO，提高性能。
+缺点：由于记录的只是执行语句，为了这些语句能在备库上正确运行，还必须记录每条语句在执行的时候的一些相关信息，以保证所有语句能在备库得到和在主库端执行时候相同的结果。
+</code></pre><ul>
+<li>Row：基于行的复制。(row-based replication,RBR)</li>
+</ul>
+<pre tabindex="0"><code>不记录 SQL 语句上下文相关信息，仅保存哪条记录被修改。
+优点：binlog 中可以不记录执行的 SQL 语句的上下文相关的信息，仅需要记录那一条记录被修改成什么了。所以rowlevel的日志内容会非常清楚的记录下每一行数据修改的细节。不会出现某些特定情况下的存储过程、或 function、或trigger的调用和触发无法被正确复制的问题。
+缺点:可能会产生大量的日志内容。
+</code></pre><ul>
+<li>Mixed：混合模式复制。(mixed-based replication,MBR)</li>
+</ul>
+<pre tabindex="0"><code>实际上就是 Statement 与 Row 的结合。一般的语句修改使用 statment 格式保存 binlog，如一些函数，statement 无法完成主从复制的操作，则采用 row 格式保存 binlog，MySQL 会根据执行的每一条具体的 SQL 语句来区分对待记录的日志形式。
+</code></pre><h2 id="原本可以执行得很快的-sql-语句执行速度却比预期的慢很多原因是什么如何解决">
+  原本可以执行得很快的 SQL 语句，执行速度却比预期的慢很多，原因是什么？如何解决？
+  <a class="anchor" href="#%e5%8e%9f%e6%9c%ac%e5%8f%af%e4%bb%a5%e6%89%a7%e8%a1%8c%e5%be%97%e5%be%88%e5%bf%ab%e7%9a%84-sql-%e8%af%ad%e5%8f%a5%e6%89%a7%e8%a1%8c%e9%80%9f%e5%ba%a6%e5%8d%b4%e6%af%94%e9%a2%84%e6%9c%9f%e7%9a%84%e6%85%a2%e5%be%88%e5%a4%9a%e5%8e%9f%e5%9b%a0%e6%98%af%e4%bb%80%e4%b9%88%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3">#</a>
+</h2>
+<pre tabindex="0"><code>MySQL 数据库本身被堵住了，比如：系统或网络资源不够。
+SQL 语句被堵住了，比如：表锁，行锁等，导致存储引擎不执行对应的 SQL 语句。
+确实是索引使用不当，没有走索引。
+表中数据的特点导致的，走了索引，但回表次数庞大。
+解决：
+考虑采用 force index 强行选择一个索引
+考虑修改语句，引导 MySQL 使用我们期望的索引。比如把“order by b limit 1” 改成 “order by b,a limit 1” ，语义的逻辑是相同的。
+第三种方法是，在有些场景下，可以新建一个更合适的索引，来提供给优化器做选择，或删掉误用的索引。
+如果确定是索引根本没必要，可以考虑删除索引。
+</code></pre><h2 id="innodb-数据页结构">
+  InnoDB 数据页结构?
+  <a class="anchor" href="#innodb-%e6%95%b0%e6%8d%ae%e9%a1%b5%e7%bb%93%e6%9e%84">#</a>
+</h2>
+<pre tabindex="0"><code>File Header：表示页的一些通用信息，占固定的38字节。
+page Header：表示数据页专有信息，占固定的56字节。
+inimum+Supermum：两个虚拟的伪记录，分别表示页中的最小记录和最大记录，占固定的26字节。
+User Records：真正存储我们插入的数据，大小不固定。
+Free Space：页中尚未使用的部分，大小不固定。
+Page Directory：页中某些记录的相对位置，也就是各个槽对应的记录在页面中的地址偏移量。
+File Trailer：用于检验页是否完整，占固定大小 8 字节。
+</code></pre><h2 id="mysql-是如何保证数据不丢失的">
+  MySQL 是如何保证数据不丢失的？
+  <a class="anchor" href="#mysql-%e6%98%af%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e6%95%b0%e6%8d%ae%e4%b8%8d%e4%b8%a2%e5%a4%b1%e7%9a%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">只要redolog</span> <span style="color:#a6e22e">和</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">保证持久化磁盘就能确保MySQL异常重启后回复数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">在恢复数据时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redolog</span> <span style="color:#a6e22e">状态为</span> <span style="color:#a6e22e">commit</span> <span style="color:#a6e22e">则说明</span> <span style="color:#a6e22e">binlog</span> <span style="color:#a6e22e">也成功</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">直接恢复数据</span><span style="color:#960050;background-color:#1e0010">；</span><span style="color:#a6e22e">如果</span> <span style="color:#a6e22e">redolog</span> <span style="color:#a6e22e">是</span> <span style="color:#a6e22e">prepare</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">则需要查询对应的</span> <span style="color:#a6e22e">binlog事务是否成功</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">决定是回滚还是执行</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="误删数据怎么办">
+  误删数据怎么办？
+  <a class="anchor" href="#%e8%af%af%e5%88%a0%e6%95%b0%e6%8d%ae%e6%80%8e%e4%b9%88%e5%8a%9e">#</a>
+</h2>
+<pre tabindex="0"><code>DML 误操作语句造成数据不完整或者丢失。可以通过 flashback，美团的 myflash，也是一个不错的工具，本质都差不多
+都是先解析 binlog event，然后在进行反转。把 delete 反转为insert，insert 反转为 delete，update前后 image 对调。
+所以必须设置binlog_format=row 和 binlog_row_image=full，切记恢复数据的时候，应该先恢复到临时的实例，然后在恢复回主库上
+DDL语句误操作(truncate和drop)，由于DDL语句不管 binlog_format 是 row 还是 statement ，在 binlog 里都只记录语句，不记录 image 所以恢复起来相对要麻烦得多。
+只能通过全量备份+应用 binlog 的方式来恢复数据。一旦数据量比较大，那么恢复时间就特别长
+rm 删除：使用备份跨机房，或者最好是跨城市保存。
+</code></pre><h2 id="droptruncate-和-delete-的区别">
+  drop、truncate 和 delete 的区别
+  <a class="anchor" href="#droptruncate-%e5%92%8c-delete-%e7%9a%84%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>DELETE 语句执行删除的过程是每次从表中删除一行，并且同时将该行的删除操作作为事务记录在日志中保存以便进行进行回滚操作。
+TRUNCATE TABLE  则一次性地从表中删除所有的数据并不把单独的删除操作记录记入日志保存，删除行是不能恢复的。并且在删除的过程中不会激活与表有关的删除触发器。执行速度快。
+drop语句将表所占用的空间全释放掉。
+在速度上，一般来说，drop&gt; truncate &gt; delete。
+如果想删除部分数据用 delete，注意带上 where 子句，回滚段要足够大；
+如果想删除表，当然用 drop；如果想保留表而将所有数据删除，如果和事务无关，用 truncate 即可；
+如果和事务有关，或者想触发 trigger，还是用 delete；如果是整理表内部的碎片，可以用 truncate 跟上 reuse stroage，再重新导入/插入数据。
+</code></pre><h2 id="在-mysql-中有两个-kill-命令">
+  在 MySQL 中有两个 kill 命令?
+  <a class="anchor" href="#%e5%9c%a8-mysql-%e4%b8%ad%e6%9c%89%e4%b8%a4%e4%b8%aa-kill-%e5%91%bd%e4%bb%a4">#</a>
+</h2>
+<pre tabindex="0"><code>一个是 kill query + 线程 id，表示终止这个线程中正在执行的语句
+一个是 kill connection + 线程 id，这里 connection 可缺省，表示断开这个线程的连接
+kill 不掉的原因
+kill命令被堵了，还没到位
+kill命令到位了，但是没被立刻触发
+kill命令被触发了，但执行完也需要时间
+</code></pre><h2 id="如何理解-mysql-的边读边发">
+  如何理解 MySQL 的边读边发
+  <a class="anchor" href="#%e5%a6%82%e4%bd%95%e7%90%86%e8%a7%a3-mysql-%e7%9a%84%e8%be%b9%e8%af%bb%e8%be%b9%e5%8f%91">#</a>
+</h2>
+<pre tabindex="0"><code>如果客户端接受慢，会导致 MySQL 服务端由于结果发不出去，这个事务的执行时间会很长。
+服务端并不需要保存一个完整的结果集，取数据和发数据的流程都是通过一个 next_buffer 来操作的。
+内存的数据页都是在 Buffer_Pool中操作的。
+InnoDB 管理 Buffer_Pool 使用的是改进的 LRU 算法，使用链表实现，实现上，按照 5:3 的比例把整个 LRU 链表分成了 young 区域和 old 区域。
+</code></pre><h2 id="mysql-的大表查询为什么不会爆内存">
+  MySQL 的大表查询为什么不会爆内存？
+  <a class="anchor" href="#mysql-%e7%9a%84%e5%a4%a7%e8%a1%a8%e6%9f%a5%e8%af%a2%e4%b8%ba%e4%bb%80%e4%b9%88%e4%b8%8d%e4%bc%9a%e7%88%86%e5%86%85%e5%ad%98">#</a>
+</h2>
+<pre tabindex="0"><code>由于 MySQL 是边读变发，因此对于数据量很大的查询结果来说，不会再 server 端保存完整的结果集，所以，如果客户端读结果不及时，会堵住 MySQL 的查询过程，但是不会把内存打爆。
+InnoDB 引擎内部，由于有淘汰策略，InnoDB 管理 Buffer_Pool 使用的是改进的 LRU 算法，使用链表实现，实现上，按照 5:3 的比例把整个 LRU 链表分成了 young 区域和 old 区域。对冷数据的全扫描，影响也能做到可控制。
+</code></pre><h2 id="mysql-临时表的用法和特性">
+  MySQL 临时表的用法和特性?
+  <a class="anchor" href="#mysql-%e4%b8%b4%e6%97%b6%e8%a1%a8%e7%9a%84%e7%94%a8%e6%b3%95%e5%92%8c%e7%89%b9%e6%80%a7">#</a>
+</h2>
+<pre tabindex="0"><code>只对当前session可见。
+可以与普通表重名。
+增删改查用的是临时表。
+show tables 不显示普通表。
+在实际应用中，临时表一般用于处理比较复杂的计算逻辑。
+由于临时表是每个线程自己可见的，所以不需要考虑多个线程执行同一个处理时临时表的重名问题，在线程退出的时候，临时表会自动删除。
+使用union union all联合查询会产生临时表
+order by 和group by 子句不一样时产生临时表
+distinct 查询并且加上order by 时参数临时表
+from中子查询产生临时表
+</code></pre><h2 id="sql优化经验">
+  sql优化经验
+  <a class="anchor" href="#sql%e4%bc%98%e5%8c%96%e7%bb%8f%e9%aa%8c">#</a>
+</h2>
+<pre tabindex="0"><code>1.where 条件左侧 不要使用函数或表达式
+2.使用explain命令优化select查询
+3.只查询一条记录时，使用limit 1
+4.不要直接用select* ,而是明确查询字段。
+5.为每一个表设置一个id属性
+6.避免在where条件进行NULL判断
+7.避免where中使用！或&gt;
+8.使用between and代替in
+9.为搜索字段建立索引
+10.like左模糊查询不会走索引，like右模糊会走索引
+11.选择合适的字段，尽可能小，尽可能定长，尽可能整数
+12.字段设计尽可能使用not null
+</code></pre><h2 id="mysql-存储引擎介绍innodbmyisammemory">
+  MySQL 存储引擎介绍（InnoDB、MyISAM、MEMORY）?
+  <a class="anchor" href="#mysql-%e5%ad%98%e5%82%a8%e5%bc%95%e6%93%8e%e4%bb%8b%e7%bb%8dinnodbmyisammemory">#</a>
+</h2>
+<pre tabindex="0"><code>InnoDB 是事务型数据库的首选引擎，支持事务安全表 (ACID)，支持行锁定和外键。MySQL5.5.5 之后，InnoDB 作为默认存储引擎
+MyISAM 基于 ISAM 的存储引擎，并对其进行扩展。它是在 Web、数据存储和其他应用环境下最常用的存储引擎之一。MyISAM 拥有较高的插入、查询速度，但不支持事务。在 MySQL5.5.5 之前的版本中，MyISAM 是默认存储引擎
+MEMORY 存储引擎将表中的数据存储到内存中，为查询和引用其他表数据提供快速访问
+</code></pre><h2 id="都说-innodb-好那还要不要使用-memory-引擎">
+  都说 InnoDB 好，那还要不要使用 MEMORY 引擎？
+  <a class="anchor" href="#%e9%83%bd%e8%af%b4-innodb-%e5%a5%bd%e9%82%a3%e8%bf%98%e8%a6%81%e4%b8%8d%e8%a6%81%e4%bd%bf%e7%94%a8-memory-%e5%bc%95%e6%93%8e">#</a>
+</h2>
+<pre tabindex="0"><code>内存表就是使用 memory 引擎创建的表
+为什么我不建议你在生产环境上使用内存表。这里的原因主要包括两个方面：锁粒度问题；数据持久化问题。
+由于重启会丢数据，如果一个备库重启，会导致主备同步线程停止；如果主库跟这个备库是双 M 架构，还可能导致主库的内存表数据被删掉。
+</code></pre><h2 id="如果数据库误操作-如何执行数据恢复">
+  如果数据库误操作, 如何执行数据恢复?
+  <a class="anchor" href="#%e5%a6%82%e6%9e%9c%e6%95%b0%e6%8d%ae%e5%ba%93%e8%af%af%e6%93%8d%e4%bd%9c-%e5%a6%82%e4%bd%95%e6%89%a7%e8%a1%8c%e6%95%b0%e6%8d%ae%e6%81%a2%e5%a4%8d">#</a>
+</h2>
+<pre tabindex="0"><code>数据库在某个时候误操作，就可以找到距离误操作最近的时间节点的bin log，重放到临时数据库里，然后选择误删的数据节点，恢复到线上数据库。
+</code></pre><h2 id="mysql-是如何保证主备同步">
+  MySQL 是如何保证主备同步？
+  <a class="anchor" href="#mysql-%e6%98%af%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e4%b8%bb%e5%a4%87%e5%90%8c%e6%ad%a5">#</a>
+</h2>
+<pre tabindex="0"><code>主备关系的建立：
+一开始创建主备关系的时候，是由备库指定的，比如基于位点的主备关系，备库说“我要从binlog文件A的位置P”开始同步，主库就从这个指定的位置开始往后发。
+而主备关系搭建之后，是主库决定要发给数据给备库的，所以主库有新的日志也会发给备库。
+MySQL 主备切换流程：
+客户端读写都是直接访问A，而节点B是备库，只要将A的更新都同步过来，到本地执行就可以保证数据是相同的。
+当需要切换的时候就把节点换一下，A的节点B的备库
+一个事务完整的同步过程：
+备库B和主库A建立来了长链接，主库A内部专门线程用于维护了这个长链接。
+在备库B上通过changemaster命令设置主库A的IP端口用户名密码以及从哪个位置开始请求binlog包括文件名和日志偏移量
+在备库B上执行start-slave命令备库会启动两个线程：io_thread和sql_thread分别负责建立连接和读取中转日志进行解析执行
+备库读取主库传过来的binlog文件备库收到文件写到本地成为中转日志
+后来由于多线程复制方案的引入，sql_thread演化成了多个线程。
+</code></pre><h2 id="什么是主备延迟">
+  什么是主备延迟?
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e4%b8%bb%e5%a4%87%e5%bb%b6%e8%bf%9f">#</a>
+</h2>
+<pre tabindex="0"><code>主库和备库在执行同一个事务的时候出现时间差的问题，主要原因有：
+有些部署条件下，备库所在机器的性能要比主库性能差。
+备库的压力较大。
+大事务，一个主库上语句执行10分钟，那么这个事务可能会导致从库延迟10分钟。
+</code></pre><h2 id="为什么要有多线程复制策略">
+  为什么要有多线程复制策略？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e6%9c%89%e5%a4%9a%e7%ba%bf%e7%a8%8b%e5%a4%8d%e5%88%b6%e7%ad%96%e7%95%a5">#</a>
+</h2>
+<pre tabindex="0"><code>因为单线程复制的能力全面低于多线程复制，对于更新压力较大的主库，备库可能是一直追不上主库的，带来的现象就是备库上seconds_behind_master值越来越大。
+在实际应用中，建议使用可靠性优先策略，减少主备延迟，提升系统可用性，尽量减少大事务操作，把大事务拆分小事务。
+</code></pre><h2 id="mysql-的并行策略有哪些">
+  MySQL 的并行策略有哪些？
+  <a class="anchor" href="#mysql-%e7%9a%84%e5%b9%b6%e8%a1%8c%e7%ad%96%e7%95%a5%e6%9c%89%e5%93%aa%e4%ba%9b">#</a>
+</h2>
+<pre tabindex="0"><code>按表分发策略：如果两个事务更新不同的表，它们就可以并行。因为数据是存储在表里的，所以按表分发，可以保证两个 worker 不会更新同一行。缺点：如果碰到热点表，比如所有的更新事务都会涉及到某一个表的时候，所有事务都会被分配到同一个 worker 中，就变成单线程复制了。
+按行分发策略：如果两个事务没有更新相同的行，它们在备库上可以并行。如果两个事务没有更新相同的行，它们在备库上可以并行执行。显然，这个模式要求 binlog 格式必须是 row。缺点：相比于按表并行分发策略，按行并行策略在决定线程分发的时候，需要消耗更多的计算资源
+</code></pre><h2 id="mysql的一主一备和一主多从有什么区别">
+  MySQL的一主一备和一主多从有什么区别？
+  <a class="anchor" href="#mysql%e7%9a%84%e4%b8%80%e4%b8%bb%e4%b8%80%e5%a4%87%e5%92%8c%e4%b8%80%e4%b8%bb%e5%a4%9a%e4%bb%8e%e6%9c%89%e4%bb%80%e4%b9%88%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>在一主一备的双 M 架构里，主备切换只需要把客户端流量切到备库；而在一主多从架构里，主备切换除了要把客户端流量切到备库外，还需要把从库接到新主库上。
+</code></pre><h2 id="主库出问题如何解决">
+  主库出问题如何解决?
+  <a class="anchor" href="#%e4%b8%bb%e5%ba%93%e5%87%ba%e9%97%ae%e9%a2%98%e5%a6%82%e4%bd%95%e8%a7%a3%e5%86%b3">#</a>
+</h2>
+<pre tabindex="0"><code>基于位点的主备切换：存在找同步位点这个问题
+MySQL 5.6 版本引入了 GTID，彻底解决了这个困难。那么，GTID 到底是什么意思，又是如何解决找同步位点这个问题呢？
+GTID：全局事务 ID，是一个事务在提交的时候生成的，是这个事务的唯一标识；它由两部分组成，格式是：GTID=server_uuid:gno
+每个 MySQL 实例都维护了一个 GTID 集合，用来对应“这个实例执行过的所有事务”。
+在基于 GTID 的主备关系里，系统认为只要建立主备关系，就必须保证主库发给备库的日志是完整的。因此，如果实例 B 需要的日志已经不存在，A’就拒绝把日志发给 B。
+</code></pre><h2 id="mysql的并发链接和并发查询有什么区别">
+  MySQL的并发链接和并发查询有什么区别？
+  <a class="anchor" href="#mysql%e7%9a%84%e5%b9%b6%e5%8f%91%e9%93%be%e6%8e%a5%e5%92%8c%e5%b9%b6%e5%8f%91%e6%9f%a5%e8%af%a2%e6%9c%89%e4%bb%80%e4%b9%88%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>在执行show processlist的结果里，看到了几千个连接，指的是并发连接。而&#34;当前正在执行&#34;的语句，才是并发查询。
+并发连接数多影响的是内存，并发查询太高对CPU不利。一个机器的CPU核数有限，线程全冲进来，上下文切换的成本就会太高。
+所以需要设置参数：innodb_thread_concurrency 用来限制线程数，当线程数达到该参数，InnoDB就会认为线程数用完了，会阻止其他语句进入引擎执行。
+</code></pre><h2 id="短时间提高-mysql-性能的方法">
+  、短时间提高 MySQL 性能的方法?
+  <a class="anchor" href="#%e7%9f%ad%e6%97%b6%e9%97%b4%e6%8f%90%e9%ab%98-mysql-%e6%80%a7%e8%83%bd%e7%9a%84%e6%96%b9%e6%b3%95">#</a>
+</h2>
+<pre tabindex="0"><code>第一种方法：先处理掉那些占着连接但是不工作的线程。或者再考虑断开事务内空闲太久的连接。kill connection + id
+第二种方法：减少连接过程的消耗：慢查询性能问题在 MySQL 中，会引发性能问题的慢查询，大体有以下三种可能：索引没有设计好；SQL 语句没写好；MySQL 选错了索引（force index）
+</code></pre><h2 id="为什么-mysql-自增主键-id-不连续">
+  为什么 MySQL 自增主键 ID 不连续？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88-mysql-%e8%87%aa%e5%a2%9e%e4%b8%bb%e9%94%ae-id-%e4%b8%8d%e8%bf%9e%e7%bb%ad">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">唯一键冲突</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">事务回滚</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">自增主键的批量申请</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">深层次原因是</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">不判断自增主键是否存在</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">从而减少加锁的时间范围和粒度</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样能保持更高的性能</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">确保自增主键不能回退</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以才有自增主键不连续</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">自增主键怎么做到唯一性</span><span style="color:#960050;background-color:#1e0010">？</span><span style="color:#a6e22e">自增值加1来通过自增锁控制并发</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="innodb-为什么要用自增-id-作为主键">
+  InnoDB 为什么要用自增 ID 作为主键？
+  <a class="anchor" href="#innodb-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e7%94%a8%e8%87%aa%e5%a2%9e-id-%e4%bd%9c%e4%b8%ba%e4%b8%bb%e9%94%ae">#</a>
+</h2>
+<pre tabindex="0"><code>自增主键的插入模式，符合递增插入，每次都是追加操作，不涉及挪动记录，也不会触发叶子节点的分裂。
+每次插入新的记录就会顺序添加到当前索引节点的后续位置，当一页写满，就会自动开辟一个新的页。
+而有业务逻辑的字段做主键，不容易保证有序插入，由于每次插入主键的值近似于随机
+因此每次新纪录都要被插到现有索引页得中间某个位置， 频繁的移动、分页操作造成了大量的碎片，得到了不够紧凑的索引结构，写数据成本较高。
+</code></pre><h2 id="如何最快的复制一张表">
+  如何最快的复制一张表？
+  <a class="anchor" href="#%e5%a6%82%e4%bd%95%e6%9c%80%e5%bf%ab%e7%9a%84%e5%a4%8d%e5%88%b6%e4%b8%80%e5%bc%a0%e8%a1%a8">#</a>
+</h2>
+<pre tabindex="0"><code>为了避免对源表加读锁，更稳妥的方案是先将数据写到外部文本文件，然后再写回目标表
+一种方法是，使用 mysqldump 命令将数据导出成一组 INSERT 语句
+另一种方法是直接将结果导出成.csv 文件。MySQL 提供语法，用来将查询结果导出到服务端本地目录：select * from db1.t where a&gt;900 into outfile &#39;/server_tmp/t.csv&#39;;得到.csv 导出文件后，你就可以用下面的 load data 命令将数据导入到目标表 db2.t 中：load data infile &#39;/server_tmp/t.csv&#39; into table db2.t;
+物理拷贝：在 MySQL 5.6 版本引入了可传输表空间(transportable tablespace) 的方法，可以通过导出 + 导入表空间的方式，实现物理拷贝表的功能。
+</code></pre><h2 id="grant-和-flush-privileges语句">
+  grant 和 flush privileges语句?
+  <a class="anchor" href="#grant-%e5%92%8c-flush-privileges%e8%af%ad%e5%8f%a5">#</a>
+</h2>
+<pre tabindex="0"><code>grant语句会同时修改数据表和内存，判断权限的时候使用的内存数据，因此，规范使用是不需要加上 flush privileges 语句。
+flush privileges 语句本身会用数据表的数据重建一份内存权限数据，所以在权限数据可能存在不一致的情况下再使用。
+</code></pre><h2 id="要不要使用分区表">
+  要不要使用分区表？
+  <a class="anchor" href="#%e8%a6%81%e4%b8%8d%e8%a6%81%e4%bd%bf%e7%94%a8%e5%88%86%e5%8c%ba%e8%a1%a8">#</a>
+</h2>
+<pre tabindex="0"><code>分区并不是越细越好。实际上，单表或者单分区的数据一千万行，只要没有特别大的索引，对于现在的硬件能力来说都已经是小表了。
+分区也不要提前预留太多，在使用之前预先创建即可。比如，如果是按月分区，每年年底时再把下一年度的 12 个新分区创建上即可。对于没有数据的历史分区，要及时的 drop 掉。
+</code></pre><h2 id="join-用法">
+  join 用法?
+  <a class="anchor" href="#join-%e7%94%a8%e6%b3%95">#</a>
+</h2>
+<pre tabindex="0"><code>使用 left join 左边的表不一定是驱动表
+如果需要 left join 的语义，就不能把被驱动表的字段放在 where 条件里面做等值判断或不等值判断，必须都写在 on 里面
+标准的 group by 语句，是需要在 select 部分加一个聚合函数，比如select a,count(*) from t group by a order by null;
+</code></pre><h2 id="mysql-的锁">
+  MySQL 的锁?
+  <a class="anchor" href="#mysql-%e7%9a%84%e9%94%81">#</a>
+</h2>
+<pre tabindex="0"><code>锁解决两个问题：事务隔离，保证多用户环境下数据库完整性和一致性
+表级锁
+1.开销小，加锁块不会出现死锁，锁颗粒度大，发送锁冲突的概率最高，并发度最低
+2. 什么时候触发表锁？修改表结构时，批量删除
+行锁
+1.开销大，加锁慢，会出现死锁；锁颗粒度最小，发生锁冲突的概率最低，并发度也最高
+2.MySQL InnoDB默认行级锁。行级锁都是基于索引的，如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住
+页面锁
+1. 开锁和加锁时间介于表锁和行锁之间，会出现死锁，并发一般
+</code></pre><h2 id="mysql-什么情况触发表锁什么情况触发行锁">
+  mysql 什么情况触发表锁，什么情况触发行锁
+  <a class="anchor" href="#mysql-%e4%bb%80%e4%b9%88%e6%83%85%e5%86%b5%e8%a7%a6%e5%8f%91%e8%a1%a8%e9%94%81%e4%bb%80%e4%b9%88%e6%83%85%e5%86%b5%e8%a7%a6%e5%8f%91%e8%a1%8c%e9%94%81">#</a>
+</h2>
+<pre tabindex="0"><code>表锁：
+	修改表结构
+	LOCK TABLES语句显式锁定表，比如数据库备份和恢复操作
+行锁：
+	事务对某一行数据进行更新
+	事务对某一行数据进行读取
+
+ InnoDB
+</code></pre><h2 id="事务四个隔离级别">
+  事务四个隔离级别？
+  <a class="anchor" href="#%e4%ba%8b%e5%8a%a1%e5%9b%9b%e4%b8%aa%e9%9a%94%e7%a6%bb%e7%ba%a7%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>RU :Read uncommitted：(读未提交)：最低级别，任何情况都无法保证。可能产生脏读，不可重复读，幻读．
+RC :Read committed : (读已提交)：可避免脏读的发生。但是会导致不可重复读
+RR :Repeatable read: (可重复读)即在一个事务读取数据的过程中，其他事务不允许修改数据，所以解决了不可重复读．解决不可重复读，但是插入时会导致幻读。
+S  :Serializable (串行化)：最高的隔离级别,某一时刻只能有一个事务操作数据库
+</code></pre><h2 id="脏读-不可重复读-幻读">
+  脏读 不可重复读 幻读
+  <a class="anchor" href="#%e8%84%8f%e8%af%bb-%e4%b8%8d%e5%8f%af%e9%87%8d%e5%a4%8d%e8%af%bb-%e5%b9%bb%e8%af%bb">#</a>
+</h2>
+<pre tabindex="0"><code>1.脏读: ：事务A读取了事务B在此过程中修改了的该数据，但没有提交，此时事务A读取的可能是脏数据，一旦事务B回滚，事务A便是脏读．
+2.不可重复读：事务A需要在此次事务中多次读取同一个数据，在此期间，事务B修改了该数据并提交，导致事务A多次读取的数据不一样，因此称为不可重复读．
+3.幻读：一个事务因读取到另一个事务已提交的insert数据。导致对同一张表读取两次以上的结果不一致
+</code></pre><h2 id="什么是事务">
+  什么是事务
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e4%ba%8b%e5%8a%a1">#</a>
+</h2>
+<pre tabindex="0"><code>原子性（Atomicity）：事务最小工作单元，要么全成功，要么全失败 。
+一致性：（Consistency）：事务开始和结束后，数据库的完整性不会被破坏 。
+隔离性：（Isolation）：不同事务之间互不影响，四种隔离级别为RU（读未提交）、RC（读已提交）、RR（可重复读）、SERIALIZABLE （串行化）
+持久性：（Durability）：事务提交后，对数据的修改是永久性的，即使系统故障也不会丢失 。
+</code></pre><h2 id="死锁-乐观锁-悲观锁-共享锁-排他锁">
+  死锁 乐观锁 悲观锁 共享锁 排他锁？
+  <a class="anchor" href="#%e6%ad%bb%e9%94%81-%e4%b9%90%e8%a7%82%e9%94%81-%e6%82%b2%e8%a7%82%e9%94%81-%e5%85%b1%e4%ba%ab%e9%94%81-%e6%8e%92%e4%bb%96%e9%94%81">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// 死锁
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">因相互竞争</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而造成相互等待的现象</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">无外力作用</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">它们无法进行下去</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">使用共享锁</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">排他锁解决</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//乐观锁
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">假设不会发生并发冲突</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只在提交操作时检查是否违反数据完整性</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//悲观锁
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">假定会发生并发冲突</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">屏蔽一切可能违反数据完整性的操作</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">每次拿数据的时候都认为别人会修改</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以每次拿数据时都会上锁</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//共享锁 执行语句后 加上  lock in share mode
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">对于多个不同的事务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对同一资源共享同一个锁</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">一个门上一把锁</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">多个钥匙</span><span style="color:#960050;background-color:#1e0010">），</span><span style="color:#a6e22e">只用于select</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对于update</span>,<span style="color:#a6e22e">insert</span>,<span style="color:#a6e22e">delete语句会自动加排它锁</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//排他锁 串行化隔离 就行排他锁
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">对于多个不同的事务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对同一个资源只能有一把锁</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">一把锁</span>
+</span></span></code></pre></div><h2 id="死锁产生的4个必要条件">
+  死锁产生的4个必要条件？
+  <a class="anchor" href="#%e6%ad%bb%e9%94%81%e4%ba%a7%e7%94%9f%e7%9a%844%e4%b8%aa%e5%bf%85%e8%a6%81%e6%9d%a1%e4%bb%b6">#</a>
+</h2>
+<pre tabindex="0"><code>1.互斥条件:某段时间内某资源只有一个进程占用，其他进程请求资源只能等待，直到被占资源得到释放
+2.请求和保留条件：自己保持了一个资源，请求新的被别进程占用的资源，而阻塞，但是不释放自己保持的资源
+3.不剥夺条件：自己保持的资源，未使用完成前，不可剥夺，只能自己释放
+4.环路等待条件：发生死锁时，必然存在一个进程占用资源的环形链
+</code></pre><h2 id="什么时候使用乐观锁-悲观锁">
+  什么时候使用乐观锁 悲观锁？
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%97%b6%e5%80%99%e4%bd%bf%e7%94%a8%e4%b9%90%e8%a7%82%e9%94%81-%e6%82%b2%e8%a7%82%e9%94%81">#</a>
+</h2>
+<pre tabindex="0"><code>乐观锁适用于写比较少的情况下，即冲突真的很少发生的时候，这样可以省去了锁的开销，加大了系统的整个吞吐量
+但如果经常产生冲突，上层应用会不断的进行retry，这样反倒是降低了性能，所以这种情况下用悲观锁
+</code></pre><h2 id="为什么-mysql-会抖一下">
+  为什么 MySQL 会抖一下？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88-mysql-%e4%bc%9a%e6%8a%96%e4%b8%80%e4%b8%8b">#</a>
+</h2>
+<pre tabindex="0"><code>脏页会被后台线程自动 flush，也会由于数据页淘汰而触发 flush，而刷脏页的过程由于会占用资源，可能会让你的更新和查询语句的响应时间长一些。
+</code></pre><h2 id="char-varchar-区别">
+  char varchar 区别？
+  <a class="anchor" href="#char-varchar-%e5%8c%ba%e5%88%ab">#</a>
+</h2>
+<pre tabindex="0"><code>char 最大长度为255字节，定长，使用空格填充，查找效率高
+varchar字段的最大长度为65535个字节，不定长，查找效率低
+</code></pre><h2 id="为什么删除了表表文件的大小还是没变">
+  为什么删除了表，表文件的大小还是没变？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e5%88%a0%e9%99%a4%e4%ba%86%e8%a1%a8%e8%a1%a8%e6%96%87%e4%bb%b6%e7%9a%84%e5%a4%a7%e5%b0%8f%e8%bf%98%e6%98%af%e6%b2%a1%e5%8f%98">#</a>
+</h2>
+<pre tabindex="0"><code>数据项删除之后 InnoDB 某个页 page A 会被标记为可复用。
+delete 命令把整个表的数据删除，结果就是，所有的数据页都会被标记为可复用。但是磁盘上，文件不会变小。
+经过大量增删改的表，都是可能是存在空洞的。这些空洞也占空间所以，如果能够把这些空洞去掉，就能达到收缩表空间的目的。
+重建表，就可以达到这样的目的。可以使用 alter table A engine=InnoDB 命令来重建表
+</code></pre><h2 id="count实现方式以及各种-count-对比">
+  count(*)实现方式以及各种 count 对比?
+  <a class="anchor" href="#count%e5%ae%9e%e7%8e%b0%e6%96%b9%e5%bc%8f%e4%bb%a5%e5%8f%8a%e5%90%84%e7%a7%8d-count-%e5%af%b9%e6%af%94">#</a>
+</h2>
+<pre tabindex="0"><code>对于 count(主键 id) 来说，InnoDB 引擎会遍历整张表，把每一行的 id 值都取出来，返回给 server 层。server 层拿到 id 后，判断是不可能为空的，就按行累加。
+对于 count(1) 来说，InnoDB 引擎遍历整张表，但不取值。server 层对于返回的每一行，放一个数字“1”进去，判断是不可能为空的，按行累加。单看这两个用法的差别的话，你能对比出来，count(1) 执行得要比 count(主键 id) 快。因为从引擎返回 id 会涉及到解析数据行，以及拷贝字段值的操作。
+对于 count(字段) 来说：如果这个“字段”是定义为 not null 的话，一行行地从记录里面读出这个字段，判断不能为 null，按行累加；如果这个“字段”定义允许为 null，那么执行的时候，判断到有可能是 null，还要把值取出来再判断一下，不是 null 才累加。也就是前面的第一条原则，server 层要什么字段，InnoDB 就返回什么字段。
+但是 count * 是例外，并不会把全部字段取出来，而是专门做了优化，不取值。count(*) 肯定不是 null，按行累加。
+所以结论是：按照效率排序的话，count(字段)&lt;count(主键 id)&lt;count(1)≈count(*)，所以建议尽量使用 count(*)。
+</code></pre><h2 id="百万级别或以上的数据如何删除">
+  百万级别或以上的数据如何删除
+  <a class="anchor" href="#%e7%99%be%e4%b8%87%e7%ba%a7%e5%88%ab%e6%88%96%e4%bb%a5%e4%b8%8a%e7%9a%84%e6%95%b0%e6%8d%ae%e5%a6%82%e4%bd%95%e5%88%a0%e9%99%a4">#</a>
+</h2>
+<pre tabindex="0"><code>对数据进行 增加 删除 修改时 会产生额外对索引文件的操作，这会消耗I/O,降低增删改的效率
+1.先删除索引
+2.删除无用数据
+3.重新创建索引
+</code></pre><h2 id="什么是最左匹配原则">
+  什么是最左匹配原则
+  <a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e6%9c%80%e5%b7%a6%e5%8c%b9%e9%85%8d%e5%8e%9f%e5%88%99">#</a>
+</h2>
+<pre tabindex="0"><code>创建多列索引时，where子句使用频繁的一列放到最左边
+</code></pre><ol start="46">
+<li>
+<p>百万级别或以上的数据，你是如何删除的？
+我们想要删除百万数据的时候可以先删除索引
+然后批量删除其中无用数据
+删除完成后重新创建索引。</p>
+</li>
+<li>
+<p>什么是最左前缀原则？什么是最左匹配原则？
+最左前缀原则，就是最左优先，在创建多列索引时，要根据业务需求，where子句中使用最频繁的一列放在最左边。
+当我们创建一个组合索引的时候，如(k1,k2,k3)，相当于创建了（k1）、(k1,k2)和(k1,k2,k3)三个索引，这就是最左匹配原则。。</p>
+</li>
+</ol>
+<h2 id="100亿的数据找出前10大的数内存有限">
+  100亿的数据找出前10大的数，内存有限
+  <a class="anchor" href="#100%e4%ba%bf%e7%9a%84%e6%95%b0%e6%8d%ae%e6%89%be%e5%87%ba%e5%89%8d10%e5%a4%a7%e7%9a%84%e6%95%b0%e5%86%85%e5%ad%98%e6%9c%89%e9%99%90">#</a>
+</h2>
+<pre tabindex="0"><code>数据分割成适当大小的块，然后对每个块进行排序
+</code></pre><h2 id="用过gorm如果一张上百万的数据的表要新建一个字段的索引如何保证线上的服务尽量少的被影响">
+  用过gorm，如果一张上百万的数据的表，要新建一个字段的索引，如何保证线上的服务尽量少的被影响
+  <a class="anchor" href="#%e7%94%a8%e8%bf%87gorm%e5%a6%82%e6%9e%9c%e4%b8%80%e5%bc%a0%e4%b8%8a%e7%99%be%e4%b8%87%e7%9a%84%e6%95%b0%e6%8d%ae%e7%9a%84%e8%a1%a8%e8%a6%81%e6%96%b0%e5%bb%ba%e4%b8%80%e4%b8%aa%e5%ad%97%e6%ae%b5%e7%9a%84%e7%b4%a2%e5%bc%95%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e7%ba%bf%e4%b8%8a%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%b0%bd%e9%87%8f%e5%b0%91%e7%9a%84%e8%a2%ab%e5%bd%b1%e5%93%8d">#</a>
+</h2>
+<pre tabindex="0"><code>在非高峰期进行操作,比如深夜
+分批次添加索引：
+监控数据库性能：
+预先测试：
+</code></pre><h2 id="heading">
+  
+  <a class="anchor" href="#heading">#</a>
+</h2>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#关系型和非关系型数据库的区别">关系型和非关系型数据库的区别？</a></li>
+    <li><a href="#详细说一下一条-mysql-语句执行的步骤">详细说一下一条 MySQL 语句执行的步骤？</a></li>
+    <li><a href="#怎么理解数据库的索引">怎么理解数据库的索引？</a></li>
+    <li><a href="#mysql-索引的优缺点">MySQL 索引的优缺点？</a></li>
+    <li><a href="#索引的三种常见底层数据结构以及优缺点">索引的三种常见底层数据结构以及优缺点</a></li>
+    <li><a href="#索引的常见类型以及它是如何发挥作用的">索引的常见类型以及它是如何发挥作用的？</a></li>
+    <li><a href="#什么时聚簇索引何时用聚簇非聚簇索引">什么时聚簇索引何时用聚簇非聚簇索引？</a></li>
+    <li><a href="#索引的几种类型">索引的几种类型？</a></li>
+    <li><a href="#mysql-存储引擎-myisam-与-innodb-区别">MySQL 存储引擎 MyISAM 与 InnoDB 区别</a></li>
+    <li><a href="#myisam-和-innodb-实现-b-树索引方式的区别是什么">MyISAM 和 InnoDB 实现 B 树索引方式的区别是什么？</a></li>
+    <li><a href="#b树和b树有什么区别">B树和B+树有什么区别</a></li>
+    <li><a href="#union-union-all-区别">union union all 区别？</a></li>
+    <li><a href="#innodb-为什么设计-b-树索引">InnoDB 为什么设计 B+ 树索引？</a></li>
+    <li><a href="#为什么选择b数">为什么选择B+数</a></li>
+    <li><a href="#为什么用b树不用b树">为什么用b+树不用b树</a></li>
+    <li><a href="#幻读是怎么解决的">幻读是怎么解决的</a></li>
+    <li><a href="#redoundo的作用和实现">redo，undo的作用和实现</a></li>
+    <li><a href="#普通索引还是唯一索引">普通索引还是唯一索引？</a></li>
+    <li><a href="#什么是覆盖索引和索引下推">什么是覆盖索引和索引下推？</a></li>
+    <li><a href="#什么是索引">什么是索引？</a></li>
+    <li><a href="#哪些操作会导致索引失效">哪些操作会导致索引失效？</a></li>
+    <li><a href="#字符串加索引">字符串加索引?</a></li>
+    <li><a href="#mysql-的-change-buffer-是什么">MySQL 的 change buffer 是什么？</a></li>
+    <li><a href="#mysql-是如何判断一行扫描数的">MySQL 是如何判断一行扫描数的？</a></li>
+    <li><a href="#mysql-的-redo-log-和-binlog-区别">MySQL 的 redo log 和 binlog 区别？</a></li>
+    <li><a href="#为什么需要-redo-log">为什么需要 redo log？</a></li>
+    <li><a href="#为什么-redo-log-具有-crash-safe-的能力是-binlog-无法替代的">为什么 redo log 具有 crash-safe 的能力，是 binlog 无法替代的？</a></li>
+    <li><a href="#当数据库-crash-后如何恢复未刷盘的数据到内存中">当数据库 crash 后，如何恢复未刷盘的数据到内存中？</a></li>
+    <li><a href="#redo-log-写入方式">redo log 写入方式？</a></li>
+    <li><a href="#redo-log-的执行流程">redo log 的执行流程?</a></li>
+    <li><a href="#inlog-的概念是什么起到什么作用-可以保证-crash-safe-吗">inlog 的概念是什么，起到什么作用， 可以保证 crash-safe 吗?</a></li>
+    <li><a href="#什么是两阶段提交">什么是两阶段提交？</a></li>
+    <li><a href="#mysql-怎么知道-binlog-是完整的">MySQL 怎么知道 binlog 是完整的?</a></li>
+    <li><a href="#什么是-wal-技术有什么优点">什么是 WAL 技术，有什么优点？</a></li>
+    <li><a href="#binlog-日志的三种格式">binlog 日志的三种格式</a></li>
+    <li><a href="#原本可以执行得很快的-sql-语句执行速度却比预期的慢很多原因是什么如何解决">原本可以执行得很快的 SQL 语句，执行速度却比预期的慢很多，原因是什么？如何解决？</a></li>
+    <li><a href="#innodb-数据页结构">InnoDB 数据页结构?</a></li>
+    <li><a href="#mysql-是如何保证数据不丢失的">MySQL 是如何保证数据不丢失的？</a></li>
+    <li><a href="#误删数据怎么办">误删数据怎么办？</a></li>
+    <li><a href="#droptruncate-和-delete-的区别">drop、truncate 和 delete 的区别</a></li>
+    <li><a href="#在-mysql-中有两个-kill-命令">在 MySQL 中有两个 kill 命令?</a></li>
+    <li><a href="#如何理解-mysql-的边读边发">如何理解 MySQL 的边读边发</a></li>
+    <li><a href="#mysql-的大表查询为什么不会爆内存">MySQL 的大表查询为什么不会爆内存？</a></li>
+    <li><a href="#mysql-临时表的用法和特性">MySQL 临时表的用法和特性?</a></li>
+    <li><a href="#sql优化经验">sql优化经验</a></li>
+    <li><a href="#mysql-存储引擎介绍innodbmyisammemory">MySQL 存储引擎介绍（InnoDB、MyISAM、MEMORY）?</a></li>
+    <li><a href="#都说-innodb-好那还要不要使用-memory-引擎">都说 InnoDB 好，那还要不要使用 MEMORY 引擎？</a></li>
+    <li><a href="#如果数据库误操作-如何执行数据恢复">如果数据库误操作, 如何执行数据恢复?</a></li>
+    <li><a href="#mysql-是如何保证主备同步">MySQL 是如何保证主备同步？</a></li>
+    <li><a href="#什么是主备延迟">什么是主备延迟?</a></li>
+    <li><a href="#为什么要有多线程复制策略">为什么要有多线程复制策略？</a></li>
+    <li><a href="#mysql-的并行策略有哪些">MySQL 的并行策略有哪些？</a></li>
+    <li><a href="#mysql的一主一备和一主多从有什么区别">MySQL的一主一备和一主多从有什么区别？</a></li>
+    <li><a href="#主库出问题如何解决">主库出问题如何解决?</a></li>
+    <li><a href="#mysql的并发链接和并发查询有什么区别">MySQL的并发链接和并发查询有什么区别？</a></li>
+    <li><a href="#短时间提高-mysql-性能的方法">、短时间提高 MySQL 性能的方法?</a></li>
+    <li><a href="#为什么-mysql-自增主键-id-不连续">为什么 MySQL 自增主键 ID 不连续？</a></li>
+    <li><a href="#innodb-为什么要用自增-id-作为主键">InnoDB 为什么要用自增 ID 作为主键？</a></li>
+    <li><a href="#如何最快的复制一张表">如何最快的复制一张表？</a></li>
+    <li><a href="#grant-和-flush-privileges语句">grant 和 flush privileges语句?</a></li>
+    <li><a href="#要不要使用分区表">要不要使用分区表？</a></li>
+    <li><a href="#join-用法">join 用法?</a></li>
+    <li><a href="#mysql-的锁">MySQL 的锁?</a></li>
+    <li><a href="#mysql-什么情况触发表锁什么情况触发行锁">mysql 什么情况触发表锁，什么情况触发行锁</a></li>
+    <li><a href="#事务四个隔离级别">事务四个隔离级别？</a></li>
+    <li><a href="#脏读-不可重复读-幻读">脏读 不可重复读 幻读</a></li>
+    <li><a href="#什么是事务">什么是事务</a></li>
+    <li><a href="#死锁-乐观锁-悲观锁-共享锁-排他锁">死锁 乐观锁 悲观锁 共享锁 排他锁？</a></li>
+    <li><a href="#死锁产生的4个必要条件">死锁产生的4个必要条件？</a></li>
+    <li><a href="#什么时候使用乐观锁-悲观锁">什么时候使用乐观锁 悲观锁？</a></li>
+    <li><a href="#为什么-mysql-会抖一下">为什么 MySQL 会抖一下？</a></li>
+    <li><a href="#char-varchar-区别">char varchar 区别？</a></li>
+    <li><a href="#为什么删除了表表文件的大小还是没变">为什么删除了表，表文件的大小还是没变？</a></li>
+    <li><a href="#count实现方式以及各种-count-对比">count(*)实现方式以及各种 count 对比?</a></li>
+    <li><a href="#百万级别或以上的数据如何删除">百万级别或以上的数据如何删除</a></li>
+    <li><a href="#什么是最左匹配原则">什么是最左匹配原则</a></li>
+    <li><a href="#100亿的数据找出前10大的数内存有限">100亿的数据找出前10大的数，内存有限</a></li>
+    <li><a href="#用过gorm如果一张上百万的数据的表要新建一个字段的索引如何保证线上的服务尽量少的被影响">用过gorm，如果一张上百万的数据的表，要新建一个字段的索引，如何保证线上的服务尽量少的被影响</a></li>
+    <li><a href="#heading"></a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

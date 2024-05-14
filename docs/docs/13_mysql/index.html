@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="mysql基础 # 事务ACID # A:Atomicity (原子性)：事务中的操作要么都发生，要么都不发生。 C:Consistency(一致性)：事务开始之前和事务结束以后，数据库的完整性约束没有被破坏。 I:Isolation(隔离性)：多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果。 D:Durability(持久性)：，该事务所对数据库所作的更改便持久的保存在数据库之中，并不会被回滚。 事务四种隔离级别 # RU :Read uncommitted：(读未提交)：最低级别，任何情况都无法保证。可能产生脏读，不可重复读，幻读． RC :Read committed : (读已提交)：可避免脏读的发生。 RR :Repeatable read: (可重复读)即在一个事务读取数据的过程中，其他事务不允许修改数据，所以解决了不可重复读． S :Serializable (串行化)：最高的隔离级别,某一时刻只能有一个事务操作数据库 脏读 不可重复读 幻读 # 脏读: ：事务A读取数据库某一数据，事务B在此过程中修改了该数据，但没有提交，此时事务A读取的可能是脏数据，一旦事务B回滚，事务A便是脏读． 不可重复读：事务A需要在此次事务中多次读取同一个数据，在此期间，事务B修改了该数据并提交，导致事务A多次读取的数据不一样，因此称为不可重复读． 幻读：涉及两个数据库的更新操作，比如事务A更新整个数据库，还未更新完时，事务B在此过程中插入一行，在此之后，事务A发现数据库中还有一行没有更新，好像产生了幻觉一样． 乐观锁 悲观锁 # //乐观锁 假设不会发生并发冲突，只在提交操作时检查是否违反数据完整性。 为数据增加一个版本标识，一般是通过为数据库表增加一个数字类型的 “version” 字段来实现。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。当我们提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对，如果数据库表当前版本号与第一次取出来的version值相等，则予以更新，否则认为是过期数据 //悲观锁 假定会发生并发冲突，屏蔽一切可能违反数据完整性的操作 table中增加一个字段，名称无所谓，字段类型使用时间戳（timestamp）, 和上面的version类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致则OK，否则就是版本冲突 每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。 乐观锁、悲观锁区别？ # 乐观锁适用于写比较少的情况下，即冲突真的很少发生的时候，这样可以省去了锁的开销，加大了系统的整个吞吐量 但如果经常产生冲突，上层应用会不断的进行retry，这样反倒是降低了性能，所以这种情况下用悲观锁 共享锁 # //执行语句后 加上 lock in share mode 对于多个不同的事务，对同一资源共享同一个锁（一个门上一把锁，多个钥匙），只用于select，对于update,insert,delete语句会自动加排它锁 排他锁 # //执行语句后加上 for update 对于多个不同的事务，对同一个资源只能有一把锁。 行锁 # MySQL InnoDB默认行级锁。行级锁都是基于索引的，如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="mysql" />
+<meta property="og:description" content="mysql基础 # 事务ACID # A:Atomicity (原子性)：事务中的操作要么都发生，要么都不发生。 C:Consistency(一致性)：事务开始之前和事务结束以后，数据库的完整性约束没有被破坏。 I:Isolation(隔离性)：多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果。 D:Durability(持久性)：，该事务所对数据库所作的更改便持久的保存在数据库之中，并不会被回滚。 事务四种隔离级别 # RU :Read uncommitted：(读未提交)：最低级别，任何情况都无法保证。可能产生脏读，不可重复读，幻读． RC :Read committed : (读已提交)：可避免脏读的发生。 RR :Repeatable read: (可重复读)即在一个事务读取数据的过程中，其他事务不允许修改数据，所以解决了不可重复读． S :Serializable (串行化)：最高的隔离级别,某一时刻只能有一个事务操作数据库 脏读 不可重复读 幻读 # 脏读: ：事务A读取数据库某一数据，事务B在此过程中修改了该数据，但没有提交，此时事务A读取的可能是脏数据，一旦事务B回滚，事务A便是脏读． 不可重复读：事务A需要在此次事务中多次读取同一个数据，在此期间，事务B修改了该数据并提交，导致事务A多次读取的数据不一样，因此称为不可重复读． 幻读：涉及两个数据库的更新操作，比如事务A更新整个数据库，还未更新完时，事务B在此过程中插入一行，在此之后，事务A发现数据库中还有一行没有更新，好像产生了幻觉一样． 乐观锁 悲观锁 # //乐观锁 假设不会发生并发冲突，只在提交操作时检查是否违反数据完整性。 为数据增加一个版本标识，一般是通过为数据库表增加一个数字类型的 “version” 字段来实现。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。当我们提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对，如果数据库表当前版本号与第一次取出来的version值相等，则予以更新，否则认为是过期数据 //悲观锁 假定会发生并发冲突，屏蔽一切可能违反数据完整性的操作 table中增加一个字段，名称无所谓，字段类型使用时间戳（timestamp）, 和上面的version类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致则OK，否则就是版本冲突 每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。 乐观锁、悲观锁区别？ # 乐观锁适用于写比较少的情况下，即冲突真的很少发生的时候，这样可以省去了锁的开销，加大了系统的整个吞吐量 但如果经常产生冲突，上层应用会不断的进行retry，这样反倒是降低了性能，所以这种情况下用悲观锁 共享锁 # //执行语句后 加上 lock in share mode 对于多个不同的事务，对同一资源共享同一个锁（一个门上一把锁，多个钥匙），只用于select，对于update,insert,delete语句会自动加排它锁 排他锁 # //执行语句后加上 for update 对于多个不同的事务，对同一个资源只能有一把锁。 行锁 # MySQL InnoDB默认行级锁。行级锁都是基于索引的，如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/13_mysql/" /><meta property="article:section" content="docs" />
+
+
+
+<title>mysql | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/13_mysql/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="active">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>mysql</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#mysql基础">mysql基础</a>
+      <ul>
+        <li><a href="#事务acid">事务ACID</a></li>
+        <li><a href="#事务四种隔离级别">事务四种隔离级别</a></li>
+        <li><a href="#脏读-不可重复读-幻读">脏读 不可重复读 幻读</a></li>
+        <li><a href="#乐观锁-悲观锁">乐观锁 悲观锁</a></li>
+        <li><a href="#乐观锁悲观锁区别">乐观锁、悲观锁区别？</a></li>
+        <li><a href="#共享锁">共享锁</a></li>
+        <li><a href="#排他锁">排他锁</a></li>
+        <li><a href="#行锁">行锁</a></li>
+        <li><a href="#表锁">表锁</a></li>
+      </ul>
+    </li>
+    <li><a href="#函数">函数</a></li>
+    <li><a href="#查询语法">查询语法</a>
+      <ul>
+        <li><a href="#order-by-descasc--排序-降升放置最后">order by desc/asc  :排序 降/升（放置最后）</a></li>
+        <li><a href="#limit">limit</a></li>
+        <li><a href="#join">join</a></li>
+        <li><a href="#distinct">distinct</a></li>
+        <li><a href="#in">in</a></li>
+        <li><a href="#like">like</a></li>
+        <li><a href="#连接两个字段成一个值去除空格">连接两个字段成一个值，去除空格</a></li>
+        <li><a href="#group-by">group by</a></li>
+        <li><a href="#子查询">子查询</a></li>
+        <li><a href="#insert">insert</a></li>
+        <li><a href="#update">update</a></li>
+        <li><a href="#delete">delete</a></li>
+      </ul>
+    </li>
+    <li><a href="#创建表结构">创建表结构</a></li>
+    <li><a href="#设置地区时间">设置地区时间</a></li>
+    <li><a href="#更改表">更改表</a></li>
+    <li><a href="#删除表">删除表</a></li>
+    <li><a href="#高级查询">高级查询</a>
+      <ul>
+        <li><a href="#case-when">case when</a></li>
+        <li><a href="#join-1">join</a></li>
+        <li><a href="#多表子查询">多表+子查询</a></li>
+        <li><a href="#查询-参数是否是表字段的子串">查询 参数是否是表字段的子串</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="mysql基础">
+  mysql基础
+  <a class="anchor" href="#mysql%e5%9f%ba%e7%a1%80">#</a>
+</h2>
+<h3 id="事务acid">
+  事务ACID
+  <a class="anchor" href="#%e4%ba%8b%e5%8a%a1acid">#</a>
+</h3>
+<pre tabindex="0"><code>A:Atomicity (原子性)：事务中的操作要么都发生，要么都不发生。
+C:Consistency(一致性)：事务开始之前和事务结束以后，数据库的完整性约束没有被破坏。
+I:Isolation(隔离性)：多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果。
+D:Durability(持久性)：，该事务所对数据库所作的更改便持久的保存在数据库之中，并不会被回滚。
+</code></pre><h3 id="事务四种隔离级别">
+  事务四种隔离级别
+  <a class="anchor" href="#%e4%ba%8b%e5%8a%a1%e5%9b%9b%e7%a7%8d%e9%9a%94%e7%a6%bb%e7%ba%a7%e5%88%ab">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">RU</span> :<span style="color:#a6e22e">Read</span> <span style="color:#a6e22e">uncommitted</span><span style="color:#960050;background-color:#1e0010">：</span>(<span style="color:#a6e22e">读未提交</span>)<span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">最低级别</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">任何情况都无法保证</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">可能产生脏读</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不可重复读</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">幻读</span><span style="color:#960050;background-color:#1e0010">．</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">RC</span> :<span style="color:#a6e22e">Read</span> <span style="color:#a6e22e">committed</span> : (<span style="color:#a6e22e">读已提交</span>)<span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">可避免脏读的发生</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">RR</span> :<span style="color:#a6e22e">Repeatable</span> <span style="color:#a6e22e">read</span>: (<span style="color:#a6e22e">可重复读</span>)<span style="color:#a6e22e">即在一个事务读取数据的过程中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其他事务不允许修改数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以解决了不可重复读</span><span style="color:#960050;background-color:#1e0010">．</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">S</span>  :<span style="color:#a6e22e">Serializable</span> (<span style="color:#a6e22e">串行化</span>)<span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">最高的隔离级别</span>,<span style="color:#a6e22e">某一时刻只能有一个事务操作数据库</span>
+</span></span></code></pre></div><h3 id="脏读-不可重复读-幻读">
+  脏读 不可重复读 幻读
+  <a class="anchor" href="#%e8%84%8f%e8%af%bb-%e4%b8%8d%e5%8f%af%e9%87%8d%e5%a4%8d%e8%af%bb-%e5%b9%bb%e8%af%bb">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">脏读</span>: <span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">事务A读取数据库某一数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务B在此过程中修改了该数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但没有提交</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">此时事务A读取的可能是脏数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">一旦事务B回滚</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务A便是脏读</span><span style="color:#960050;background-color:#1e0010">．</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">不可重复读</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">事务A需要在此次事务中多次读取同一个数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在此期间</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务B修改了该数据并提交</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">导致事务A多次读取的数据不一样</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">因此称为不可重复读</span><span style="color:#960050;background-color:#1e0010">．</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">幻读</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">涉及两个数据库的更新操作</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">比如事务A更新整个数据库</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">还未更新完时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务B在此过程中插入一行</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">在此之后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">事务A发现数据库中还有一行没有更新</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">好像产生了幻觉一样</span><span style="color:#960050;background-color:#1e0010">．</span>
+</span></span></code></pre></div><h3 id="乐观锁-悲观锁">
+  乐观锁 悲观锁
+  <a class="anchor" href="#%e4%b9%90%e8%a7%82%e9%94%81-%e6%82%b2%e8%a7%82%e9%94%81">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//乐观锁
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">假设不会发生并发冲突</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只在提交操作时检查是否违反数据完整性</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">为数据增加一个版本标识</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">一般是通过为数据库表增加一个数字类型的</span> <span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">version</span><span style="color:#960050;background-color:#1e0010">”</span> <span style="color:#a6e22e">字段来实现</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">当读取数据时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">将version字段的值一同读出</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">数据每更新一次</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对此version值加一</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">当我们提交更新的时候</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果数据库表当前版本号与第一次取出来的version值相等</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">则予以更新</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">否则认为是过期数据</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//悲观锁
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">假定会发生并发冲突</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">屏蔽一切可能违反数据完整性的操作</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">table中增加一个字段</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">名称无所谓</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">字段类型使用时间戳</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">timestamp</span><span style="color:#960050;background-color:#1e0010">）</span>, <span style="color:#a6e22e">和上面的version类似</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果一致则OK</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">否则就是版本冲突</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">每次去拿数据的时候都认为别人会修改</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以每次在拿数据的时候都会上锁</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样别人想拿这个数据就会block直到它拿到锁</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h3 id="乐观锁悲观锁区别">
+  乐观锁、悲观锁区别？
+  <a class="anchor" href="#%e4%b9%90%e8%a7%82%e9%94%81%e6%82%b2%e8%a7%82%e9%94%81%e5%8c%ba%e5%88%ab">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">乐观锁适用于写比较少的情况下</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">即冲突真的很少发生的时候</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样可以省去了锁的开销</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">加大了系统的整个吞吐量</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">但如果经常产生冲突</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">上层应用会不断的进行retry</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样反倒是降低了性能</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以这种情况下用悲观锁</span>
+</span></span></code></pre></div><h3 id="共享锁">
+  共享锁
+  <a class="anchor" href="#%e5%85%b1%e4%ba%ab%e9%94%81">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//执行语句后 加上  lock in share mode
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">对于多个不同的事务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对同一资源共享同一个锁</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">一个门上一把锁</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">多个钥匙</span><span style="color:#960050;background-color:#1e0010">），</span><span style="color:#a6e22e">只用于select</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对于update</span>,<span style="color:#a6e22e">insert</span>,<span style="color:#a6e22e">delete语句会自动加排它锁</span>
+</span></span></code></pre></div><h3 id="排他锁">
+  排他锁
+  <a class="anchor" href="#%e6%8e%92%e4%bb%96%e9%94%81">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//执行语句后加上 for update
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">对于多个不同的事务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对同一个资源只能有一把锁</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h3 id="行锁">
+  行锁
+  <a class="anchor" href="#%e8%a1%8c%e9%94%81">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">MySQL</span> <span style="color:#a6e22e">InnoDB默认行级锁</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">行级锁都是基于索引的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果一条SQL语句用不到索引是不会使用行级锁的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会使用表级锁把整张表锁住</span>.
+</span></span></code></pre></div><h3 id="表锁">
+  表锁
+  <a class="anchor" href="#%e8%a1%a8%e9%94%81">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">给这个表加上锁</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="函数">
+  函数
+  <a class="anchor" href="#%e5%87%bd%e6%95%b0">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span> <span style="color:#66d9ef">substring</span>() <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">提取字符串一部分</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">convert</span>()<span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">数据类型转换</span>
+</span></span><span style="display:flex;"><span> len()<span style="color:#960050;background-color:#1e0010">字符串长度</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">lower</span>()<span style="color:#960050;background-color:#1e0010">字符串转为小写</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">upper</span>()<span style="color:#960050;background-color:#1e0010">字符串转为大写</span>
+</span></span><span style="display:flex;"><span> ltrim()<span style="color:#960050;background-color:#1e0010">去除字符串左空格</span>
+</span></span><span style="display:flex;"><span> rtrim()<span style="color:#960050;background-color:#1e0010">去除字符串右空格</span>
+</span></span><span style="display:flex;"><span> substr()<span style="color:#960050;background-color:#1e0010">提取字符串部分</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">avg</span>()<span style="color:#960050;background-color:#1e0010">某列平均值</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">count</span>()<span style="color:#960050;background-color:#1e0010">某列行数</span> <span style="color:#f92672">//</span><span style="color:#66d9ef">count</span>(<span style="color:#f92672">*</span>)<span style="color:#960050;background-color:#1e0010">不过滤</span><span style="color:#66d9ef">null</span>,<span style="color:#66d9ef">count</span>(age)<span style="color:#960050;background-color:#1e0010">过滤</span>age的null
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">max</span>()<span style="color:#960050;background-color:#1e0010">某列最大值</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">min</span>()<span style="color:#960050;background-color:#1e0010">某列最小值</span>
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">sum</span>()<span style="color:#960050;background-color:#1e0010">求和</span>
+</span></span></code></pre></div><h2 id="查询语法">
+  查询语法
+  <a class="anchor" href="#%e6%9f%a5%e8%af%a2%e8%af%ad%e6%b3%95">#</a>
+</h2>
+<h3 id="order-by-descasc--排序-降升放置最后">
+  order by desc/asc  :排序 降/升（放置最后）
+  <a class="anchor" href="#order-by-descasc--%e6%8e%92%e5%ba%8f-%e9%99%8d%e5%8d%87%e6%94%be%e7%bd%ae%e6%9c%80%e5%90%8e">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> <span style="color:#66d9ef">user</span>,age <span style="color:#66d9ef">desc</span>;
+</span></span></code></pre></div><h3 id="limit">
+  limit
+  <a class="anchor" href="#limit">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">1</span>;             <span style="color:#f92672">//</span>:<span style="color:#960050;background-color:#1e0010">取一个</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">3</span>;           <span style="color:#f92672">//</span>:<span style="color:#960050;background-color:#1e0010">从</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">开始，取</span><span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">个</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">3</span> <span style="color:#66d9ef">offset</span> <span style="color:#ae81ff">1</span>;    <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">从第</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">行开始，取三个</span>(<span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">3</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">3</span> <span style="color:#66d9ef">offset</span> <span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><h3 id="join">
+  join
+  <a class="anchor" href="#join">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> a.<span style="color:#f92672">*</span>,b.<span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> test1 <span style="color:#66d9ef">as</span> a <span style="color:#66d9ef">left</span> <span style="color:#66d9ef">join</span>  test2 <span style="color:#66d9ef">as</span> b <span style="color:#66d9ef">on</span> a.<span style="color:#66d9ef">user</span> <span style="color:#f92672">=</span>b.<span style="color:#66d9ef">user</span> <span style="color:#66d9ef">where</span> a.age <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">20</span> <span style="color:#f92672">//</span>:<span style="color:#66d9ef">left</span> <span style="color:#66d9ef">join</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> a.<span style="color:#f92672">*</span>,b.<span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> test1 <span style="color:#66d9ef">as</span> a <span style="color:#66d9ef">right</span> <span style="color:#66d9ef">join</span> test2 <span style="color:#66d9ef">as</span> b <span style="color:#66d9ef">on</span> a.<span style="color:#66d9ef">user</span> <span style="color:#f92672">=</span>b.<span style="color:#66d9ef">user</span> <span style="color:#66d9ef">where</span> a.age <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">20</span> <span style="color:#f92672">//</span>:<span style="color:#66d9ef">right</span> <span style="color:#66d9ef">join</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> a.<span style="color:#f92672">*</span>,b.<span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> test1 <span style="color:#66d9ef">as</span> a <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> test2 <span style="color:#66d9ef">as</span> b <span style="color:#66d9ef">on</span> a.<span style="color:#66d9ef">user</span> <span style="color:#f92672">=</span>b.<span style="color:#66d9ef">user</span> <span style="color:#66d9ef">where</span> a.age <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">20</span> <span style="color:#f92672">//</span>:<span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span>
+</span></span></code></pre></div><h3 id="distinct">
+  distinct
+  <a class="anchor" href="#distinct">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">distinct</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">去重</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">distinct</span> <span style="color:#66d9ef">user</span>,age <span style="color:#66d9ef">from</span> test; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">组合去重</span>
+</span></span></code></pre></div><h3 id="in">
+  in
+  <a class="anchor" href="#in">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;aa&#39;</span>,<span style="color:#e6db74">&#39;bb&#39;</span>);  <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">代替</span><span style="color:#66d9ef">or</span>,<span style="color:#960050;background-color:#1e0010">里面的任何一个</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;aa&#39;</span>,<span style="color:#e6db74">&#39;bb&#39;</span>);<span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">代替</span><span style="color:#66d9ef">or</span>,<span style="color:#960050;background-color:#1e0010">不在里面的任何一个</span>
+</span></span></code></pre></div><h3 id="like">
+  like
+  <a class="anchor" href="#like">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;a%&#39;</span>  <span style="color:#f92672">//</span>a开头的任意字符 <span style="color:#960050;background-color:#1e0010">（区分大小写）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;F%y&#39;</span><span style="color:#f92672">//</span>F开头y结尾的任意字符
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;a_&#39;</span>  <span style="color:#f92672">//</span>a开头匹配一个
+</span></span></code></pre></div><h3 id="连接两个字段成一个值去除空格">
+  连接两个字段成一个值，去除空格
+  <a class="anchor" href="#%e8%bf%9e%e6%8e%a5%e4%b8%a4%e4%b8%aa%e5%ad%97%e6%ae%b5%e6%88%90%e4%b8%80%e4%b8%aa%e5%80%bc%e5%8e%bb%e9%99%a4%e7%a9%ba%e6%a0%bc">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  concat(<span style="color:#66d9ef">user</span>,rtrim(age)) <span style="color:#66d9ef">as</span> aa <span style="color:#66d9ef">from</span> test;
+</span></span></code></pre></div><h3 id="group-by">
+  group by
+  <a class="anchor" href="#group-by">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> age <span style="color:#66d9ef">having</span> age<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">18</span>; <span style="color:#f92672">//</span><span style="color:#66d9ef">having</span> <span style="color:#960050;background-color:#1e0010">作用于分组条件</span>
+</span></span></code></pre></div><h3 id="子查询">
+  子查询
+  <a class="anchor" href="#%e5%ad%90%e6%9f%a5%e8%af%a2">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> customer <span style="color:#66d9ef">from</span> test1 <span style="color:#66d9ef">where</span> customer_age <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">18</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>  <span style="color:#66d9ef">user</span>,(<span style="color:#66d9ef">select</span> cost <span style="color:#66d9ef">from</span> test1 <span style="color:#66d9ef">where</span> test.id<span style="color:#f92672">=</span>test1.id) <span style="color:#66d9ef">as</span> user_cost <span style="color:#66d9ef">from</span> test ;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">union</span> <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span>  <span style="color:#66d9ef">from</span> customer;    <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">自动压缩多个结果集合中的重复结果</span>(<span style="color:#960050;background-color:#1e0010">去重</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">union</span> <span style="color:#66d9ef">all</span> <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span>  <span style="color:#66d9ef">from</span> customer; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">将所有的结果全部显示出来</span>,<span style="color:#960050;background-color:#1e0010">可重复</span>
+</span></span></code></pre></div><h3 id="insert">
+  insert
+  <a class="anchor" href="#insert">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> test <span style="color:#66d9ef">values</span>(<span style="color:#e6db74">&#34;aa&#34;</span>,<span style="color:#ae81ff">18</span>,<span style="color:#e6db74">&#34;13269118806&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">insert</span> <span style="color:#66d9ef">into</span> test(<span style="color:#66d9ef">user</span>,age) <span style="color:#66d9ef">values</span>(<span style="color:#e6db74">&#34;aa&#34;</span>,<span style="color:#ae81ff">18</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> new_table <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> test; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">创建一个新表，并将</span>test表内容复制到new_table表中
+</span></span></code></pre></div><h3 id="update">
+  update
+  <a class="anchor" href="#update">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">update</span> test <span style="color:#66d9ef">set</span> age<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>,phone<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;132731907&#34;</span> <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;aa&#34;</span>;
+</span></span></code></pre></div><h3 id="delete">
+  delete
+  <a class="anchor" href="#delete">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">from</span> test <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">user</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;aa&#34;</span>; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">删除一行</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">from</span> test;                    <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">清空表</span>
+</span></span></code></pre></div><h2 id="创建表结构">
+  创建表结构
+  <a class="anchor" href="#%e5%88%9b%e5%bb%ba%e8%a1%a8%e7%bb%93%e6%9e%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">表要有：</span> <span style="color:#960050;background-color:#1e0010">创建时间、更新时间、</span><span style="color:#66d9ef">state</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">初始，</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">使用，</span><span style="color:#ae81ff">2</span>  <span style="color:#ae81ff">3</span><span style="color:#960050;background-color:#1e0010">停用</span>.<span style="color:#ae81ff">4</span><span style="color:#960050;background-color:#1e0010">删除）创建人，更新人</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> <span style="color:#f92672">`</span>test<span style="color:#f92672">`</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>id<span style="color:#f92672">`</span> bigint(<span style="color:#ae81ff">20</span>) unsigned <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>uuid<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">180</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;uuid&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;用户名&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>passwd<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">40</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;登录密码&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>age<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;年龄&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>cost<span style="color:#f92672">`</span> double(<span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">4</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0.0000&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;花费&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>download_count<span style="color:#f92672">`</span> bigint(<span style="color:#ae81ff">20</span>) unsigned <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;下载量&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>date<span style="color:#f92672">`</span> date <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;2006-01-02&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;日期&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span><span style="color:#66d9ef">state</span><span style="color:#f92672">`</span> int(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;0:初始,1:使用,2:保留,3:停用，4:删除&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span><span style="color:#66d9ef">commit</span><span style="color:#f92672">`</span> text <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>create_user<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;创建人&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>update_user<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;修改人&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>create_time<span style="color:#f92672">`</span> datetime <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">CURRENT_TIMESTAMP</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;记录创建时间&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>update_time<span style="color:#f92672">`</span> datetime <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">CURRENT_TIMESTAMP</span> <span style="color:#66d9ef">ON</span> <span style="color:#66d9ef">UPDATE</span> <span style="color:#66d9ef">CURRENT_TIMESTAMP</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;记录修改时间&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>zone_time<span style="color:#f92672">`</span> <span style="color:#66d9ef">TIMESTAMP</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">CURRENT_TIMESTAMP</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;创建时间戳，设置mysql地区时间，会相应变化&#39;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#f92672">`</span>id<span style="color:#f92672">`</span>),
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">KEY</span> <span style="color:#f92672">`</span>idx_key_value<span style="color:#f92672">`</span> (<span style="color:#f92672">`</span><span style="color:#66d9ef">user</span><span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>cost<span style="color:#f92672">`</span>, <span style="color:#f92672">`</span>download_count<span style="color:#f92672">`</span>)
+</span></span><span style="display:flex;"><span>) ENGINE <span style="color:#f92672">=</span> InnoDB AUTO_INCREMENT <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span> <span style="color:#66d9ef">DEFAULT</span> CHARSET <span style="color:#f92672">=</span> utf8mb4 <span style="color:#66d9ef">COMMENT</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;测试表&#39;</span>;
+</span></span></code></pre></div><h2 id="设置地区时间">
+  设置地区时间
+  <a class="anchor" href="#%e8%ae%be%e7%bd%ae%e5%9c%b0%e5%8c%ba%e6%97%b6%e9%97%b4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">mysql</span>&gt; <span style="color:#a6e22e">SET</span> <span style="color:#a6e22e">time_zone</span> = <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">America</span><span style="color:#f92672">/</span><span style="color:#a6e22e">Los_Angeles</span><span style="color:#960050;background-color:#1e0010">&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">mysql</span>&gt; <span style="color:#a6e22e">SET</span> <span style="color:#a6e22e">time_zone</span> = <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">Asia</span><span style="color:#f92672">/</span><span style="color:#a6e22e">Shanghai</span><span style="color:#960050;background-color:#1e0010">&#39;</span>;
+</span></span></code></pre></div><h2 id="更改表">
+  更改表
+  <a class="anchor" href="#%e6%9b%b4%e6%94%b9%e8%a1%a8">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">table</span> test <span style="color:#66d9ef">drop</span> age; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">删除</span>test表的age字段
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">table</span> test <span style="color:#66d9ef">add</span> phone varchar(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;手机号&#39;</span>; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">新增字段</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">table</span> test change phone phone int(<span style="color:#ae81ff">11</span>);<span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">修改数据类型</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">table</span> test change phone call_number varchar(<span style="color:#ae81ff">20</span>);<span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">修改字段名</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">table</span> test <span style="color:#66d9ef">alter</span> phone <span style="color:#66d9ef">set</span> <span style="color:#66d9ef">default</span> <span style="color:#e6db74">&#39;&#39;</span>; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">修改默认值</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">table</span> test <span style="color:#66d9ef">add</span> <span style="color:#66d9ef">index</span> idx_phone (phone,age); <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">新建索引</span>(<span style="color:#66d9ef">unique</span>,<span style="color:#66d9ef">primary</span> <span style="color:#66d9ef">key</span>,fulltext,<span style="color:#66d9ef">index</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">table</span> test <span style="color:#66d9ef">drop</span> <span style="color:#66d9ef">index</span> idx_phone; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">删除索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">rename</span> <span style="color:#66d9ef">table</span> test <span style="color:#66d9ef">to</span> test1; <span style="color:#f92672">//</span><span style="color:#960050;background-color:#1e0010">重命名表</span>
+</span></span></code></pre></div><h2 id="删除表">
+  删除表
+  <a class="anchor" href="#%e5%88%a0%e9%99%a4%e8%a1%a8">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">drop</span> <span style="color:#66d9ef">table</span> test;
+</span></span></code></pre></div><h2 id="高级查询">
+  高级查询
+  <a class="anchor" href="#%e9%ab%98%e7%ba%a7%e6%9f%a5%e8%af%a2">#</a>
+</h2>
+<h3 id="case-when">
+  case when
+  <a class="anchor" href="#case-when">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> round(<span style="color:#66d9ef">AVG</span>(u1),<span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">AS</span> new_user ,round(<span style="color:#66d9ef">SUM</span>(u3) <span style="color:#f92672">/</span> <span style="color:#66d9ef">SUM</span>(u2), <span style="color:#ae81ff">4</span>) <span style="color:#66d9ef">AS</span> re_1 ,round(<span style="color:#66d9ef">SUM</span>(u5) <span style="color:#f92672">/</span> <span style="color:#66d9ef">SUM</span>(u4), <span style="color:#ae81ff">4</span>) <span style="color:#66d9ef">AS</span> re_30,<span style="color:#66d9ef">sum</span>(new_user_no_filter)<span style="color:#f92672">-</span><span style="color:#66d9ef">sum</span>(u1) <span style="color:#66d9ef">AS</span> filter
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#66d9ef">when</span> dim<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;huawei-store&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;华为商店&#39;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">when</span> dim<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;vivo-online&#39;</span> <span style="color:#66d9ef">then</span> <span style="color:#e6db74">&#39;OPPO线上&#39;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">else</span> dim
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#66d9ef">as</span> dim
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> table1
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> ds <span style="color:#f92672">&gt;=</span><span style="color:#e6db74">&#39;2021-09-10&#39;</span>  <span style="color:#66d9ef">AND</span> ds <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2021-09-10&#39;</span> <span style="color:#66d9ef">AND</span> dim_type <span style="color:#66d9ef">in</span> (<span style="color:#e6db74">&#39;channel_cate2&#39;</span>, <span style="color:#e6db74">&#39;channel_cate1&#39;</span> ) <span style="color:#66d9ef">and</span> (<span style="color:#66d9ef">source</span> <span style="color:#66d9ef">in</span>(<span style="color:#e6db74">&#39;huawei&#39;</span>, <span style="color:#e6db74">&#39;oppo&#39;</span>, <span style="color:#e6db74">&#39;vivo&#39;</span>) <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">source</span> rlike <span style="color:#e6db74">&#39;^ios_ys&#39;</span> <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">source</span> rlike <span style="color:#e6db74">&#39;^ios_yw&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> dim
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> ds <span style="color:#66d9ef">desc</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">LIMIT</span> <span style="color:#ae81ff">100000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> <span style="color:#66d9ef">like</span> <span style="color:#960050;background-color:#1e0010">不是正则，默认全匹配；</span>rlike <span style="color:#960050;background-color:#1e0010">子匹配，可以是正则，特殊字符需要转义</span> <span style="color:#960050;background-color:#1e0010">类似</span> rlike <span style="color:#e6db74">&#39;hu&#39;</span><span style="color:#f92672">=</span><span style="color:#66d9ef">like</span> <span style="color:#f92672">%</span>hu<span style="color:#f92672">%</span>
+</span></span></code></pre></div><h3 id="join-1">
+  join
+  <a class="anchor" href="#join-1">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> t1.<span style="color:#f92672">*</span>,t2.dau,
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span>(t2.value <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span>, t2.value, t1.value)<span style="color:#66d9ef">as</span> value
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> (
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">select</span> new_date,channel_id <span style="color:#66d9ef">as</span> sub_category
+</span></span><span style="display:flex;"><span>     ,round(<span style="color:#66d9ef">max</span>((<span style="color:#66d9ef">if</span>(data_type<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,uv,<span style="color:#ae81ff">0</span>))<span style="color:#f92672">*</span><span style="color:#ae81ff">100</span>),<span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">as</span> u0
+</span></span><span style="display:flex;"><span>     , <span style="color:#66d9ef">max</span>(<span style="color:#66d9ef">if</span>(data_type<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,uv,<span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">as</span> u1
+</span></span><span style="display:flex;"><span>     , <span style="color:#66d9ef">max</span>(<span style="color:#66d9ef">if</span>(data_type<span style="color:#f92672">=</span><span style="color:#ae81ff">7</span>,uv,<span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">as</span> u7
+</span></span><span style="display:flex;"><span>     , <span style="color:#66d9ef">max</span>(<span style="color:#66d9ef">if</span>(data_type<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>,uv,<span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">as</span> u30
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">from</span> table1
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">where</span> new_date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2021-09-10&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> new_date,channel_id
+</span></span><span style="display:flex;"><span>)t1 <span style="color:#66d9ef">left</span> <span style="color:#66d9ef">join</span> (
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">select</span> new_date,channel_id <span style="color:#66d9ef">as</span> sub_category, <span style="color:#66d9ef">max</span>(<span style="color:#66d9ef">if</span>(data_type<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,uv_valid,<span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">as</span> dau
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">from</span> table2
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">where</span> new_date<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2021-09-10&#34;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> new_date,channel_id
+</span></span><span style="display:flex;"><span>)t2 <span style="color:#66d9ef">on</span> t1.new_date<span style="color:#f92672">=</span>t2.new_date <span style="color:#66d9ef">and</span> t1.sub_category<span style="color:#f92672">=</span>t2.sub_category
+</span></span></code></pre></div><h3 id="多表子查询">
+  多表+子查询
+  <a class="anchor" href="#%e5%a4%9a%e8%a1%a8%e5%ad%90%e6%9f%a5%e8%af%a2">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> Student.Sname,course.cname,score
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> Student,SC,Course ,Teacher
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> Student.s_id<span style="color:#f92672">=</span>SC.s_id <span style="color:#66d9ef">and</span> SC.c_id<span style="color:#f92672">=</span>Course.c_id  <span style="color:#66d9ef">and</span> sc.t_id<span style="color:#f92672">=</span>teacher.t_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> Teacher.Tname<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;tname553&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">and</span> SC.score<span style="color:#f92672">=</span>(<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">max</span>(score)<span style="color:#66d9ef">from</span> SC <span style="color:#66d9ef">where</span> sc.t_id<span style="color:#f92672">=</span>teacher.t_Id);
+</span></span></code></pre></div><h3 id="查询-参数是否是表字段的子串">
+  查询 参数是否是表字段的子串
+  <a class="anchor" href="#%e6%9f%a5%e8%af%a2-%e5%8f%82%e6%95%b0%e6%98%af%e5%90%a6%e6%98%af%e8%a1%a8%e5%ad%97%e6%ae%b5%e7%9a%84%e5%ad%90%e4%b8%b2">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> <span style="color:#f92672">`</span>menu<span style="color:#f92672">`</span> <span style="color:#66d9ef">WHERE</span> FIND_IN_SET(<span style="color:#e6db74">&#39;0&#39;</span>,<span style="color:#f92672">`</span>menu<span style="color:#f92672">`</span>.<span style="color:#f92672">`</span>roleIDs<span style="color:#f92672">`</span>)
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#mysql基础">mysql基础</a>
+      <ul>
+        <li><a href="#事务acid">事务ACID</a></li>
+        <li><a href="#事务四种隔离级别">事务四种隔离级别</a></li>
+        <li><a href="#脏读-不可重复读-幻读">脏读 不可重复读 幻读</a></li>
+        <li><a href="#乐观锁-悲观锁">乐观锁 悲观锁</a></li>
+        <li><a href="#乐观锁悲观锁区别">乐观锁、悲观锁区别？</a></li>
+        <li><a href="#共享锁">共享锁</a></li>
+        <li><a href="#排他锁">排他锁</a></li>
+        <li><a href="#行锁">行锁</a></li>
+        <li><a href="#表锁">表锁</a></li>
+      </ul>
+    </li>
+    <li><a href="#函数">函数</a></li>
+    <li><a href="#查询语法">查询语法</a>
+      <ul>
+        <li><a href="#order-by-descasc--排序-降升放置最后">order by desc/asc  :排序 降/升（放置最后）</a></li>
+        <li><a href="#limit">limit</a></li>
+        <li><a href="#join">join</a></li>
+        <li><a href="#distinct">distinct</a></li>
+        <li><a href="#in">in</a></li>
+        <li><a href="#like">like</a></li>
+        <li><a href="#连接两个字段成一个值去除空格">连接两个字段成一个值，去除空格</a></li>
+        <li><a href="#group-by">group by</a></li>
+        <li><a href="#子查询">子查询</a></li>
+        <li><a href="#insert">insert</a></li>
+        <li><a href="#update">update</a></li>
+        <li><a href="#delete">delete</a></li>
+      </ul>
+    </li>
+    <li><a href="#创建表结构">创建表结构</a></li>
+    <li><a href="#设置地区时间">设置地区时间</a></li>
+    <li><a href="#更改表">更改表</a></li>
+    <li><a href="#删除表">删除表</a></li>
+    <li><a href="#高级查询">高级查询</a>
+      <ul>
+        <li><a href="#case-when">case when</a></li>
+        <li><a href="#join-1">join</a></li>
+        <li><a href="#多表子查询">多表+子查询</a></li>
+        <li><a href="#查询-参数是否是表字段的子串">查询 参数是否是表字段的子串</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

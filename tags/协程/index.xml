@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>协程 on Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/tags/%E5%8D%8F%E7%A8%8B/</link>
+    <description>Recent content in 协程 on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 May 2024 13:47:42 +0800</lastBuildDate>
+    <atom:link href="https://xiaohubai.github.io/tags/%E5%8D%8F%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>高并发时，数据一致性问题</title>
+      <link>https://xiaohubai.github.io/posts/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%97%B6%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%97%B6%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;p&gt;对于共享资源，在多用户访问、程序内、数据库中，怎么保证共享资源独占，数据一致性。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。 2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。 3、应尽量避免在 WHERE 子句中使用 != 或 &lt;&gt; 操作符。MySQL 只有对以下操作符才使用索引：&lt;，&lt;=，=，&gt;，&gt;=，BETWEEN，IN，以及某些时候的 LIKE。 4、应尽量避免在 WHERE 子句中使用 OR 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，可以使用 UNION 合并查询：select id from t where num=10 union all select id from t where num=20。 5、IN 和 NOT IN 也要慎用，否则会导致全表扫描。对于连续的数值，能用 BETWEEN 就不要用 IN：select id from t where num between 1 and 3。、 6、下面的查询也将导致全表扫描：select id from t where name like‘%abc%’ 或者select id from t where name like‘%abc’若要提高效率，可以考虑全文检索。而select id from t where name like‘abc%’才用到索引。 7、如果在 WHERE 子句中使用参数，也会导致全表扫描。 8、应尽量避免在 WHERE 子句中对字段进行表达式操作，应尽量避免在 WHERE 子句中对字段进行函数操作。 9、很多时候用 EXISTS 代替 IN 是一个好的选择：select num from a where num in(select num from b)。用下面的语句替换：select num from a where exists(select 1 from b where num=a.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="sql语句性能优化" />
+<meta property="og:description" content="1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。 2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。 3、应尽量避免在 WHERE 子句中使用 != 或 &lt;&gt; 操作符。MySQL 只有对以下操作符才使用索引：&lt;，&lt;=，=，&gt;，&gt;=，BETWEEN，IN，以及某些时候的 LIKE。 4、应尽量避免在 WHERE 子句中使用 OR 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，可以使用 UNION 合并查询：select id from t where num=10 union all select id from t where num=20。 5、IN 和 NOT IN 也要慎用，否则会导致全表扫描。对于连续的数值，能用 BETWEEN 就不要用 IN：select id from t where num between 1 and 3。、 6、下面的查询也将导致全表扫描：select id from t where name like‘%abc%’ 或者select id from t where name like‘%abc’若要提高效率，可以考虑全文检索。而select id from t where name like‘abc%’才用到索引。 7、如果在 WHERE 子句中使用参数，也会导致全表扫描。 8、应尽量避免在 WHERE 子句中对字段进行表达式操作，应尽量避免在 WHERE 子句中对字段进行函数操作。 9、很多时候用 EXISTS 代替 IN 是一个好的选择：select num from a where num in(select num from b)。用下面的语句替换：select num from a where exists(select 1 from b where num=a." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-05-08T13:47:42+08:00" />
+<meta property="article:modified_time" content="2024-05-08T13:47:42+08:00" />
+
+<title>sql语句性能优化 | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>sql语句性能优化</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents"></nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+<article class="markdown book-post">
+  <h1>
+    <a href="/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">sql语句性能优化</a>
+  </h1>
+  
+  <h5>May 8, 2024</h5>
+
+
+
+  
+
+  
+  <div>
+    
+      <a href="/tags/mysql/">Mysql</a>
+  </div>
+  
+
+
+
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>3、应尽量避免在 WHERE 子句中使用 != 或 &lt;&gt; 操作符。MySQL 只有对以下操作符才使用索引：&lt;，&lt;=，=，&gt;，&gt;=，BETWEEN，IN，以及某些时候的 LIKE。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>4、应尽量避免在 WHERE 子句中使用 OR 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，可以使用 UNION 合并查询：select id from t where num=10 union all select id from t where num=20。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>5、IN 和 NOT IN 也要慎用，否则会导致全表扫描。对于连续的数值，能用 BETWEEN 就不要用 IN：select id from t where num between 1 and 3。、
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>6、下面的查询也将导致全表扫描：select id from t where name like‘%abc%’ 或者select id from t where name like‘%abc’若要提高效率，可以考虑全文检索。而select id from t where name like‘abc%’才用到索引。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>7、如果在 WHERE 子句中使用参数，也会导致全表扫描。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>8、应尽量避免在 WHERE 子句中对字段进行表达式操作，应尽量避免在 WHERE 子句中对字段进行函数操作。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>9、很多时候用 EXISTS 代替 IN 是一个好的选择：select num from a where num in(select num from b)。用下面的语句替换：select num from a where exists(select 1 from b where num=a.num)。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>10、索引固然可以提高相应的 SELECT 的效率，但同时也降低了 INSERT 及 UPDATE 的效率。因为 INSERT 或 UPDATE 时有可能会重建索引，所以怎样建索引需要慎重考虑，视具体情况而定。一个表的索引数最好不要超过 6 个，若太多则应考虑一些不常使用到的列上建的索引是否有必要。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>11、应尽可能的避免更新 clustered（聚合） 索引数据列， 因为 clustered 索引数据列的顺序就是表记录的物理存储顺序，一旦该列值改变将导致整个表记录的顺序的调整，会耗费相当大的资源。若应用系统需要频繁更新 clustered 索引数据列，那么需要考虑是否应将该索引建为 clustered 索引。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>12、尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>13、尽可能的使用 varchar, nvarchar 代替 char, nchar。因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>14、最好不要使用返回所有：select from t ，用具体的字段列表代替 “*”，不要返回用不到的任何字段。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>15、尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>16、使用表的别名（Alias）：当在 SQL 语句中连接多个表时，请使用表的别名并把别名前缀于每个 Column 上。这样一来，就可以减少解析的时间并减少那些由 Column 歧义引起的语法错误。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>17、使用“临时表”暂存中间结果 ：
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>18、一些 SQL 查询语句应加上 nolock，读、写是会相互阻塞的，为了提高并发性能。对于一些查询，可以加上 nolock，这样读的时候可以允许写，但缺点是可能读到未提交的脏数据。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>19、不要有超过 5 个以上的表连接（JOIN），考虑使用临时表或表变量存放中间结果。少用子查询，视图嵌套不要过深，一般视图嵌套不要超过 2 个为宜。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>20、将需要查询的结果预先计算好放在表中，查询的时候再Select。这在SQL7.0以前是最重要的手段，例如医院的住院费计算。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>21、用 OR 的字句可以分解成多个查询，并且通过 UNION 连接多个查询。他们的速度只同是否使用索引有关，如果查询需要用到联合索引，用 UNION all 执行的效率更高。多个 OR 的字句没有用到索引，改写成 UNION 的形式再试图与索引匹配。一个关键的问题是否用到索引
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>22、在IN后面值的列表中，将出现最频繁的值放在最前面，出现得最少的放在最后面，减少判断的次数。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>23、尽量将数据的处理工作放在服务器上，减少网络的开销，如使用存储过程。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>24、当服务器的内存够多时，配制线程数量 = 最大连接数+5，这样能发挥最大的效率；否则使用配制线程数量&lt; 最大连接数，启用 SQL SERVER 的线程池来解决，如果还是数量 = 最大连接数+5，严重的损害服务器的性能。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>25、尽量使用 “&gt;=”，不要使用 “&gt;”。
+</span></span></code></pre></div><p>26、索引的使用规范：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>索引的创建要与应用结合考虑，建议大的 OLTP 表不要超过 6 个索引；
+</span></span><span style="display:flex;"><span>尽可能的使用索引字段作为查询条件，尤其是聚簇索引，必要时可以通过 index index_name 来强制指定索引；
+</span></span><span style="display:flex;"><span>避免对大表查询时进行 table scan，必要时考虑新建索引；
+</span></span><span style="display:flex;"><span>在使用索引字段作为条件时，如果该索引是联合索引，那么必须使用到该索引中的第一个字段作为条件时才能保证系统使用该索引，否则该索引将不会被使用；
+</span></span><span style="display:flex;"><span>要注意索引的维护，周期性重建索引，重新编译存储过程。
+</span></span></code></pre></div><p>27、慢查询实例</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>//慢查询
+</span></span><span style="display:flex;"><span>SELECT * FROM record WHERE substrINg(card_no,1,4)=’5378’ (13秒)
+</span></span><span style="display:flex;"><span>SELECT * FROM record WHERE amount/30&lt; 1000 （11秒）
+</span></span><span style="display:flex;"><span>SELECT * FROM record WHERE convert(char(10),date,112)=’19991201’ （10秒）
+</span></span><span style="display:flex;"><span>//优化
+</span></span><span style="display:flex;"><span>SELECT * FROM record WHERE card_no like ‘5378%’ （&lt; 1秒）
+</span></span><span style="display:flex;"><span>SELECT * FROM record WHERE amount&lt; 1000*30 （&lt; 1秒）
+</span></span><span style="display:flex;"><span>SELECT * FROM record WHERE date= ‘1999/12/01’ （&lt; 1秒）
+</span></span></code></pre></div><p>28、当有一批处理的插入或更新时，用批量插入或批量更新，绝不会一条条记录的去更新。</p>
+<p>29、提高 GROUP BY 语句的效率，可以通过将不需要的记录在 GROUP BY 之前过滤掉。下面两个查询返回相同结果，但第二个明显就快了许多。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//低效
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">SELECT</span> <span style="color:#a6e22e">JOB</span>,<span style="color:#a6e22e">AVG</span>(<span style="color:#a6e22e">SAL</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FROM</span> <span style="color:#a6e22e">EMP</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">GROUP</span> <span style="color:#a6e22e">BY</span> <span style="color:#a6e22e">JOB</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">HAVING</span> <span style="color:#a6e22e">JOB</span> =<span style="color:#e6db74">&#34;PRESIDENT&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">OR</span> <span style="color:#a6e22e">JOB</span> =<span style="color:#e6db74">&#34;MANAGER&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//高效
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">SELECT</span> <span style="color:#a6e22e">JOB</span>,<span style="color:#a6e22e">AVG</span>(<span style="color:#a6e22e">SAL</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FROM</span> <span style="color:#a6e22e">EMP</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">WHERE</span> <span style="color:#a6e22e">JOB</span> =<span style="color:#e6db74">&#34;PRESIDENT&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">OR</span> <span style="color:#a6e22e">JOB</span> =<span style="color:#e6db74">&#34;MANAGER&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">GROUP</span> <span style="color:#a6e22e">BY</span> <span style="color:#a6e22e">JOB</span>
+</span></span></code></pre></div><p>30、SQL 语句用大写，因为 Oracle 总是先解析 SQL 语句，把小写的字母转换成大写的再执行。</p>
+<p>31、别名的使用，别名是大型数据库的应用技巧，就是表名、列名在查询中以一个字母为别名，查询速度要比建连接表快 1.5 倍。</p>
+<p>32、索引创建规则</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>表的主键、外键必须有索引；
+</span></span><span style="display:flex;"><span>数据量超过 300 的表应该有索引；
+</span></span><span style="display:flex;"><span>经常与其他表进行连接的表，在连接字段上应该建立索引；
+</span></span><span style="display:flex;"><span>经常出现在 WHERE 子句中的字段，特别是大表的字段，应该建立索引；
+</span></span><span style="display:flex;"><span>索引应该建在选择性高的字段上；
+</span></span><span style="display:flex;"><span>索引应该建在小字段上，对于大的文本字段甚至超长字段，不要建索引；
+</span></span><span style="display:flex;"><span>复合索引的建立需要进行仔细分析，尽量考虑用单字段索引代替；
+</span></span><span style="display:flex;"><span>正确选择复合索引中的主列字段，一般是选择性较好的字段；
+</span></span><span style="display:flex;"><span>复合索引的几个字段是否经常同时以 AND 方式出现在 WHERE 子句中？单字段查询是否极少甚至没有？如果是，则可以建立复合索引；否则考虑单字段索引；
+</span></span><span style="display:flex;"><span>如果复合索引中包含的字段经常单独出现在 WHERE 子句中，则分解为多个单字段索引；
+</span></span><span style="display:flex;"><span>如果复合索引所包含的字段超过 3 个，那么仔细考虑其必要性，考虑减少复合的字段；
+</span></span><span style="display:flex;"><span>如果既有单字段索引，又有这几个字段上的复合索引，一般可以删除复合索引；
+</span></span><span style="display:flex;"><span>频繁进行数据操作的表，不要建立太多的索引；
+</span></span><span style="display:flex;"><span>删除无用的索引，避免对执行计划造成负面影响；
+</span></span><span style="display:flex;"><span>表上建立的每个索引都会增加存储开销，索引对于插入、删除、更新操作也会增加处理上的开销。另外，过多的复合索引，在有单字段索引的情况下，一般都是没有存在价值的；相反，还会降低数据增加删除时的性能，特别是对频繁更新的表来说，负面影响更大。
+</span></span><span style="display:flex;"><span>尽量不要对数据库中某个含有大量重复的值的字段建立索引。
+</span></span></code></pre></div><p>33、查询缓冲并不自动处理空格，因此，在写 SQL 语句时，应尽量减少空格的使用，尤其是在 SQL 首和尾的空格（因为查询缓冲并不自动截取首尾空格）。</p>
+<p>34、我们应该为数据库里的每张表都设置一个 ID 做为其主键，而且最好的是一个 INT 型的（推荐使用 UNSIGNED），并设置上自动增加的 AUTO_INCREMENT 标志。</p>
+<p>35、EXPLAIN SELECT 查询用来跟踪查看效果</p>
+<p>36、当只要一行数据时使用 LIMIT 1</p>
+<p>37、选择表合适存储引擎：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>myisam：应用时以读和插入操作为主，只有少量的更新和删除，并且对事务的完整性，并发性要求不是很高的。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>InnoDB：事务处理，以及并发条件下要求数据的一致性。除了插入和查询外，包括很多的更新和删除。（InnoDB 有效地降低删除和更新导致的锁定）。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>对于支持事务的 InnoDB类 型的表来说，影响速度的主要原因是 AUTOCOMMIT 默认设置是打开的，而且程序没有显式调用 BEGIN 开始事务，导致每插入一条都自动提交，严重影响了速度。可以在执行 SQL 前调用 begin，多条 SQL 形成一个事物（即使 autocommit 打开也可以），将大大提高性能。
+</span></span></code></pre></div><p>38、优化表的数据类型，选择合适的数据类型：</p>
+<pre tabindex="0"><code>更小通常更好，简单就好，所有字段都得有默认值，尽量避免 NULL。
+</code></pre><p>39、任何对列的操作都将导致表扫描，它包括数据库函数、计算表达式等等，查询时要尽可能将操作移至等号右边。</p>
+<p>40、避免使用 select *</p>
+<p>41、用 union all 代替 union，除非是有些特殊的场景，比如 union all 之后，结果集中出现了重复数据，而业务场景中是不允许产生重复数据的，这时可以使用 union。</p>
+<p>42、小表驱动大表</p>
+<pre tabindex="0"><code>in 适用于左边大表，右边小表。
+exists 适用于左边小表，右边大表。
+</code></pre></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents"></nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

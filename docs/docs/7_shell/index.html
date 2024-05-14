@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="shell脚本 # shell命令 # str=&#34;hello word !&#34; # 定义变量,没有数据类型的概念，全是字符串，单引号用于保留字符的字面含义，各种特殊字符在单引号里面，双引号的美元符号（$）、反引号（`）和反斜杠（\）有特殊含义 (()) # 整数进行算术运算,((i&#43;&#43;)),((i--)) [[]] # 条件判断，==，&amp;&amp;，|| {} # 取出变量值 &amp;&amp; -a # and || -o # or -n str1 # 判断字符串不为空（长度大于零） -z str1 # 判断字符串为空（长度等于零） echo ${str} # 查看变量内容 ${#str} # 返回字符串长度 echo ${str:4:4} # 获取子串，不会改变原始字符串 str2=&#34;$str$str1&#34; # 字符串拼接，可以有空格 str3=$(($str&#43;$str1)) # 整型运算 a[0]=&#34;2&#34; # 定义数组 a=( foo bar &#34;a b c&#34; 42 ) # 定义数组 ${a[0]} # 取得数组中的元素 ${#a[@]} # 取得数组的长度 ${#a[i]} # 取得数组中某个变量的长度 (${a1[@]} ${a2[@]}) # 两个数组拼接 unset a[5] # 删除数组元素，unset a 删除整个数组 read # 接收命令行输入 -p提示 ####### if ######### if [ &#34;$varname&#34; = &#34;foo&#34; ]; then echo &#34;this is foo&#34; elif [ &#34;$varname&#34; = &#34;bar&#34; ]; then echo &#34;this is bar&#34; else echo &#34;neither&#34; fi ##### case ########## case expression in pattern1 ) statements ;; pattern2 ) statements ;; * ) otherwise ;; esac ######for######### for i in {1.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="shell" />
+<meta property="og:description" content="shell脚本 # shell命令 # str=&#34;hello word !&#34; # 定义变量,没有数据类型的概念，全是字符串，单引号用于保留字符的字面含义，各种特殊字符在单引号里面，双引号的美元符号（$）、反引号（`）和反斜杠（\）有特殊含义 (()) # 整数进行算术运算,((i&#43;&#43;)),((i--)) [[]] # 条件判断，==，&amp;&amp;，|| {} # 取出变量值 &amp;&amp; -a # and || -o # or -n str1 # 判断字符串不为空（长度大于零） -z str1 # 判断字符串为空（长度等于零） echo ${str} # 查看变量内容 ${#str} # 返回字符串长度 echo ${str:4:4} # 获取子串，不会改变原始字符串 str2=&#34;$str$str1&#34; # 字符串拼接，可以有空格 str3=$(($str&#43;$str1)) # 整型运算 a[0]=&#34;2&#34; # 定义数组 a=( foo bar &#34;a b c&#34; 42 ) # 定义数组 ${a[0]} # 取得数组中的元素 ${#a[@]} # 取得数组的长度 ${#a[i]} # 取得数组中某个变量的长度 (${a1[@]} ${a2[@]}) # 两个数组拼接 unset a[5] # 删除数组元素，unset a 删除整个数组 read # 接收命令行输入 -p提示 ####### if ######### if [ &#34;$varname&#34; = &#34;foo&#34; ]; then echo &#34;this is foo&#34; elif [ &#34;$varname&#34; = &#34;bar&#34; ]; then echo &#34;this is bar&#34; else echo &#34;neither&#34; fi ##### case ########## case expression in pattern1 ) statements ;; pattern2 ) statements ;; * ) otherwise ;; esac ######for######### for i in {1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/7_shell/" /><meta property="article:section" content="docs" />
+
+
+
+<title>shell | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/7_shell/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="active">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>shell</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#shell命令">shell命令</a></li>
+    <li><a href="#常用命令">常用命令</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="shell脚本">
+  shell脚本
+  <a class="anchor" href="#shell%e8%84%9a%e6%9c%ac">#</a>
+</h1>
+<h2 id="shell命令">
+  shell命令
+  <a class="anchor" href="#shell%e5%91%bd%e4%bb%a4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>str<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;hello word !&#34;</span>          <span style="color:#75715e"># 定义变量,没有数据类型的概念，全是字符串，单引号用于保留字符的字面含义，各种特殊字符在单引号里面，双引号的美元符号（$）、反引号（`）和反斜杠（\）有特殊含义</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(())</span>                        <span style="color:#75715e"># 整数进行算术运算,((i++)),((i--))</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[[]]</span>                        <span style="color:#75715e"># 条件判断，==，&amp;&amp;，||</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{}</span>                          <span style="color:#75715e"># 取出变量值</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&amp;&amp;</span> -a                       <span style="color:#75715e"># and</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">||</span> -o                       <span style="color:#75715e"># or</span>
+</span></span><span style="display:flex;"><span>-n str1                   <span style="color:#75715e"># 判断字符串不为空（长度大于零）</span>
+</span></span><span style="display:flex;"><span>-z str1                   <span style="color:#75715e"># 判断字符串为空（长度等于零）</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">${</span>str<span style="color:#e6db74">}</span>                 <span style="color:#75715e"># 查看变量内容</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">${#</span>str<span style="color:#e6db74">}</span>                     <span style="color:#75715e"># 返回字符串长度</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">${</span>str:4:4<span style="color:#e6db74">}</span>             <span style="color:#75715e"># 获取子串，不会改变原始字符串</span>
+</span></span><span style="display:flex;"><span>str2<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$str$str1<span style="color:#e6db74">&#34;</span>            <span style="color:#75715e"># 字符串拼接，可以有空格</span>
+</span></span><span style="display:flex;"><span>str3<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$str<span style="color:#f92672">+</span>$str1<span style="color:#66d9ef">))</span>        <span style="color:#75715e"># 整型运算</span>
+</span></span><span style="display:flex;"><span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]=</span><span style="color:#e6db74">&#34;2&#34;</span>                    <span style="color:#75715e"># 定义数组</span>
+</span></span><span style="display:flex;"><span>a<span style="color:#f92672">=(</span> foo bar <span style="color:#e6db74">&#34;a  b c&#34;</span> <span style="color:#ae81ff">42</span> <span style="color:#f92672">)</span>   <span style="color:#75715e"># 定义数组</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">${</span>a[0]<span style="color:#e6db74">}</span>                     <span style="color:#75715e"># 取得数组中的元素</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">${#</span>a[@]<span style="color:#e6db74">}</span>                    <span style="color:#75715e"># 取得数组的长度</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">${#</span>a[i]<span style="color:#e6db74">}</span>                    <span style="color:#75715e"># 取得数组中某个变量的长度</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span><span style="color:#e6db74">${</span>a1[@]<span style="color:#e6db74">}</span> <span style="color:#e6db74">${</span>a2[@]<span style="color:#e6db74">}</span><span style="color:#f92672">)</span>         <span style="color:#75715e"># 两个数组拼接</span>
+</span></span><span style="display:flex;"><span>unset a<span style="color:#f92672">[</span>5<span style="color:#f92672">]</span>                  <span style="color:#75715e"># 删除数组元素，unset a 删除整个数组</span>
+</span></span><span style="display:flex;"><span>read                        <span style="color:#75715e"># 接收命令行输入 -p提示</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">####### if #########</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$varname<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;foo&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;this is foo&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">elif</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$varname<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;bar&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;this is bar&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;neither&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##### case ##########</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">case</span> expression in
+</span></span><span style="display:flex;"><span>    pattern1 <span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        statements ;;
+</span></span><span style="display:flex;"><span>    pattern2 <span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        statements ;;
+</span></span><span style="display:flex;"><span>    * <span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        otherwise ;;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">esac</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">######for#########</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i in <span style="color:#f92672">{</span>1..10<span style="color:#f92672">}</span>; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    echo $i
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#f92672">((</span>i <span style="color:#f92672">=</span> 0; i &lt; 10; i++<span style="color:#f92672">))</span>; <span style="color:#66d9ef">do</span> echo $i; <span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">####### func #########</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> myfunc<span style="color:#f92672">(){</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># $1 代表第一个入参，$N 代表第 N 个入参</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># $# 代表参数个数</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># $0 代表被调用者自身的名字</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># $@ 代表所有参数，类型是个数组，想传递所有参数给其他命令用 cmd &#34;$@&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># $* 空格链接起来的所有参数，类型是字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>myfunc                    <span style="color:#75715e"># 调用函数 myfunc</span>
+</span></span><span style="display:flex;"><span>myfunc arg1 arg2 arg3     <span style="color:#75715e"># 带参数的函数调用</span>
+</span></span><span style="display:flex;"><span>myfunc <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span>               <span style="color:#75715e"># 将所有参数传递给函数</span>
+</span></span><span style="display:flex;"><span>myfunc <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>array[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>      <span style="color:#75715e"># 将一个数组当作多个参数传递给函数</span>
+</span></span><span style="display:flex;"><span>unset -f myfunc           <span style="color:#75715e"># 删除函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##########文件###########</span>
+</span></span><span style="display:flex;"><span>-a file                   <span style="color:#75715e"># 判断文件存在，如 [ -a /tmp/abc ]</span>
+</span></span><span style="display:flex;"><span>-e file                   <span style="color:#75715e"># 判断文件夹是否存在</span>
+</span></span><span style="display:flex;"><span>-d file                   <span style="color:#75715e"># 判断文件存在，且该文件是一个目录</span>
+</span></span><span style="display:flex;"><span>-f file                   <span style="color:#75715e"># 判断文件存在，且该文件是一个普通文件（非目录等）</span>
+</span></span><span style="display:flex;"><span>-r file                   <span style="color:#75715e"># 判断文件存在，且可读</span>
+</span></span><span style="display:flex;"><span>-w file                   <span style="color:#75715e"># 判断文件存在，且可写</span>
+</span></span><span style="display:flex;"><span>-x file                   <span style="color:#75715e"># 判断文件存在，且执行</span>
+</span></span><span style="display:flex;"><span>-s file                   <span style="color:#75715e"># 判断文件存在，且尺寸大于0</span>
+</span></span><span style="display:flex;"><span>-O file                   <span style="color:#75715e"># 文件存在且属于当前用户</span>
+</span></span><span style="display:flex;"><span>-G file                   <span style="color:#75715e"># 文件存在且匹配你的用户组</span>
+</span></span><span style="display:flex;"><span>file1 -nt file2           <span style="color:#75715e"># 文件1 比 文件2 新</span>
+</span></span><span style="display:flex;"><span>file1 -ot file2           <span style="color:#75715e"># 文件1 比 文件2 旧</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#############数字###########</span>
+</span></span><span style="display:flex;"><span>num1 -eq num2             <span style="color:#75715e"># 数字判断：num1 == num2</span>
+</span></span><span style="display:flex;"><span>num1 -ne num2             <span style="color:#75715e"># 数字判断：num1 != num2</span>
+</span></span><span style="display:flex;"><span>num1 -lt num2             <span style="color:#75715e"># 数字判断：num1 &lt; num2</span>
+</span></span><span style="display:flex;"><span>num1 -le num2             <span style="color:#75715e"># 数字判断：num1 &lt;= num2</span>
+</span></span><span style="display:flex;"><span>num1 -gt num2             <span style="color:#75715e"># 数字判断：num1 &gt; num2</span>
+</span></span><span style="display:flex;"><span>num1 -ge num2             <span style="color:#75715e"># 数字判断：num1 &gt;= num2</span>
+</span></span></code></pre></div><h2 id="常用命令">
+  常用命令
+  <a class="anchor" href="#%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{print $5}&#39;</span> file              <span style="color:#75715e"># 打印文件中以空格分隔的第五列</span>
+</span></span><span style="display:flex;"><span>awk -F <span style="color:#e6db74">&#39;,&#39;</span> <span style="color:#e6db74">&#39;{print $5}&#39;</span> file       <span style="color:#75715e"># 打印文件中以逗号分隔的第五列</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;/str/ {print $2}&#39;</span> file        <span style="color:#75715e"># 打印文件中包含 str 的所有行的第二列</span>
+</span></span><span style="display:flex;"><span>awk -F <span style="color:#e6db74">&#39;,&#39;</span> <span style="color:#e6db74">&#39;{print $NF}&#39;</span> file      <span style="color:#75715e"># 打印逗号分隔的文件中的每行最后一列</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{s+=$1} END {print s}&#39;</span> file   <span style="color:#75715e"># 计算所有第一列的合</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;NR%3==1&#39;</span> file                 <span style="color:#75715e"># 从第一行开始，每隔三行打印一行</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#e6db74">&#39;s/find/replace/&#39;</span> file         <span style="color:#75715e"># 替换文件中首次出现的字符串并输出结果</span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#e6db74">&#39;10s/find/replace/&#39;</span> file       <span style="color:#75715e"># 替换文件第 10 行内容</span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#e6db74">&#39;10,20s/find/replace/&#39;</span> file    <span style="color:#75715e"># 替换文件中 10-20 行内容</span>
+</span></span><span style="display:flex;"><span>sed -r <span style="color:#e6db74">&#39;s/regex/replace/g&#39;</span> file    <span style="color:#75715e"># 替换文件中所有出现的字符串</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;s/find/replace/g&#39;</span> file     <span style="color:#75715e"># 替换文件中所有出现的字符并且覆盖文件</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;/find/i\newline&#39;</span> file      <span style="color:#75715e"># 在文件的匹配文本前插入行</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;/find/a\newline&#39;</span> file      <span style="color:#75715e"># 在文件的匹配文本后插入行</span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#e6db74">&#39;/line/s/find/replace/&#39;</span> file   <span style="color:#75715e"># 先搜索行特征再执行替换</span>
+</span></span><span style="display:flex;"><span>sed -e <span style="color:#e6db74">&#39;s/f/r/&#39;</span> -e <span style="color:#e6db74">&#39;s/f/r&#39;</span> file    <span style="color:#75715e"># 执行多次替换</span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#e6db74">&#39;s#find#replace#&#39;</span> file         <span style="color:#75715e"># 使用 # 替换 / 来避免 pattern 中有斜杆</span>
+</span></span><span style="display:flex;"><span>sed -i -r <span style="color:#e6db74">&#39;s/^\s+//g&#39;</span> file         <span style="color:#75715e"># 删除文件每行头部空格</span>
+</span></span><span style="display:flex;"><span>sed <span style="color:#e6db74">&#39;/^$/d&#39;</span> file                   <span style="color:#75715e"># 删除文件空行并打印</span>
+</span></span><span style="display:flex;"><span>sed -i <span style="color:#e6db74">&#39;s/\s\+$//&#39;</span> file            <span style="color:#75715e"># 删除文件每行末尾多余空格</span>
+</span></span><span style="display:flex;"><span>sed -n <span style="color:#e6db74">&#39;2p&#39;</span> file                   <span style="color:#75715e"># 打印文件第二行</span>
+</span></span><span style="display:flex;"><span>sed -n <span style="color:#e6db74">&#39;2,5p&#39;</span> file                 <span style="color:#75715e"># 打印文件第二到第五行</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sort file                          <span style="color:#75715e"># 排序文件</span>
+</span></span><span style="display:flex;"><span>sort -r file                       <span style="color:#75715e"># 反向排序（降序）</span>
+</span></span><span style="display:flex;"><span>sort -n file                       <span style="color:#75715e"># 使用数字而不是字符串进行比较</span>
+</span></span><span style="display:flex;"><span>sort -t: -k 3n /etc/passwd         <span style="color:#75715e"># 按 passwd 文件的第三列进行排序</span>
+</span></span><span style="display:flex;"><span>sort -u file                       <span style="color:#75715e"># 去重排序</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ps aux | sort -nk +4 | tail        <span style="color:#75715e"># 显示前十个运行的进程并按内存使用量排序</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># {&#34;level&#34;:&#34;info&#34;,&#34;time&#34;:&#34;2022-03-31 14:13:25.514&#34;,&#34;caller&#34;:&#34;/home/xiaohu/project/alpha/middleware/trace.go:26&#34;,&#34;trace_id&#34;:&#34;d9a7097f-5b27-4660-b675-25b4824dbc82&#34;,&#34;key&#34;:&#34;req&#34;,&#34;ip&#34;:&#34;172.12.0.1&#34;,&#34;path&#34;:&#34;favicon.ico&#34;,&#34;method&#34;:&#34;GET&#34;,&#34;query&#34;:&#34;&#34;}</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># awk 复杂文本格式化；单分隔符：-F &#39;,&#39; ；多分隔符：-F &#39;[,;]&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># {print $6} 输出分割的第几个值</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># sort 排序</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># uniq 去重</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># wc 统计 -l统计行数</span>
+</span></span><span style="display:flex;"><span>awk -F <span style="color:#e6db74">&#39;,&#39;</span> <span style="color:#e6db74">&#39;{print $6}&#39;</span> latest_log | awk -F <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#e6db74">&#39;{print $2}&#39;</span> | sort|uniq|wc -l      <span style="color:#75715e"># 查看有多少个IP访问</span>
+</span></span><span style="display:flex;"><span>grep <span style="color:#e6db74">&#34;/index.php&#34;</span> log_file | wc -l                                                  <span style="color:#75715e"># 查看某一个页面被访问的次数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># BEGIN：放的是执行前的语句；END：这里面放的是处理完所有的行后要执行的语句</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># {++S[$1]} 对空格或tab分割的第一个字符，进行计数。s[2.22.2.1]=9</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># sort r倒叙，t分隔符 n数值型  k排序依据</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{++S[$1]} END {for (a in S) print a,S[a]}&#39;</span> log_file &gt; log.txt                          <span style="color:#75715e"># 查看每一个IP访问了多少个页面</span>
+</span></span><span style="display:flex;"><span>sort -n -t <span style="color:#e6db74">&#39; &#39;</span> -k <span style="color:#ae81ff">2</span> log.txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{++S[$1]} END {for (a in S) print S[a],a}&#39;</span> log_file | sort -n                          <span style="color:#75715e"># 将每个IP访问的页面数进行从小到大排序</span>
+</span></span><span style="display:flex;"><span>grep ^111.111.111.111 log_file| awk <span style="color:#e6db74">&#39;{print $1,$7}&#39;</span>                                         <span style="color:#75715e"># 查看某一个IP访问了哪些页面</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{print $12,$1}&#39;</span> log_file | grep ^<span style="color:#ae81ff">\&#34;</span>Mozilla | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span> |sort | uniq | wc -l     <span style="color:#75715e"># 去掉搜索引擎统计的页面</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{print $4,$1}&#39;</span> log_file | grep 16/Aug/2015:14 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span>| sort | uniq | wc -l  <span style="color:#75715e"># 查看2015年8月16日14时这一个小时内有多少IP访问</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{print $1}&#39;</span> |sort|uniq -c|sort -nr |head -10 access_log                                <span style="color:#75715e"># 查看访问前十个ip地址</span>
+</span></span><span style="display:flex;"><span>cat log_file|awk <span style="color:#e6db74">&#39;{print $11}&#39;</span>|sort|uniq -c|sort -nr | head -10                             <span style="color:#75715e"># 访问次数最多的10个文件或页面</span>
+</span></span><span style="display:flex;"><span>cat www.access.log |awk <span style="color:#e6db74">&#39;($7~/\.php/){print $10 &#34; &#34; $1 &#34; &#34; $4 &#34; &#34; $7}&#39;</span>|sort -nr|head -100   <span style="color:#75715e"># 列出传输大小最大的几个文件</span>
+</span></span><span style="display:flex;"><span>cat www.access.log |awk <span style="color:#e6db74">&#39;($10 &gt; 200000 &amp;&amp; $7~/\.php/){print $7}&#39;</span>|sort -n|uniq -c|sort -nr|head -100         <span style="color:#75715e"># 列出输出大于200000byte(约200kb)的页面以及对应页面发生次数</span>
+</span></span><span style="display:flex;"><span>cat www.access.log |awk <span style="color:#e6db74">&#39;($7~/\.php/){print $NF &#34; &#34; $1 &#34; &#34; $4 &#34; &#34; $7}&#39;</span>|sort -nr|head -100                   <span style="color:#75715e"># 如果日志最后一列记录的是页面文件传输时间，则有列出到客户端最耗时的页面</span>
+</span></span><span style="display:flex;"><span>cat www.access.log |awk <span style="color:#e6db74">&#39;($NF &gt; 60 &amp;&amp; $7~/\.php/){print $7}&#39;</span>|sort -n|uniq -c|sort -nr|head -100             <span style="color:#75715e"># 列出最最耗时的页面(超过60秒的)的以及对应页面发生次数</span>
+</span></span><span style="display:flex;"><span>cat www.access.log |awk <span style="color:#e6db74">&#39;($NF &gt; 30){print $7}&#39;</span>|sort -n|uniq -c|sort -nr|head -20                            <span style="color:#75715e"># 列出传输时间超过 30 秒的文件</span>
+</span></span><span style="display:flex;"><span>ps -ef | awk -F <span style="color:#e6db74">&#39; &#39;</span> <span style="color:#e6db74">&#39;{print $8 &#34; &#34; $9}&#39;</span> |sort | uniq -c |sort -nr |head -20                                 <span style="color:#75715e"># 列出当前服务器每一进程运行的数量，倒序排列</span>
+</span></span><span style="display:flex;"><span>cat access.log |grep <span style="color:#e6db74">&#39;04/May/2012&#39;</span>| awk <span style="color:#e6db74">&#39;{print $11}&#39;</span>|sort|uniq -c|sort -nr|head -20                        <span style="color:#75715e"># 分析日志文件下 2012-05-04 访问页面最高 的前20个 URL 并排序</span>
+</span></span><span style="display:flex;"><span>cat access_log | awk <span style="color:#e6db74">&#39;($11~/\www.abc.com/){print $1}&#39;</span>|sort|uniq -c|sort -nr                                 <span style="color:#75715e"># 查询访问页面的URL地址中 含有 某个网址的 IP 地址</span>
+</span></span><span style="display:flex;"><span>cat linewow-access.log|awk <span style="color:#e6db74">&#39;{print $1}&#39;</span>|sort|uniq -c|sort -nr|head -10                                      <span style="color:#75715e"># 获取访问最高的10个IP地址 同时也可以按时间来查询</span>
+</span></span><span style="display:flex;"><span>cat log_file | egrep <span style="color:#e6db74">&#39;15/Aug/2015|16/Aug/2015&#39;</span> |awk <span style="color:#e6db74">&#39;{print $1}&#39;</span>|sort|uniq -c|sort -nr|head -10             <span style="color:#75715e"># 时间段查询日志时间段的情况</span>
+</span></span><span style="display:flex;"><span>cat access.log |awk <span style="color:#e6db74">&#39;($NF &gt; 60 &amp;&amp; $7~/\.php/){print $7}&#39;</span>|sort -n|uniq -c|sort -nr|head -100                 <span style="color:#75715e"># 列出最最耗时的页面(超过60秒的)的以及对应页面发生次数</span>
+</span></span><span style="display:flex;"><span>cat access.log |awk <span style="color:#e6db74">&#39;{sum+=$10} END {print sum/1024/1024/1024}&#39;</span>                                             <span style="color:#75715e"># 统计网站流量（G)</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;($9 ~/404/)&#39;</span> access.log | awk <span style="color:#e6db74">&#39;{print $9,$7}&#39;</span> | sort                                                   <span style="color:#75715e"># 统计404的连接</span>
+</span></span><span style="display:flex;"><span>cat access.log |awk <span style="color:#e6db74">&#39;{print $9}&#39;</span>|sort|uniq -c|sort -rn                                                      <span style="color:#75715e"># 统计http status</span>
+</span></span><span style="display:flex;"><span>cat /tmp/access.log | grep <span style="color:#e6db74">&#34;20/Mar/2011&#34;</span> |awk <span style="color:#e6db74">&#39;{print $3}&#39;</span>|sort |uniq -c|sort -nr|head                      <span style="color:#75715e"># 找出某天访问次数最多的10个IP</span>
+</span></span><span style="display:flex;"><span>awk -vFS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;[:]&#34;</span> <span style="color:#e6db74">&#39;{gsub(&#34;-.*&#34;,&#34;&#34;,$1);num[$2&#34; &#34;$1]++}END{for(i in num)print i,num[i]}&#39;</span> log_file | sort -n -k <span style="color:#ae81ff">3</span> -r | head -10   <span style="color:#75715e"># 小时单位里ip连接数最多的10个时段</span>
+</span></span><span style="display:flex;"><span>awk <span style="color:#e6db74">&#39;{print $1}&#39;</span> access.log | grep <span style="color:#e6db74">&#34;20/Mar/2011&#34;</span> |cut -c 14-18|sort|uniq -c|sort -nr|head                                   <span style="color:#75715e"># 找出访问次数最多的几个分钟</span>
+</span></span><span style="display:flex;"><span>netstat -nat |awk <span style="color:#e6db74">&#39;{print $6}&#39;</span>|sort|uniq -c|sort -rn                                                                        <span style="color:#75715e"># 查看tcp的链接状态</span>
+</span></span><span style="display:flex;"><span>netstat -n |awk <span style="color:#e6db74">&#39;/^tcp/ {print $NF}&#39;</span>|sort|uniq -c|sort -rn                                                                  <span style="color:#75715e"># 查看tcp的链接状态</span>
+</span></span><span style="display:flex;"><span>netstat -anlp|grep 80|grep tcp|awk <span style="color:#e6db74">&#39;{print $5}&#39;</span>|awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span>|sort|uniq -c|sort -nr|head -n20                        <span style="color:#75715e"># 查找请求数前20个IP（常用于查找攻来源）</span>
+</span></span><span style="display:flex;"><span>netstat -ant |awk <span style="color:#e6db74">&#39;/:80/{split($5,ip,&#34;:&#34;);++A[ip[1]]}END{for(i in A) print A[i],i}&#39;</span> |sort -rn|head -n20                     <span style="color:#75715e"># 查找请求数前20个IP（常用于查找攻来源）</span>
+</span></span><span style="display:flex;"><span>tcpdump -i eth0 -tnn dst port <span style="color:#ae81ff">80</span> -c <span style="color:#ae81ff">1000</span> | awk -F<span style="color:#e6db74">&#34;.&#34;</span> <span style="color:#e6db74">&#39;{print $1&#34;.&#34;$2&#34;.&#34;$3&#34;.&#34;$4}&#39;</span> | sort | uniq -c | sort -nr |head -20      <span style="color:#75715e"># 用tcpdump嗅探80端口的访问看看谁最高</span>
+</span></span><span style="display:flex;"><span>netstat -n|grep TIME_WAIT|awk <span style="color:#e6db74">&#39;{print $5}&#39;</span>|sort|uniq -c|sort -rn|head -n20                                                  <span style="color:#75715e"># 查找较多time_wait连接</span>
+</span></span><span style="display:flex;"><span>netstat -an | grep SYN | awk <span style="color:#e6db74">&#39;{print $5}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span> | sort | uniq -c | sort -nr | more                         <span style="color:#75715e"># 找查较多的SYN连接</span>
+</span></span><span style="display:flex;"><span>netstat -ntlp | grep <span style="color:#ae81ff">80</span> | awk <span style="color:#e6db74">&#39;{print $7}&#39;</span> | cut -d/ -f1                                                                    <span style="color:#75715e"># 根据端口列进程</span>
+</span></span><span style="display:flex;"><span>netstat -ant | grep $ip:80 | wc -l                                                                                          <span style="color:#75715e"># 查看了连接数和当前的连接数</span>
+</span></span><span style="display:flex;"><span>netstat -ant | grep $ip:80 | grep EST | wc -l                                                                               <span style="color:#75715e"># 查看了连接数和当前的连接数</span>
+</span></span><span style="display:flex;"><span>netstat -nat|grep <span style="color:#e6db74">&#34;:80&#34;</span>|awk <span style="color:#e6db74">&#39;{print $5}&#39;</span> |awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span> | sort| uniq -c|sort -n                                      <span style="color:#75715e"># 查看IP访问次数</span>
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#shell命令">shell命令</a></li>
+    <li><a href="#常用命令">常用命令</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

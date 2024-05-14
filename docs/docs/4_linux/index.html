@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="常用命令 # su passwd root //为ubuntu的root用户设置密码 sudo passwd root adduser user //新建用户 passwd user //修改用户密码 // chmod -v u&#43;w /etc/sudoers //添加sudoers文件可写权限 vim /etc/sudoers xiaohu ALL=(ALL:ALL) NOPASSWD: ALL // chown -R docker //更改目录及其子目录文件的归属 chmod -R docker //更改目录及其子目录文件的权限 cat /etc/issue //查看操作系统 uname -a //查看内核版本 exit //退出当前登陆 which bash //查找bash可执行二进制文件位置 whereis bash //查找所有bash的文件 whatis bash //bash是干什么的 clear //清除屏幕内容 pwd //当前目录地址 touch fn //创建文件 mkdir dirname //创建目录 mkdir -p dirname //递归创建目录 ln -s fn link //给指定文件创建一个软链接 cat fn //显示整个内容 more fn //逐屏显示某文件内容,空格翻页,q退出 less fn //b向上翻一页,d向后翻半页,/搜索，n向下查找,N向上查找 head -3 fn //显示文件头部3行 tail -3 fn //显示文件尾3行 tail -f fn //持续显示文件尾部数据，可用于监控日志 wc fn //统计文件有多少行，多少个单词,多少个字节数 grep &#34;info&#34; fn //在文件中查找出现过info的内容 grep -r &#34;info&#34; dirname //递归查找dirname目录下info的内容&#43;文件地址 whoami //显示登录用户 passwd user //修改用户密码 deluser user //删除用户 groupdel user //删除用户组 ps //查看当前会话进程 ps ax //查看所有进程 ps aux //查看所有进程详细信息 ps -u user //查看某用户进程 ps axjf //列出进程树 ps aux | grep httpd //查看名为 httpd 的所有进程 kill 287391 //杀死进程 kill -9 3829 //强制杀死进程 top //查看最活跃的进程 nohup main.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="linux" />
+<meta property="og:description" content="常用命令 # su passwd root //为ubuntu的root用户设置密码 sudo passwd root adduser user //新建用户 passwd user //修改用户密码 // chmod -v u&#43;w /etc/sudoers //添加sudoers文件可写权限 vim /etc/sudoers xiaohu ALL=(ALL:ALL) NOPASSWD: ALL // chown -R docker //更改目录及其子目录文件的归属 chmod -R docker //更改目录及其子目录文件的权限 cat /etc/issue //查看操作系统 uname -a //查看内核版本 exit //退出当前登陆 which bash //查找bash可执行二进制文件位置 whereis bash //查找所有bash的文件 whatis bash //bash是干什么的 clear //清除屏幕内容 pwd //当前目录地址 touch fn //创建文件 mkdir dirname //创建目录 mkdir -p dirname //递归创建目录 ln -s fn link //给指定文件创建一个软链接 cat fn //显示整个内容 more fn //逐屏显示某文件内容,空格翻页,q退出 less fn //b向上翻一页,d向后翻半页,/搜索，n向下查找,N向上查找 head -3 fn //显示文件头部3行 tail -3 fn //显示文件尾3行 tail -f fn //持续显示文件尾部数据，可用于监控日志 wc fn //统计文件有多少行，多少个单词,多少个字节数 grep &#34;info&#34; fn //在文件中查找出现过info的内容 grep -r &#34;info&#34; dirname //递归查找dirname目录下info的内容&#43;文件地址 whoami //显示登录用户 passwd user //修改用户密码 deluser user //删除用户 groupdel user //删除用户组 ps //查看当前会话进程 ps ax //查看所有进程 ps aux //查看所有进程详细信息 ps -u user //查看某用户进程 ps axjf //列出进程树 ps aux | grep httpd //查看名为 httpd 的所有进程 kill 287391 //杀死进程 kill -9 3829 //强制杀死进程 top //查看最活跃的进程 nohup main." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/4_linux/" /><meta property="article:section" content="docs" />
+
+
+
+<title>linux | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/4_linux/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="active">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>linux</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#常用命令">常用命令</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="常用命令">
+  常用命令
+  <a class="anchor" href="#%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">su</span> <span style="color:#a6e22e">passwd</span> <span style="color:#a6e22e">root</span>                          <span style="color:#75715e">//为ubuntu的root用户设置密码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">sudo</span> <span style="color:#a6e22e">passwd</span> <span style="color:#a6e22e">root</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">adduser</span> <span style="color:#a6e22e">user</span>                            <span style="color:#75715e">//新建用户
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">passwd</span> <span style="color:#a6e22e">user</span>                             <span style="color:#75715e">//修改用户密码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">chmod</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">v</span> <span style="color:#a6e22e">u</span><span style="color:#f92672">+</span><span style="color:#a6e22e">w</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">etc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">sudoers</span>               <span style="color:#75715e">//添加sudoers文件可写权限
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">vim</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">etc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">sudoers</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">xiaohu</span>  <span style="color:#a6e22e">ALL</span>=(<span style="color:#a6e22e">ALL</span>:<span style="color:#a6e22e">ALL</span>) <span style="color:#a6e22e">NOPASSWD</span>: <span style="color:#a6e22e">ALL</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">chown</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">R</span> <span style="color:#a6e22e">docker</span>                         <span style="color:#75715e">//更改目录及其子目录文件的归属
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">chmod</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">R</span> <span style="color:#a6e22e">docker</span>                         <span style="color:#75715e">//更改目录及其子目录文件的权限
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">etc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">issue</span>                          <span style="color:#75715e">//查看操作系统
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">uname</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">a</span>                                <span style="color:#75715e">//查看内核版本
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">exit</span>                                    <span style="color:#75715e">//退出当前登陆
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">which</span> <span style="color:#a6e22e">bash</span>                              <span style="color:#75715e">//查找bash可执行二进制文件位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">whereis</span> <span style="color:#a6e22e">bash</span>                            <span style="color:#75715e">//查找所有bash的文件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">whatis</span> <span style="color:#a6e22e">bash</span>                             <span style="color:#75715e">//bash是干什么的
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">clear</span>                                   <span style="color:#75715e">//清除屏幕内容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">pwd</span>                                     <span style="color:#75715e">//当前目录地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">touch</span> <span style="color:#a6e22e">fn</span>                                <span style="color:#75715e">//创建文件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mkdir</span> <span style="color:#a6e22e">dirname</span>                           <span style="color:#75715e">//创建目录
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">mkdir</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">p</span> <span style="color:#a6e22e">dirname</span>                        <span style="color:#75715e">//递归创建目录
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ln</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">s</span> <span style="color:#a6e22e">fn</span> <span style="color:#a6e22e">link</span>                           <span style="color:#75715e">//给指定文件创建一个软链接
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#a6e22e">fn</span>                                  <span style="color:#75715e">//显示整个内容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">more</span> <span style="color:#a6e22e">fn</span>                                 <span style="color:#75715e">//逐屏显示某文件内容,空格翻页,q退出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">less</span> <span style="color:#a6e22e">fn</span>                                 <span style="color:#75715e">//b向上翻一页,d向后翻半页,/搜索，n向下查找,N向上查找
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">head</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span> <span style="color:#a6e22e">fn</span>                              <span style="color:#75715e">//显示文件头部3行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">tail</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">3</span> <span style="color:#a6e22e">fn</span>                              <span style="color:#75715e">//显示文件尾3行
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">tail</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">f</span> <span style="color:#a6e22e">fn</span>                              <span style="color:#75715e">//持续显示文件尾部数据，可用于监控日志
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">wc</span> <span style="color:#a6e22e">fn</span>                                   <span style="color:#75715e">//统计文件有多少行，多少个单词,多少个字节数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">grep</span> <span style="color:#e6db74">&#34;info&#34;</span> <span style="color:#a6e22e">fn</span>                          <span style="color:#75715e">//在文件中查找出现过info的内容
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">grep</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">r</span> <span style="color:#e6db74">&#34;info&#34;</span> <span style="color:#a6e22e">dirname</span>                  <span style="color:#75715e">//递归查找dirname目录下info的内容+文件地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">whoami</span>                                  <span style="color:#75715e">//显示登录用户
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">passwd</span> <span style="color:#a6e22e">user</span>                             <span style="color:#75715e">//修改用户密码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">deluser</span> <span style="color:#a6e22e">user</span>                            <span style="color:#75715e">//删除用户
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">groupdel</span> <span style="color:#a6e22e">user</span>                           <span style="color:#75715e">//删除用户组
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ps</span>                                      <span style="color:#75715e">//查看当前会话进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ps</span> <span style="color:#a6e22e">ax</span>                                   <span style="color:#75715e">//查看所有进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ps</span> <span style="color:#a6e22e">aux</span>                                  <span style="color:#75715e">//查看所有进程详细信息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ps</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">u</span> <span style="color:#a6e22e">user</span>                              <span style="color:#75715e">//查看某用户进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ps</span> <span style="color:#a6e22e">axjf</span>                                 <span style="color:#75715e">//列出进程树
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ps</span> <span style="color:#a6e22e">aux</span> | <span style="color:#a6e22e">grep</span> <span style="color:#a6e22e">httpd</span>                     <span style="color:#75715e">//查看名为 httpd 的所有进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">kill</span> <span style="color:#ae81ff">287391</span>                             <span style="color:#75715e">//杀死进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">kill</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">9</span> <span style="color:#ae81ff">3829</span>                            <span style="color:#75715e">//强制杀死进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">top</span>                                     <span style="color:#75715e">//查看最活跃的进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">nohup</span> <span style="color:#a6e22e">main</span>.<span style="color:#66d9ef">go</span> <span style="color:#f92672">&amp;</span>                         <span style="color:#75715e">//在后台长期运行某程序
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">date</span>                                    <span style="color:#75715e">//显示日期
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">free</span>                                    <span style="color:#75715e">//显示内存和交换区使用情况
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">df</span>                                      <span style="color:#75715e">//显示磁盘使用情况 -m:M显示，-H:G显示
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">du</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">sh</span> <span style="color:#f92672">*</span>								<span style="color:#75715e">//查看当前文件 目录大小
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">ps</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">ef</span>|<span style="color:#a6e22e">grep</span> <span style="color:#ae81ff">3306</span>						<span style="color:#75715e">//查看端口进程
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//显示当前目录各个文件大小
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">netstat</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">a</span>                              <span style="color:#75715e">//列出所有端口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">netstat</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">l</span>                              <span style="color:#75715e">//查看所有监听的端口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">netstat</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">t</span>                              <span style="color:#75715e">//查看所有 TCP 链接
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>&gt; <span style="color:#a6e22e">file</span>                                  <span style="color:#75715e">//将命令的标准输出重定向到文件，会覆盖文件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">file</span>                                 <span style="color:#75715e">//将命令的标准输出重定向到文件，追加不覆盖
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">tar</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">zcvf</span> <span style="color:#a6e22e">filename</span>.<span style="color:#a6e22e">tar</span>.<span style="color:#a6e22e">gz</span>  <span style="color:#a6e22e">src</span>     <span style="color:#75715e">//压缩
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">tar</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">zxvf</span> <span style="color:#a6e22e">filename</span>.<span style="color:#a6e22e">tar</span>.<span style="color:#a6e22e">gz</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">usr</span><span style="color:#f92672">/</span><span style="color:#a6e22e">local</span><span style="color:#f92672">/</span>   <span style="color:#75715e">//解压
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//总核数 = 物理CPU个数 X 每颗物理CPU的核数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">proc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">cpuinfo</span>| <span style="color:#a6e22e">grep</span> <span style="color:#e6db74">&#34;physical id&#34;</span>| <span style="color:#a6e22e">sort</span>| <span style="color:#a6e22e">uniq</span>| <span style="color:#a6e22e">wc</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">l</span>    <span style="color:#75715e">//查看物理CPU个数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">proc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">cpuinfo</span>| <span style="color:#a6e22e">grep</span> <span style="color:#e6db74">&#34;cpu cores&#34;</span>| <span style="color:#a6e22e">uniq</span>                   <span style="color:#75715e">//查看每个物理CPU中core的个数(即核数)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">proc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">cpuinfo</span>| <span style="color:#a6e22e">grep</span> <span style="color:#e6db74">&#34;processor&#34;</span>| <span style="color:#a6e22e">wc</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">l</span>                  <span style="color:#75715e">//查看逻辑CPU的个数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">proc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">cpuinfo</span> | <span style="color:#a6e22e">grep</span> <span style="color:#a6e22e">name</span> | <span style="color:#a6e22e">cut</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">f2</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">d</span>: | <span style="color:#a6e22e">uniq</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">c</span>       <span style="color:#75715e">//查看CPU信息（型号）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">proc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">meminfo</span>                                           <span style="color:#75715e">//查看内存信息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">cat</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">proc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">cpuinfo</span> |<span style="color:#a6e22e">grep</span> <span style="color:#a6e22e">MHz</span>|<span style="color:#a6e22e">uniq</span>                            <span style="color:#75715e">//查看cpu内核频率
+</span></span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#常用命令">常用命令</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

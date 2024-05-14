@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/docs/docs/</link>
+    <description>Recent content on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://xiaohubai.github.io/docs/docs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常识</title>
+      <link>https://xiaohubai.github.io/docs/docs/2_%E5%B8%B8%E8%AF%86/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/2_%E5%B8%B8%E8%AF%86/</guid>
+      <description> 数学 # 百分比 # 假设比如公司共有 13人，男的8个人，女的5个人。求男女各占总数的百分比。 男占公司员工比例8/13*100%=61.5%。 女占公司员工比例5/13*100%=38.5%(四舍五入)。 百分数化小数：去掉百分号，小数点左移两位。如：75%可化为0.75 小数化百分数：加上百分号，小数点右移两位。如：0.62可化为62% 计量单位 # 公斤=kg 1斤=500g 1斤=10两 1 吨 [t] = 2000 斤 1 吨 [t] = 1000 千克 [kg] 公里=km 1里=500米 1公里(km) = 1千米(km) </description>
+    </item>
+    <item>
+      <title>各种工具安装</title>
+      <link>https://xiaohubai.github.io/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/</guid>
+      <description>彻底卸载禁用snap # sudo vim /etc/apt/preferences.d/nosnap.pref https://www.cnblogs.com/learner-and-helper-YZY/p/17654961.html oh-my-zsh # sudo apt install zsh -y sh -c &amp;#34;$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&amp;#34; git # 配置github用户 git config --global user.name &amp;#34;youname&amp;#34; git config --global user.email &amp;#34;youname@qq.com&amp;#34; 配置ssh key ssh-keygen -m PEM -t ed25519 -C &amp;#34;yourname@qq.com&amp;#34; # id_ed25519.pub内容 粘贴到远端github的setting-&amp;gt;SSH and GPG keys下 ssh -T git@github.com 配置github和公司仓库地址 cd ~/.ssh &amp;amp;&amp;amp; vim config Host github.com Hostname github.com Port 22 User git PreferredAuthentications publickey IdentityFile ~/.ssh/id_github Host e.</description>
+    </item>
+    <item>
+      <title>linux</title>
+      <link>https://xiaohubai.github.io/docs/docs/4_linux/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/4_linux/</guid>
+      <description>常用命令 # su passwd root //为ubuntu的root用户设置密码 sudo passwd root adduser user //新建用户 passwd user //修改用户密码 // chmod -v u+w /etc/sudoers //添加sudoers文件可写权限 vim /etc/sudoers xiaohu ALL=(ALL:ALL) NOPASSWD: ALL // chown -R docker //更改目录及其子目录文件的归属 chmod -R docker //更改目录及其子目录文件的权限 cat /etc/issue //查看操作系统 uname -a //查看内核版本 exit //退出当前登陆 which bash //查找bash可执行二进制文件位置 whereis bash //查找所有bash的文件 whatis bash //bash是干什么的 clear //清除屏幕内容 pwd //当前目录地址 touch fn //创建文件 mkdir dirname //创建目录 mkdir -p dirname //递归创建目录 ln -s fn link //给指定文件创建一个软链接 cat fn //显示整个内容 more fn //逐屏显示某文件内容,空格翻页,q退出 less fn //b向上翻一页,d向后翻半页,/搜索，n向下查找,N向上查找 head -3 fn //显示文件头部3行 tail -3 fn //显示文件尾3行 tail -f fn //持续显示文件尾部数据，可用于监控日志 wc fn //统计文件有多少行，多少个单词,多少个字节数 grep &amp;#34;info&amp;#34; fn //在文件中查找出现过info的内容 grep -r &amp;#34;info&amp;#34; dirname //递归查找dirname目录下info的内容+文件地址 whoami //显示登录用户 passwd user //修改用户密码 deluser user //删除用户 groupdel user //删除用户组 ps //查看当前会话进程 ps ax //查看所有进程 ps aux //查看所有进程详细信息 ps -u user //查看某用户进程 ps axjf //列出进程树 ps aux | grep httpd //查看名为 httpd 的所有进程 kill 287391 //杀死进程 kill -9 3829 //强制杀死进程 top //查看最活跃的进程 nohup main.</description>
+    </item>
+    <item>
+      <title>regexp</title>
+      <link>https://xiaohubai.github.io/docs/docs/5_regexp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/5_regexp/</guid>
+      <description>校验数字的表达式 # 1 数字：^[0-9]*$ 2 n位的数字：^\d{n}$ 3 至少n位的数字：^\d{n,}$ 4 m-n位的数字：^\d{m,n}$ 5 零和非零开头的数字：^(0|[1-9][0-9]*)$ 6 非零开头的最多带两位小数的数字：^([1-9][0-9]*)+(.[0-9]{1,2})?$ 7 带1-2位小数的正数或负数：^(\-)?\d+(\.\d{1,2})?$ 8 正数、负数、和小数：^(\-|\+)?\d+(\.\d+)?$ 9 有两位小数的正实数：^[0-9]+(.[0-9]{2})?$ 10 有1~3位小数的正实数：^[0-9]+(.[0-9]{1,3})?$ 11 非零的正整数：^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\+?[1-9][0-9]*$ 12 非零的负整数：^\-[1-9][]0-9&amp;#34;*$ 或 ^-[1-9]\d*$ 13 非负整数：^\d+$ 或 ^[1-9]\d*|0$ 14 非正整数：^-[1-9]\d*|0$ 或 ^((-\d+)|(0+))$ 15 非负浮点数：^\d+(\.\d+)?$ 或 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$ 16 非正浮点数：^((-\d+(\.\d+)?)|(0+(\.0+)?))$ 或 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$ 17 正浮点数：^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$ 或 ^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$ 18 负浮点数：^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$ 或 ^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$ 19 浮点数：^(-?\d+)(\.\d+)?$ 或 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$ 校验字符的表达式 # 1 汉字：^[\u4e00-\u9fa5]{0,}$ 2 英文和数字：^[A-Za-z0-9]+$ 或 ^[A-Za-z0-9]{4,40}$ 3 长度为3-20的所有字符：^.</description>
+    </item>
+    <item>
+      <title>设计模式</title>
+      <link>https://xiaohubai.github.io/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description>设计模式 # 创建型 //在一些情况下，要创建的对象需要一系列复杂的初始化操作，比如查配置文件、查数据库表、初始化成员对象等，如果把这些逻辑放在构造函数中，会极大影响代码的可读性。不妨定义一个类来专门负责对象的创建，这样的类就是工厂类，这种做法就是工厂模式 简单工厂模式:根据传入的入参，生成不同的结构体的接口方法(有一个具体的工厂类，可以根据传入参数，生产不同的产品)，由一个对象负责所有具体类的实例化。 工厂方法模式:解决根据简单工厂入参的判断问题，（只需要知道具体工厂名，即可生产对应产品），将对象创建从由一个对象负责所有具体类的实例化，变成由一群子类来负责对具体类的实例化，从而将过程解耦 抽象工厂模式：子类会越来越多，可以将产品进行分组，每组中的不同产品由同一个工厂类的不同方法来创建。 创建者模式:将一个复杂对象的构建分离成多个简单对象的构建组合;(将一个复杂的对象的构造和表示分离，使同样的构造过程可以创建不同的产品。) 原型模式:使对象能复制自身，并且暴露到接口中，使客户端面向接口编程时，不知道接口实际对象的情况下生成新的对象。 单例模式: 结构型模式 外观模式 适配器模式 代理模式 组合模式 享元模式 装饰模式 桥模式 行为型模式 中介者模式: 观察者模式: 命令模式: 迭代器模式: 模板方法模式: 策略模式: 状态模式: 备忘录模式: 解释器模式: 职责链模式: 访问者模式: 创建型 # 简单工厂模式 # //简单工厂模式有一个具体的工厂类，可以根据传入的入参，生产不同的产品 func main() { f := getFruit(&amp;#34;apple&amp;#34;) fmt.Println(f.Fruit()) } type FruitFactory interface { Fruit() string } func getFruit(t string) FruitFactory { switch t { case &amp;#34;apple&amp;#34;: return &amp;amp;apple{} case &amp;#34;banana&amp;#34;: return &amp;amp;banana{} } return nil } type apple struct{} func (*apple) Fruit() string { return &amp;#34;我是苹果，我很好吃&amp;#34; } type banana struct{} func (*banana) Fruit() string { return &amp;#34;我是香蕉，我最好吃了&amp;#34; } 工厂方法模式 # //工厂方法 调用方只需要知道具体工厂名即可生成对应产品 //工厂方法模式使用子类的方式延迟生成对象到子类中实现。 func main() { apple := appleFactory{} fmt.</description>
+    </item>
+    <item>
+      <title>shell</title>
+      <link>https://xiaohubai.github.io/docs/docs/7_shell/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/7_shell/</guid>
+      <description>shell脚本 # shell命令 # str=&amp;#34;hello word !&amp;#34; # 定义变量,没有数据类型的概念，全是字符串，单引号用于保留字符的字面含义，各种特殊字符在单引号里面，双引号的美元符号（$）、反引号（`）和反斜杠（\）有特殊含义 (()) # 整数进行算术运算,((i++)),((i--)) [[]] # 条件判断，==，&amp;amp;&amp;amp;，|| {} # 取出变量值 &amp;amp;&amp;amp; -a # and || -o # or -n str1 # 判断字符串不为空（长度大于零） -z str1 # 判断字符串为空（长度等于零） echo ${str} # 查看变量内容 ${#str} # 返回字符串长度 echo ${str:4:4} # 获取子串，不会改变原始字符串 str2=&amp;#34;$str$str1&amp;#34; # 字符串拼接，可以有空格 str3=$(($str+$str1)) # 整型运算 a[0]=&amp;#34;2&amp;#34; # 定义数组 a=( foo bar &amp;#34;a b c&amp;#34; 42 ) # 定义数组 ${a[0]} # 取得数组中的元素 ${#a[@]} # 取得数组的长度 ${#a[i]} # 取得数组中某个变量的长度 (${a1[@]} ${a2[@]}) # 两个数组拼接 unset a[5] # 删除数组元素，unset a 删除整个数组 read # 接收命令行输入 -p提示 ####### if ######### if [ &amp;#34;$varname&amp;#34; = &amp;#34;foo&amp;#34; ]; then echo &amp;#34;this is foo&amp;#34; elif [ &amp;#34;$varname&amp;#34; = &amp;#34;bar&amp;#34; ]; then echo &amp;#34;this is bar&amp;#34; else echo &amp;#34;neither&amp;#34; fi ##### case ########## case expression in pattern1 ) statements ;; pattern2 ) statements ;; * ) otherwise ;; esac ######for######### for i in {1.</description>
+    </item>
+    <item>
+      <title>docker</title>
+      <link>https://xiaohubai.github.io/docs/docs/8_docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/8_docker/</guid>
+      <description>docker命令 # sudo systemctl start docker //启动 sudo systemctl enable docker.service //开机启动 docker ps -a //查看所有容器 docker ps //查看正在运行的容器 docker stop 容器 //停止容器 docker start 容器 docker restart 容器 docker rm 容器 //删除容器 docker images //查看所有镜像 docker rmi 镜像 //删除镜像 docker logs -f -t --tail n 容器 //查看容器日志最新的第n条数据(f:跟踪日志输出；-t:显示时间戳；--tail:列出最新的n条日志) docker inspect 容器 //查看容器详细信息 docker exec -it 容器 bash //进入运行的容器 docker exec -u 0 -it kibana /bim/bash //root权限进入容器 docker stats //查看当前运行容器 (解释:https://www.</description>
+    </item>
+    <item>
+      <title>dockerfile</title>
+      <link>https://xiaohubai.github.io/docs/docs/9_dockerfile/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/9_dockerfile/</guid>
+      <description>命令 # FROM： //指定基础镜像 MAINTAINER： //作者信息 RUN： //运行Linux系统的命令 CMD： //指定容器启动执行的命令（CMD用于指定在容器启动时所要执行的命令，而RUN用于指定镜像构建时所要执行的命令） LABEL： //指定生成镜像的源数据标签 EXPOSE： //指定镜像容器监听端口号 ENV： //设置环境变量 ADD： //对压缩文件进行解压缩，将本机数据或远程文件（url）添加到容器指定的目录 COPY： //复制宿主机数据到镜像内部使用（与ADD不同，不会自动解压文件，也不能访问网络资源） WORKDIR： //切换到镜像容器中的指定目录中,终端默认登陆的进来工作目录 VOLUME： //挂载数据卷到镜像容器中，持久化目录 USER： //指定运行容器的用户 ARG： //指定镜像的版本号信息 ONBUILD： //创建镜像，作为其他镜像的基础镜像运行操作指令 ENTRYPOINT： //配置容器启动后执行的命令，并且不可被 docker run 提供的参数覆盖 实例 # FROM golang:1.20.3 AS builder WORKDIR /src COPY . /src RUN export GOPROXY=https://goproxy.io &amp;amp;&amp;amp; make build FROM debian:stable-slim LABEL MAINTAINER=&amp;#34;xiaohubai@outlook.com&amp;#34; RUN apt-get update &amp;amp;&amp;amp; apt-get install -y --no-install-recommends \ ca-certificates \ netbase \ &amp;amp;&amp;amp; rm -rf /var/lib/apt/lists/ \ &amp;amp;&amp;amp; apt-get autoremove -y &amp;amp;&amp;amp; apt-get autoclean -y WORKDIR /app COPY --from=builder /src/server /app COPY --from=builder /src/rbac_model.</description>
+    </item>
+    <item>
+      <title>docker-compose</title>
+      <link>https://xiaohubai.github.io/docs/docs/10_docker-compose/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/10_docker-compose/</guid>
+      <description>docker-compose.yml # version: &amp;#39;3&amp;#39; ## 遇到容器不停重启，首先怀疑是挂载目录读写执行权限问题 services: #### mysql #### mysql: image: bitnami/mysql:8.0 container_name: mysql restart: always ports: - &amp;#34;3306:3306&amp;#34; volumes: - /usr/local/volumes/mysql:/bitnami/mysql environment: - TZ=Asia/Shanghai - MYSQL_ROOT_USER=root - MYSQL_ROOT_PASSWORD=123456 - MYSQL_DATABASE=go-layout - MYSQL_CHARACTER_SET=utf8mb4 - MYSQL_COLLATE=utf8mb4_general_ci #### redis #### redis: image: redis:7.0.0 container_name: redis restart: always ports: - &amp;#34;6379:6379&amp;#34; command: redis-server --appendonly yes --requirepass &amp;#34;123456&amp;#34; volumes: - /usr/local/volumes/redis/redis.conf:/etc/redis.conf - /usr/local/volumes/redis/data:/data environment: - TZ=Asia/Shanghai #### jaeger #### jaeger: image: jaegertracing/all-in-one:1.37 container_name: jaeger restart: always ports: - &amp;#34;5775:5775/udp&amp;#34; - &amp;#34;6831:6831/udp&amp;#34; - &amp;#34;6832:6832/udp&amp;#34; - &amp;#34;5778:5778&amp;#34; - &amp;#34;14268:14268&amp;#34; - &amp;#34;9411:9411&amp;#34; - &amp;#34;16686:16686&amp;#34; environment: - TZ=Asia/Shanghai - COLLECTOR_ZIPKIN_HTTP_PORT=9411 #### prometheus #### ## 注意数据集data要保证其他用户可读写，直接设置777 prometheus: image: bitnami/prometheus:2.</description>
+    </item>
+    <item>
+      <title>git</title>
+      <link>https://xiaohubai.github.io/docs/docs/11_git/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/11_git/</guid>
+      <description>命令 # git remote -v //查看远程管理分支 git remote rm origin //删除关联的origin远程库 git branch //查看分支 git branch -D 分支 //强制删除分支 git push -f origin test:test //强制推送 git checkout -b 分支 //创建分支，并进入分支 git checkout 分支 //切换分支 git merge dev //将分支dev合并到当前分支内(切换到目标分支) git reset --hard 030bfd0393a55ead2c6b9a3dc3312a6932e9d0ae //代码回退到某一个时间戳 git log //查看commit记录 git remote prune origin //远程、本地已经删除分支，本地缓存还有分支名称 git reset --soft HEAD^ //撤销本次commit，不删除git add添加的内容 git reset --soft HEAD~2 //撤销最近两次的commit，不删除git add添加的内容 git commit --amend //修改注释 这时候会进入vim编辑器，修改完成你要的注释后保存即可 git reflog //显示所有发生的commit git branch dev_xhubai_core_unitTest HEAD@{692} // 找回本地删除的分支 git merge --squash 分支 //压缩合并commit git fetch --tags //拉取远程tag git tag v0.</description>
+    </item>
+    <item>
+      <title>go</title>
+      <link>https://xiaohubai.github.io/docs/docs/12_go/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/12_go/</guid>
+      <description>类型转换 # string # 1. int int8 int16 int32 str:=strconv.Itoa(int(value)) 2. int64 str:=strconv.FormatInt(value, 10) 3. uint uint8 uint16 uint32 str:=strconv.FormatUint(uint64(value), 10) 4. uint64 str:=strconv.FormatUint(value, 10) 5. float32 str:=strconv.FormatFloat(float64(value), &amp;#39;f&amp;#39;, -1, 32) 6. float64 str:=strconv.FormatFloat(value, &amp;#39;f&amp;#39;, -1, 64) 7. bool str:=strconv.FormatBool(value) 8. []byte str:=string(value) 9. time.Time if value.IsZero() { return &amp;#34;&amp;#34; } return value.String() 10. *time.Time if value == nil { return &amp;#34;&amp;#34; } return value.String() int # 1. int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float32 float64 i:=int(int64(value)) 2.</description>
+    </item>
+    <item>
+      <title>mysql</title>
+      <link>https://xiaohubai.github.io/docs/docs/13_mysql/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/13_mysql/</guid>
+      <description>mysql基础 # 事务ACID # A:Atomicity (原子性)：事务中的操作要么都发生，要么都不发生。 C:Consistency(一致性)：事务开始之前和事务结束以后，数据库的完整性约束没有被破坏。 I:Isolation(隔离性)：多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果。 D:Durability(持久性)：，该事务所对数据库所作的更改便持久的保存在数据库之中，并不会被回滚。 事务四种隔离级别 # RU :Read uncommitted：(读未提交)：最低级别，任何情况都无法保证。可能产生脏读，不可重复读，幻读． RC :Read committed : (读已提交)：可避免脏读的发生。 RR :Repeatable read: (可重复读)即在一个事务读取数据的过程中，其他事务不允许修改数据，所以解决了不可重复读． S :Serializable (串行化)：最高的隔离级别,某一时刻只能有一个事务操作数据库 脏读 不可重复读 幻读 # 脏读: ：事务A读取数据库某一数据，事务B在此过程中修改了该数据，但没有提交，此时事务A读取的可能是脏数据，一旦事务B回滚，事务A便是脏读． 不可重复读：事务A需要在此次事务中多次读取同一个数据，在此期间，事务B修改了该数据并提交，导致事务A多次读取的数据不一样，因此称为不可重复读． 幻读：涉及两个数据库的更新操作，比如事务A更新整个数据库，还未更新完时，事务B在此过程中插入一行，在此之后，事务A发现数据库中还有一行没有更新，好像产生了幻觉一样． 乐观锁 悲观锁 # //乐观锁 假设不会发生并发冲突，只在提交操作时检查是否违反数据完整性。 为数据增加一个版本标识，一般是通过为数据库表增加一个数字类型的 “version” 字段来实现。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。当我们提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对，如果数据库表当前版本号与第一次取出来的version值相等，则予以更新，否则认为是过期数据 //悲观锁 假定会发生并发冲突，屏蔽一切可能违反数据完整性的操作 table中增加一个字段，名称无所谓，字段类型使用时间戳（timestamp）, 和上面的version类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致则OK，否则就是版本冲突 每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。 乐观锁、悲观锁区别？ # 乐观锁适用于写比较少的情况下，即冲突真的很少发生的时候，这样可以省去了锁的开销，加大了系统的整个吞吐量 但如果经常产生冲突，上层应用会不断的进行retry，这样反倒是降低了性能，所以这种情况下用悲观锁 共享锁 # //执行语句后 加上 lock in share mode 对于多个不同的事务，对同一资源共享同一个锁（一个门上一把锁，多个钥匙），只用于select，对于update,insert,delete语句会自动加排它锁 排他锁 # //执行语句后加上 for update 对于多个不同的事务，对同一个资源只能有一把锁。 行锁 # MySQL InnoDB默认行级锁。行级锁都是基于索引的，如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住.</description>
+    </item>
+    <item>
+      <title>gorm</title>
+      <link>https://xiaohubai.github.io/docs/docs/14_gorm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/14_gorm/</guid>
+      <description> 代码生成 # gentool -dsn &amp;#34;root:123456@tcp(172.21.0.2:3306)/go-layout?charset=utf8mb4&amp;amp;parseTime=True&amp;amp;loc=Local&amp;#34; --modelPkgName=&amp;#34;./internal/data/model&amp;#34; -outPath=&amp;#34;./internal/data/gen&amp;#34; 常见问题 # gorm 做更新操作 要特别注意 默认值, 再不确定更新那个struct字段时,要求请求参数全部有值,gorm进行map[string]interface{}指定全部请求参数更新 gorm 统计总数 加上 delete_at is null 删除非真删除,只是delete_at 不为null </description>
+    </item>
+    <item>
+      <title>elasticsearch</title>
+      <link>https://xiaohubai.github.io/docs/docs/15_elasticsearch/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/15_elasticsearch/</guid>
+      <description>常用名称 # 索引（index）：数据库,一个可检索的文档对象的集合 类型（type):表,不常用，一般一个index下建一个type，默认为_doc 文档（document):一条记录 映射关系 （mapping），设置字段类型。如何索引数据 字段（Field）：doc组成部分 分片(shard)：索引的数据量太大时，需要水平拆分，分片在创建索引时创建，之后不能更改 副本(replica)：分片的 Copy，每个主分片都有一个或多个副本分片，当主分片异常时，副本可以提供数据的查询等操作。 脑裂现象 # // 原因 网络问题： 集群间的网络延迟导致一些节点访问不到 Master，认为 Master 挂掉了从而选举出新的 Master，并对 Master 上的分片和副本标红，分配新的主分片。 节点负载： 主节点的角色既为 Master 又为 Data，访问量较大时可能会导致 ES 停止响应（假死状态）造成大面积延迟，此时其他节点得不到主节点的响应认为主节点挂掉了，会重新选取主节点。 内存回收： 主节点的角色既为 Master 又为 Data，当 Data 节点上的 ES 进程占用的内存较大，引发 JVM 的大规模内存回收，造成 ES 进程失去响应。 // 解决 适当调大响应时间：减少误判。 通过参数 discovery.zen.ping_timeout 设置节点状态的响应时间，默认为 3s，可以适当调大。 选举触发：我们需要在候选集群中的节点的配置文件中设置参数 discovery.zen.munimum_master_nodes 的值。这个参数表示在选举主节点时需要参与选举的候选主节点的节点数，默认值是 1，官方建议取值(master_eligibel_nodes2)+1，其中 master_eligibel_nodes 为候选主节点的个数。 角色分离：即是上面我们提到的候选主节点和数据节点进行角色分离，这样可以减轻主节点的负担，防止主节点的假死状态发生，减少对主节点“已死”的误判。 mapping # //long, integer, short, byte, double, float, half_float, scaled_float（需配合scaling_factor（缩放因子）使用，存的是*缩放因子的整数；57.34的字段缩放因子为100，存起来就是5734） PUT my_index { &amp;#34;settings&amp;#34;: { &amp;#34;number_of_shards&amp;#34;: &amp;#34;1&amp;#34;, &amp;#34;number_of_replicas&amp;#34;: &amp;#34;0&amp;#34;, &amp;#34;analysis&amp;#34;: { &amp;#34;analyzer&amp;#34;: { &amp;#34;ik&amp;#34;: { &amp;#34;tokenizer&amp;#34;: &amp;#34;ik_max_word&amp;#34; } } } }, &amp;#34;mappings&amp;#34;: { &amp;#34;properties&amp;#34;: { &amp;#34;name&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;text&amp;#34;, &amp;#34;analyzer&amp;#34;: &amp;#34;ik&amp;#34; }, &amp;#34;path&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;text&amp;#34;, &amp;#34;analyzer&amp;#34;: &amp;#34;ik&amp;#34; } } } } { &amp;#34;settings&amp;#34;: { &amp;#34;number_of_shards&amp;#34;: 1, //分片数量 &amp;#34;number_of_replicas&amp;#34;: 0 //副本数量 }, &amp;#34;mappings&amp;#34;: { &amp;#34;properties&amp;#34;: { //字符串类型 &amp;#34;key1&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;text&amp;#34; //会分词、模糊搜索 }, &amp;#34;key2&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;keyword&amp;#34;,//不分词、作为整体进行搜索 &amp;#34;index&amp;#34;: true, //字段是否可被搜索，true(默认)或false &amp;#34;store&amp;#34;: false //字段值是否应与_source字段分开存储和检索。 true或false(默认) }, //数值型 &amp;#34;key3&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;byte&amp;#34; //-127到128 }, &amp;#34;key4&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;short&amp;#34; //-32768到32767 }, &amp;#34;key5&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;integer&amp;#34; //有符号的32位整数 }, &amp;#34;key6&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;float&amp;#34; //32位单精度 }, &amp;#34;key7&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;double&amp;#34; //双精度64位 }, &amp;#34;key8&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;long&amp;#34; //有符号的64位整数 }, //日期类型 &amp;#34;key9&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;date&amp;#34;, &amp;#34;format&amp;#34;: &amp;#34;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&amp;#34;, //日期格式，epoch_second(秒时间戳)，epoch_millis（毫秒时间戳），日期字符串 &amp;#34;ignore_malformed&amp;#34;: false //true:格式错误的数字将被忽略(默认)；false:格式错误的数字会引发异常并拒绝整个文档。 }, //布尔类型 &amp;#34;key10&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;boolean&amp;#34; //false:(false,&amp;#34;false&amp;#34;,&amp;#34;off&amp;#34;,&amp;#34;no&amp;#34;,&amp;#34;0&amp;#34;,&amp;#34;&amp;#34;,0,&amp;#34;0.</description>
+    </item>
+    <item>
+      <title>grafana</title>
+      <link>https://xiaohubai.github.io/docs/docs/16_grafana/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/16_grafana/</guid>
+      <description> 语法 # //每分钟请求/响应数 sum(increase(fwd_req_request_counter[1m])) sum(increase(fwd_res_response_counter[1m])) // qps sum(irate(fwd_req_request_counter{}[1m])) sum(irate(fwd_res_response_counter{}[1m])) //请求P9x图 histogram_quantile(0.90, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) //响应P9x图 histogram_quantile(0.90, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) //请求最大耗时 sum(max_over_time(fwd_req_time_cost_gauge[15s])) //响应最大耗时 sum(max_over_time(fwd_res_time_cost_gauge[15s])) //每分钟ip数 count(increase(fwd_req_request_counter[1m])&amp;gt;0) count(increase(fwd_res_response_counter[1m])&amp;gt;0) 指标 # Gauge(仪表盘): 值是有变化的,如CPU使用率，有高有低 Counter(计数器):从程序开始，只增不减 Histogram(直方图): 把观测值归入的 bucket 的数量 Summary(摘要):与Histogram类似类型，用于表示一段时间内的数据采样结果,但它直接存储了分位数（通过客户端计算，然后展示出来），而不是通过区间计算 函数 # sum: 对瞬时向量求和, 加by(),按照字段分组: group by min: 最小值 可配合by max: 最大值 可配合by avg: 平均值 可配合by count: 瞬时向量个数求和,可配合by topk:对瞬时向量的值从大到小进行排列，并获取前N个值 可配合by bottomk 和topk相反 changes返回给定的区间向量中，对比于当前值，发生变化的元素的数量。 delta:返回区间向量中，第一个元素和最后一个元素之间的变化值须作用在gauge类型的指标 </description>
+    </item>
+    <item>
+      <title>grpc</title>
+      <link>https://xiaohubai.github.io/docs/docs/17_grpc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/17_grpc/</guid>
+      <description> proto3 # </description>
+    </item>
+    <item>
+      <title>redis</title>
+      <link>https://xiaohubai.github.io/docs/docs/19_redis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/19_redis/</guid>
+      <description>基础操作 # String（key-value） # get # # 返回字符串value,不存在-&amp;gt;nil,非字符串-&amp;gt;err get key set # # 设置key-value 字符串，存在value，覆盖;返回ok set key value set key value ex second # 设置键的过期时间为秒 set key value px millisecond # 设置键的过期时间为毫秒 set key value nx # 键不存在才设置 set key value xx # 只有键存在才设置 set key value ex second nx # 设置key的过期时间为秒，不存在才设置 strlen # # 返回value字符串长度，非字符串-&amp;gt;err strlen key append # # key存在，追加到value尾部，反之设为value append key value decr # # 数字value减一,不存在，key的值设为-1，非数字返回错误 decr key decrby # # 已存储的value,减去数字value decrby key 20 incr # # 数字加一，不存在key设为1，非数字-&amp;gt;err incr key incrby # # 已存储的value,减去数字value incrby key 20 incrbyfloat # # 已存储的value，加上数字浮点数 incrby key 20 getrange # # 返回字符串字串，两边都包含，-1：最后一个字符，-2倒数第二 getrange key 0 4 getset # # 覆盖旧字符串，返回旧字符串，value不是字符串-&amp;gt;err,key不存在-&amp;gt;nil getset key value mget # # 返回所有key的value,不存在对应value-&amp;gt;nil mget key1 key2 mset # # 设置多个key-value对,会覆盖旧值 mset key1 value1 key2 value2 psetex # # 设置key的生存时间，毫秒 psetex key time value setrange # # 从offset开始覆盖字符串 setrange key 6 value Hash # key ckey1 cvalue ckey2 cvalue2</description>
+    </item>
+    <item>
+      <title>kafka</title>
+      <link>https://xiaohubai.github.io/docs/docs/18_kafka/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/18_kafka/</guid>
+      <description>kafka基本组件 # ZooKeeper # 负责保存 broker 集群元数据，并对控制器进行选举等操作 Broker # 消息中间件节点（服务器），一个节点就是一个broker，一个kafka集群由一个或多个broker组成 Producer (生产者) # 负责发布消息到 Kafka broker Consumer（消费者） # 消息消费者，向 Kafka broker 读取消息的客户端 Topic（主题） # 每条发布到 Kafka 集群的消息都有一个类别，这个类别被称为 Topic。（物理上不同 Topic 的消息分开存储，逻辑上一个 Topic 的消息虽然保存于一个或多个 broker 上，但用户只需指定消息的 Topic 即可生产或消费数据而不必关心数据存于何处） Partition # partition 默认一个topic有一个分区（partition） Partition 是物理上的概念，每个 Topic 包含一个或多个 Partition，数据存储最小单元， 分区分散存储在服务器不同节点上解决了一个海量数据如何存储的问题 Offset # offset 是消息在分区中的唯一标识，Kafka 通过它来保证消息在分区内的顺序性，不过 offset 并不跨越分区，也就是说，Kafka保证的是分区有序性而不是主题有序性。 Replication(副本) # Kafka 同一 Partition 的数据可以在多 Broker 上存在多个副本，通常只有主副本对外提供读写服务，当主副本所在 broker 崩溃或发生网络异常，Kafka 会在 Controller 的管理下会重新选择新的 Leader 副本对外提供读写服务。 kafka零拷贝机制保证读取数据高性能 # 消费者读取数据流程：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据）-》os cache 复制数据到kafka应用中-》kafka将数据（复制）发送到socket cache中-》socket cache 通过网卡传输给消费者 //零拷贝 kafka linux sendfile技术 ：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据） 从os cache直接将数据发送给网卡传输给消费者 //如何做到高性能？基于以下相当于 Kafka 完全基于内存提供数据的写和读 1.</description>
+    </item>
+    <item>
+      <title>swaggo</title>
+      <link>https://xiaohubai.github.io/docs/docs/20_swaggo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/20_swaggo/</guid>
+      <description>main总入口 # // @title Swagger Example API // @version 0.0.1 // @description 总入口 // @in header // @BasePath / Get不带参数跟Header请求 # // @Summary 接口描述 // @Tags 分类名称 // @Accept application/json // @Success 200 object result.Response 返回值 // @Router /api/get [get] Get带Query参数请求 # // @Summary 接口描述 // @Tags 分类名称 // @Accept application/json // @Param userId path integer true &amp;#34;用户ID&amp;#34; // @Success 200 object result.Response 返回值 // @Router /api/get/{userId} [get] Get带token请求 # // @Summary 接口描述 // @Tags 分类名称 // @Security ApiKeyAuth // @Accept application/json // @Param token header string true &amp;#34;登录信息&amp;#34; // @Success 200 object result.</description>
+    </item>
+    <item>
+      <title>validator</title>
+      <link>https://xiaohubai.github.io/docs/docs/21_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/21_validator/</guid>
+      <description>go-playground/validator # https://github.com/go-playground/validator tag参数 # required //必填； len=11 //长度=11； min=3 //如果是数字，验证的是数据大小范围，最小值为3，如果是文本，验证的是最小长度为3， max=6 //如果是数字，验证的是数字最大值为6，如果是文本，验证的是最大长度为6 mail //验证邮箱 gt=3 //对于文本就是长度&amp;gt;=3 lt=6 //对于文本就是长度&amp;lt;=6 示例 # type Register struct { UserName string `form:&amp;#34;user_name&amp;#34; json:&amp;#34;user_name&amp;#34; binding:&amp;#34;required,min=1&amp;#34;` Pass string `form:&amp;#34;pass&amp;#34; json:&amp;#34;pass&amp;#34; binding:&amp;#34;required,min=6,max=20&amp;#34;` Captcha string `form:&amp;#34;captcha&amp;#34; json:&amp;#34;captcha&amp;#34; binding:&amp;#34;required,len=4&amp;#34;` Age float64 `form:&amp;#34;age&amp;#34; json:&amp;#34;age&amp;#34; binding:&amp;#34;required,min=1,max=200&amp;#34;` // 注意： 如果你的表单参数含有0值是允许提交的，必须用指针类型（*float64），而 float64 类型则认为 0 值不合格 Status *float64 `form:&amp;#34;status&amp;#34; json:&amp;#34;status&amp;#34; binding:&amp;#34;required,min=0,max=1&amp;#34;` } var r Register if err := c.ShouldBindJSON(&amp;amp;r); err != nil { //返回参数错误 } proto-gen-validate # https://github.</description>
+    </item>
+    <item>
+      <title>vue</title>
+      <link>https://xiaohubai.github.io/docs/docs/22_vue/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/22_vue/</guid>
+      <description> 新建项目 # pnpm init vite@latest pnpm create vite 生命周期函数 # data(): 定义该页面使用的变量 created(): 页面加载完成之前 执行 父组件-- &amp;gt; 子组件 mounted(): 页面加载完成之后，执行 子组件-- &amp;gt; 父组件 watch(): 监听一个值的变化，然后执行相应的函数 destroyed(): 离开页面后，会调用 销毁一些监听事件及定时函数 methods() ：事件方法执行 //vue3 onMounted() :用来在组件完成初始渲染并创建 DOM 节点后运行代码 ref reactive # ref和reactive是实现响应式数据的方法,即界面和数据同步，能实现实时更新 reactive:参数必须是一个对象，包括json数据和数组都可以，否则不具有响应式 ref:ref本质也是reactive,是reactive+简单值: ref(&amp;#34;&amp;#34;) 在vue中使用ref的值，不用通过.value获取 在js中使用ref的值，必须通过.value获取 </description>
+    </item>
+    <item>
+      <title>js</title>
+      <link>https://xiaohubai.github.io/docs/docs/23_js/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/23_js/</guid>
+      <description>字符串 # length 获取长度 indexOf() 字符串中指定文本首次出现的索引 lastIndexOf()字符串中指定文本最后一次出现的索引 search() 方法搜索特定值的字符串，并返回匹配的位置 slice() 提取字符串的某个部分并返回被提取的部分 substring()类似于 slice(),不同之处在于 substring() 无法接受负的索引 substr() 方法 类似于 slice(),不同之处在于第二个参数规定被提取部分的长度。 replace() 另一个值替换在字符串中指定的值,只替换首个匹配： /xxxx/ :正则写法不带引号 /xxxx/i :不区分大小写 /xxxx/g :替换所有匹配的 toUpperCase() 字符串大写 toLowerCase() 字符拆小写 concat() 连接两个或多个字符串 trim() 方法删除字符串两端的空白符： charAt() 方法返回字符串中指定下标（位置）的字符串 charCodeAt() 方法返回字符串中指定索引的字符 unicode 编码 split() 将字符串转换为数组：括号内是根据什么切割 数字 # toString() 将数值转化为字符串 toFixed() 返回字符串值，它包含了指定长度的数字： toPrecision() 返回字符串值，它包含了指定长度的数字： Number() 其它类型 转换为数字 parseInt(str) 去除小数点 取整 数组 # join() 返回一个新字符串，将所有数组元素结合为一个字符串 pop() 方法从数组中删除最后一个元素： push() 方法（在数组结尾处）向数组添加一个新的元素，返回新数组的长度 shift() 方法会删除首个数组元素，回被“位移出”的字符串： unshift() 方法（在开头）向数组添加新元素，返回新数组的长度。 sort() 方法以字母顺序对数组进行排序 (“25”大于100：str1.</description>
+    </item>
+    <item>
+      <title>scss</title>
+      <link>https://xiaohubai.github.io/docs/docs/24_scss/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/24_scss/</guid>
+      <description> 优先级 # !important 行间样式 id选择器 class选择器 标签选择器 通配符选择器: * 继承 # //不可继承,但子元素使用inherit继承父元素的值. width border margin height padding. background float clear position top right bottom left overflow z-index content outline size vertical-align：垂直文本对齐 text-decoration：规定添加到文本的装饰 text-shadow：文本阴影效果 white-space：空白符的处理 unicode-bidi：设置文本的方向 //可继承: font：组合字体 font-family：规定元素的字体系列 font-weight：设置字体的粗细 font-size：设置字体的尺寸 font-style：定义字体的风格 text-indent：文本缩进 text-align：文本水平对齐 line-height：行高 color：文本颜色 visibility cursor page page-break-inside windows orphans text-indent、text-align 块级可继承 vh vw px # 1vh 等于视口高度的1% 1vw 等于视口宽度的1% px 像素 display(块,行内元素) :只是决定了宽高居中方式 # display: none //隐藏元素,将元素所占的位置一并隐藏 display: block //将元素强制转换为块级元素 display: inline //将元素强制转换为行内元素 display: inline-block //将元素强制转换为行内块元素,可设置宽高 display: flex/inline-flex //弹性,通过参数决定块或行 flex-direction: row（默认值）：主轴为水平方向，起点在左端。 row-reverse：主轴为水平方向，起点在右端。 column：主轴为垂直方向，起点在上沿。 column-reverse：主轴为垂直方向，起点在下沿。 flex-wrap: nowrap（默认）：不换行。 wrap：换行，第一行在上方。 wrap-reverse：换行，第一行在下方。 justify-content: flex-start（默认值）：左对齐 flex-end：右对齐 center： 居中 space-between：两端对齐，项目之间的间隔都相等。 space-around：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。 align-items: flex-start：交叉轴的起点对齐。 flex-end：交叉轴的终点对齐。 center：交叉轴的中点对齐。 baseline: 项目的第一行文字的基线对齐。 stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。 flex:拉伸 收缩 元素大小；默认值为0 1 auto(不拉伸,收缩/0不收缩,自动) position(定位) # //配合top，right，bottom left决定了该元素的最终位置。 position: relative; //相对定位,相对于上 左,父元素定位 position: absolute; //绝对定位,整个尺寸做基点定位 position: sticky; //吸附定位,元素到达某位置将其固定 position: fixed; //固定定位,不管滚动条怎么动，都在一个固定的位置 overflow # overflow:visible /内容不会被修剪，会呈现在元素框之外。 overflow:hidden //内容会被修剪，并且其余内容是不可见的。 overflow:scroll//内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。 overflow:auto //如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。 overflow:inherit //规定应该从父元素继承 overflow 属性的值。 text(文字对齐方式) # //文字对齐都使用line-height的值等于行高,然后text-align居中就OK text-align:left; //把文本排列到左边。默认值：由浏览器决定。 text-align:right; //把文本排列到右边。 text-align:center; //把文本排列到中间。 text-align:justify; //实现两端对齐文本效果。 font-weight: 600; //字体粗细 font-style: italic; //斜体 line-height: 0%; //单行文本所在的高度,当 line-height=height(文本高度等于容器高度,单行文本水平垂直居中) font-size: 12px; //字体大小 font-family: &amp;#39;Courier New&amp;#39;, Courier, monospace; //字体包样式 min-height: 60px; //最小高度 border(块加边框样式) # border-width: 11; //,粗细 border-style: solid; //实线 虚线 border-color: #333; //颜色 border-radius: 10px; //定义圆角 color(颜色) # color: #fff //前景色 background #333 //背景色 background-size cursor(鼠标样式) # cursor: pointer; //鼠标变成小手 margin(块外间距) # margin: auto; //块外间距 margin-top: auto; margin-left: auto; margin-right: 8px; margin-bottom: 12px; //下外边距 padding(块内间距) # padding: 3px; //四边同值 padding: 3px 3px; //上下 左右 padding: 3px 3px 3px 3px; //上 右 下 左 (正时针) padding-bottom padding-left padding-right padding-top calc(动态计算值) # width: calc(100% - 10px) 行内元素 # span 块元素 # p </description>
+    </item>
+  </channel>
+</rss>

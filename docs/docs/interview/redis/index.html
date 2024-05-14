@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Redis高性能的 key-value 数据库 # redis特点 # 1.Redis 支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时 候可以再次加载进行使用。 2.Redis 不仅仅支持简单的 key-value 类型的数据，同时还提供 list， set，zset，hash 等数据结构的存储。 3.Redis 支持数据的备份，即 master-slave 模式的数据备份。 4.性能极高 – Redis 能读的速度是 110000 次/s,写的速度是 81000 次/s 5.原子 – Redis 的所有操作都是原子性的，意思就是要么成功执行要么失败完全不执行。单个操作是原子性的。多个操作也支持事务，即原子性， 通过 MULTI 和 EXEC 指令包起来。 redis数据结构，用途 # string（字符串），hash（哈希），list（列表），set（集合）及 zsetsorted set：有序集合。 1.String：用于存储字符串值，常用于缓存、计数器、分布式锁等场景。 2.Hash：用于存储键值对集合，常用于存储对象的属性，如用户信息、商品信息等。 3.List：用于存储有序的字符串元素列表，常用于消息队列、栈等场景。 4.Set：用于存储字符串元素的无序集合，常用于去重、共同好友等场景。 5.Sorted Set：用于存储字符串元素及其分数的有序集合，常用于排行榜、范围查询等场景。 Redis 是单进程单线程的？ # Redis v6之前是单进程单线程的，原因是CPU 通常不会成为性能瓶颈，瓶颈往往是内存和网络，因此单线程足够了，redis 利用队列技术将并发访问变为串行访问，消 除了传统数据库串行控制的开销。 //好处： 1.避免过多的上下文切换开销 2.避免同步机制的开销 3.简单可维护：引入多线程必须的同步机制，那么所有的底层数据结构都必须实现成线程安全的，这无疑又使得 Redis 的实现变得更加复杂。 v6之后(多线程网络模型)Redis在6.0支持的多线程，并不是说指令操作的多线程，而是针对网络IO的多线程支持 针对网络IO的处理方式改成了多线程，通过多线程并行的方式提升了网络IO的处理效率。 但是对于客户端指令的执行过程，还是使用单线程方式来执行。 Redis 多线程是怎么做到无锁的？ # redis 多线程的模型是主线程负责搜集任务，放入全局读队列 clients_pending_read 和全局写队列 clients_pending_write，主线程在将队列中的任务以轮训的方式分发到每个线程对应的队列（list *io_threads_list[128]） 主线程将任务分发到子线程的队列中,等待所有子线程处理完所有任务,继续收集任务到全局队列.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="Redis" />
+<meta property="og:description" content="Redis高性能的 key-value 数据库 # redis特点 # 1.Redis 支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时 候可以再次加载进行使用。 2.Redis 不仅仅支持简单的 key-value 类型的数据，同时还提供 list， set，zset，hash 等数据结构的存储。 3.Redis 支持数据的备份，即 master-slave 模式的数据备份。 4.性能极高 – Redis 能读的速度是 110000 次/s,写的速度是 81000 次/s 5.原子 – Redis 的所有操作都是原子性的，意思就是要么成功执行要么失败完全不执行。单个操作是原子性的。多个操作也支持事务，即原子性， 通过 MULTI 和 EXEC 指令包起来。 redis数据结构，用途 # string（字符串），hash（哈希），list（列表），set（集合）及 zsetsorted set：有序集合。 1.String：用于存储字符串值，常用于缓存、计数器、分布式锁等场景。 2.Hash：用于存储键值对集合，常用于存储对象的属性，如用户信息、商品信息等。 3.List：用于存储有序的字符串元素列表，常用于消息队列、栈等场景。 4.Set：用于存储字符串元素的无序集合，常用于去重、共同好友等场景。 5.Sorted Set：用于存储字符串元素及其分数的有序集合，常用于排行榜、范围查询等场景。 Redis 是单进程单线程的？ # Redis v6之前是单进程单线程的，原因是CPU 通常不会成为性能瓶颈，瓶颈往往是内存和网络，因此单线程足够了，redis 利用队列技术将并发访问变为串行访问，消 除了传统数据库串行控制的开销。 //好处： 1.避免过多的上下文切换开销 2.避免同步机制的开销 3.简单可维护：引入多线程必须的同步机制，那么所有的底层数据结构都必须实现成线程安全的，这无疑又使得 Redis 的实现变得更加复杂。 v6之后(多线程网络模型)Redis在6.0支持的多线程，并不是说指令操作的多线程，而是针对网络IO的多线程支持 针对网络IO的处理方式改成了多线程，通过多线程并行的方式提升了网络IO的处理效率。 但是对于客户端指令的执行过程，还是使用单线程方式来执行。 Redis 多线程是怎么做到无锁的？ # redis 多线程的模型是主线程负责搜集任务，放入全局读队列 clients_pending_read 和全局写队列 clients_pending_write，主线程在将队列中的任务以轮训的方式分发到每个线程对应的队列（list *io_threads_list[128]） 主线程将任务分发到子线程的队列中,等待所有子线程处理完所有任务,继续收集任务到全局队列." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/interview/redis/" /><meta property="article:section" content="docs" />
+
+
+
+<title>Redis | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/interview/redis/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle" checked />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="active">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Redis</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#redis特点">redis特点</a></li>
+    <li><a href="#redis数据结构用途">redis数据结构，用途</a></li>
+    <li><a href="#redis-是单进程单线程的">Redis 是单进程单线程的？</a></li>
+    <li><a href="#redis-多线程是怎么做到无锁的">Redis 多线程是怎么做到无锁的？</a></li>
+    <li><a href="#redis-一个字符串类型的值能存储最大容量是多少">redis 一个字符串类型的值能存储最大容量是多少？</a></li>
+    <li><a href="#redis-的持久化机制是什么各自的优缺点">Redis 的持久化机制是什么？各自的优缺点？</a></li>
+    <li><a href="#redis-常见性能问题和解决方案">Redis 常见性能问题和解决方案</a></li>
+    <li><a href="#redis-过期减删除策略">redis 过期减删除策略？</a></li>
+    <li><a href="#为什么redis需要把所有数据放到内存中">为什么redis需要把所有数据放到内存中？</a></li>
+    <li><a href="#redis同步机制了解吗">redis同步机制了解吗？</a></li>
+    <li><a href="#redis淘汰策略">redis淘汰策略</a></li>
+    <li><a href="#redis-应用场景">redis 应用场景？</a></li>
+    <li><a href="#假如-redis-里面有-1-亿个-key其中有-10w-个-key-是以某个固定的已知的前缀开头的如果将它们全部找出来">假如 Redis 里面有 1 亿个 key，其中有 10w 个 key 是以某个固定的已知的前缀开头的，如果将它们全部找出来？</a></li>
+    <li><a href="#如果有大量的-key-需要设置同一时间过期一般需要注意什么">如果有大量的 key 需要设置同一时间过期，一般需要注意什么？</a></li>
+    <li><a href="#使用过-redis-分布式锁么它是什么回事">使用过 Redis 分布式锁么，它是什么回事</a></li>
+    <li><a href="#redis和mysql一致性">redis和mysql一致性</a></li>
+    <li><a href="#缓存可能出现的问题">缓存可能出现的问题</a></li>
+    <li><a href="#缓存击穿某热点数据失效">缓存击穿（某热点数据失效）</a></li>
+    <li><a href="#缓存穿透redis-mysql都不存在数据">缓存穿透(redis mysql都不存在数据)</a></li>
+    <li><a href="#缓存雪崩大量数据同时失效">缓存雪崩（大量数据同时失效）</a></li>
+    <li><a href="#缓存预热">缓存预热</a></li>
+    <li><a href="#redis分布式锁问题">redis分布式锁问题</a></li>
+    <li><a href="#set底层实现">set底层实现</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="redis高性能的-key-value-数据库">
+  Redis高性能的 key-value 数据库
+  <a class="anchor" href="#redis%e9%ab%98%e6%80%a7%e8%83%bd%e7%9a%84-key-value-%e6%95%b0%e6%8d%ae%e5%ba%93">#</a>
+</h1>
+<h2 id="redis特点">
+  redis特点
+  <a class="anchor" href="#redis%e7%89%b9%e7%82%b9">#</a>
+</h2>
+<pre tabindex="0"><code>1.Redis 支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时
+候可以再次加载进行使用。
+2.Redis 不仅仅支持简单的 key-value 类型的数据，同时还提供 list，
+set，zset，hash 等数据结构的存储。
+3.Redis 支持数据的备份，即 master-slave 模式的数据备份。
+4.性能极高 – Redis 能读的速度是 110000 次/s,写的速度是 81000 次/s
+5.原子 – Redis 的所有操作都是原子性的，意思就是要么成功执行要么失败完全不执行。单个操作是原子性的。多个操作也支持事务，即原子性，
+通过 MULTI 和 EXEC 指令包起来。
+</code></pre><h2 id="redis数据结构用途">
+  redis数据结构，用途
+  <a class="anchor" href="#redis%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%94%a8%e9%80%94">#</a>
+</h2>
+<pre tabindex="0"><code>string（字符串），hash（哈希），list（列表），set（集合）及 zsetsorted set：有序集合。
+
+1.String：用于存储字符串值，常用于缓存、计数器、分布式锁等场景。
+
+2.Hash：用于存储键值对集合，常用于存储对象的属性，如用户信息、商品信息等。
+
+3.List：用于存储有序的字符串元素列表，常用于消息队列、栈等场景。
+
+4.Set：用于存储字符串元素的无序集合，常用于去重、共同好友等场景。
+
+5.Sorted Set：用于存储字符串元素及其分数的有序集合，常用于排行榜、范围查询等场景。
+</code></pre><h2 id="redis-是单进程单线程的">
+  Redis 是单进程单线程的？
+  <a class="anchor" href="#redis-%e6%98%af%e5%8d%95%e8%bf%9b%e7%a8%8b%e5%8d%95%e7%ba%bf%e7%a8%8b%e7%9a%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">v6之前是单进程单线程的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">原因是CPU</span> <span style="color:#a6e22e">通常不会成为性能瓶颈</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">瓶颈往往是内存和网络</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">因此单线程足够了</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">redis</span> <span style="color:#a6e22e">利用队列技术将并发访问变为串行访问</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">消</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">除了传统数据库串行控制的开销</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//好处：
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#ae81ff">1.</span><span style="color:#a6e22e">避免过多的上下文切换开销</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.</span><span style="color:#a6e22e">避免同步机制的开销</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3.</span><span style="color:#a6e22e">简单可维护</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">引入多线程必须的同步机制</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">那么所有的底层数据结构都必须实现成线程安全的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这无疑又使得</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">的实现变得更加复杂</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">v6之后</span>(<span style="color:#a6e22e">多线程网络模型</span>)<span style="color:#a6e22e">Redis在6</span><span style="color:#ae81ff">.0</span><span style="color:#a6e22e">支持的多线程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并不是说指令操作的多线程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而是针对网络IO的多线程支持</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">针对网络IO的处理方式改成了多线程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">通过多线程并行的方式提升了网络IO的处理效率</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">但是对于客户端指令的执行过程</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">还是使用单线程方式来执行</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="redis-多线程是怎么做到无锁的">
+  Redis 多线程是怎么做到无锁的？
+  <a class="anchor" href="#redis-%e5%a4%9a%e7%ba%bf%e7%a8%8b%e6%98%af%e6%80%8e%e4%b9%88%e5%81%9a%e5%88%b0%e6%97%a0%e9%94%81%e7%9a%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">redis</span> <span style="color:#a6e22e">多线程的模型是主线程负责搜集任务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">放入全局读队列</span> <span style="color:#a6e22e">clients_pending_read</span> <span style="color:#a6e22e">和全局写队列</span> <span style="color:#a6e22e">clients_pending_write</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">主线程在将队列中的任务以轮训的方式分发到每个线程对应的队列</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">list</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">io_threads_list</span>[<span style="color:#ae81ff">128</span>]<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">主线程将任务分发到子线程的队列中</span>,<span style="color:#a6e22e">等待所有子线程处理完所有任务</span>,<span style="color:#a6e22e">继续收集任务到全局队列</span>.<span style="color:#a6e22e">这样就避免了主线程和子线程同时访问队列的情况</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">主线程向队列写的时候子线程还没开始消费</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">子线程在消费的时候主线程在等待子线程消费完</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">子线程消费完后主线程才会往队列中继续写</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就不用加锁了</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.</span> <span style="color:#a6e22e">主线程负责接收建立连接请求</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">获取</span> <span style="color:#a6e22e">socket</span> <span style="color:#a6e22e">放入全局等待读处理队列</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.</span> <span style="color:#a6e22e">主线程通过轮询将可读</span> <span style="color:#a6e22e">socket</span> <span style="color:#a6e22e">分配给</span> <span style="color:#a6e22e">IO</span> <span style="color:#a6e22e">线程</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3.</span> <span style="color:#a6e22e">主线程阻塞等待</span> <span style="color:#a6e22e">IO</span> <span style="color:#a6e22e">线程读取</span> <span style="color:#a6e22e">socket</span> <span style="color:#a6e22e">完成</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">4.</span> <span style="color:#a6e22e">主线程执行</span> <span style="color:#a6e22e">IO</span> <span style="color:#a6e22e">线程读取和解析出来的</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">请求命令</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">5.</span> <span style="color:#a6e22e">主线程阻塞等待</span> <span style="color:#a6e22e">IO</span> <span style="color:#a6e22e">线程将指令执行结果回写回</span> <span style="color:#a6e22e">socket完毕</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">6.</span> <span style="color:#a6e22e">主线程清空全局队列</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">等待客户端后续的请求</span>
+</span></span></code></pre></div><h2 id="redis-一个字符串类型的值能存储最大容量是多少">
+  redis 一个字符串类型的值能存储最大容量是多少？
+  <a class="anchor" href="#redis-%e4%b8%80%e4%b8%aa%e5%ad%97%e7%ac%a6%e4%b8%b2%e7%b1%bb%e5%9e%8b%e7%9a%84%e5%80%bc%e8%83%bd%e5%ad%98%e5%82%a8%e6%9c%80%e5%a4%a7%e5%ae%b9%e9%87%8f%e6%98%af%e5%a4%9a%e5%b0%91">#</a>
+</h2>
+<pre tabindex="0"><code>512M
+</code></pre><h2 id="redis-的持久化机制是什么各自的优缺点">
+  Redis 的持久化机制是什么？各自的优缺点？
+  <a class="anchor" href="#redis-%e7%9a%84%e6%8c%81%e4%b9%85%e5%8c%96%e6%9c%ba%e5%88%b6%e6%98%af%e4%bb%80%e4%b9%88%e5%90%84%e8%87%aa%e7%9a%84%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h2>
+<pre tabindex="0"><code>RDB:只有一个文件 dump.rdb，某段时间间隔数据快照存储在磁盘，父进程判断需要save时，fork（父进程阻塞）一个子进程生成rdb文件，写入。
+1.数据安全性低。RDB 是间隔一段时间进行持久化，如果持久化之间 Redis 发生
+故障，会发生数据丢失。所以这种方式更适合数据要求不严谨的时候
+AOF:以追加的方式记录每一次redis写的操作，当服务器重启时,重新执行这些命令恢复原始数据,
+1.数据安全，aof 持久化可以配置 appendfsync 属性，有 always，每进行
+一次命令操作就记录到 aof 文件中一次。
+2.通过 append 模式写文件，即使中途服务器宕机，可以通过 redischeck-aof 工具解决数据一致性问题。
+AOF 文件比 RDB 文件大，且恢复速度慢。
+数据集大的时候，比 rdb 启动效率低。
+</code></pre><h2 id="redis-常见性能问题和解决方案">
+  Redis 常见性能问题和解决方案
+  <a class="anchor" href="#redis-%e5%b8%b8%e8%a7%81%e6%80%a7%e8%83%bd%e9%97%ae%e9%a2%98%e5%92%8c%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88">#</a>
+</h2>
+<pre tabindex="0"><code>1.Master 最好不要写内存快照，如果 Master 写内存快照，save 命令调度rdbSave 函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大
+的，会间断性暂停服务
+2.如果数据比较重要，某个 Slave 开启 AOF 备份数据，策略设置为每秒同步一次
+3.为了主从复制的速度和连接的稳定性，Master 和 Slave 最好在同一个局域网
+</code></pre><h2 id="redis-过期减删除策略">
+  redis 过期减删除策略？
+  <a class="anchor" href="#redis-%e8%bf%87%e6%9c%9f%e5%87%8f%e5%88%a0%e9%99%a4%e7%ad%96%e7%95%a5">#</a>
+</h2>
+<pre tabindex="0"><code>1.定时删除:设置键的同时 设置过期时间，由定时器执行删除
+2.惰性删除：取值的时候，检查是否过期，再删除
+3.定期删除：每隔一段时间对数据库检查一次，删除过期键，算法决定删除多少键，和什么数据库
+</code></pre><h2 id="为什么redis需要把所有数据放到内存中">
+  为什么redis需要把所有数据放到内存中？
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88redis%e9%9c%80%e8%a6%81%e6%8a%8a%e6%89%80%e6%9c%89%e6%95%b0%e6%8d%ae%e6%94%be%e5%88%b0%e5%86%85%e5%ad%98%e4%b8%ad">#</a>
+</h2>
+<pre tabindex="0"><code>Redis 为了达到最快的读写速度将数据都读到内存中，并通过异步的方式 将数
+据写入磁盘。所以 Redis 具有快速和数据持久化的特征,如果不将数据放在
+内存中，磁盘 I/O 速度为严重影响 Redis 的性能,
+</code></pre><h2 id="redis同步机制了解吗">
+  redis同步机制了解吗？
+  <a class="anchor" href="#redis%e5%90%8c%e6%ad%a5%e6%9c%ba%e5%88%b6%e4%ba%86%e8%a7%a3%e5%90%97">#</a>
+</h2>
+<pre tabindex="0"><code>Redis 可以使用主从同步，从从同步。第一次同步时，主节点做一次 bgsave，
+并同时将后续修改操作记录到内存 buffer，待完成后将 rdb 文件全 量同步到
+复制节点，复制节点接受完成后将 rdb 镜像加载到内存。加载完成 后，再通
+知主节点将期间修改的操作记录同步到复制节点进行重放就完成了同步过程。
+</code></pre><h2 id="redis淘汰策略">
+  redis淘汰策略
+  <a class="anchor" href="#redis%e6%b7%98%e6%b1%b0%e7%ad%96%e7%95%a5">#</a>
+</h2>
+<pre tabindex="0"><code>volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选
+最近最少使用的数据淘汰
+volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选
+将要过期的数据淘汰
+volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任
+意选择数据淘汰
+allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘
+汰
+allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰
+no-enviction（驱逐）：禁止驱逐数据
+</code></pre><h2 id="redis-应用场景">
+  redis 应用场景？
+  <a class="anchor" href="#redis-%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af">#</a>
+</h2>
+<pre tabindex="0"><code>会话缓存（Session Cache）
+全页缓存（FPC）
+队列
+排行榜/计数器
+发布/订阅
+</code></pre><h2 id="假如-redis-里面有-1-亿个-key其中有-10w-个-key-是以某个固定的已知的前缀开头的如果将它们全部找出来">
+  假如 Redis 里面有 1 亿个 key，其中有 10w 个 key 是以某个固定的已知的前缀开头的，如果将它们全部找出来？
+  <a class="anchor" href="#%e5%81%87%e5%a6%82-redis-%e9%87%8c%e9%9d%a2%e6%9c%89-1-%e4%ba%bf%e4%b8%aa-key%e5%85%b6%e4%b8%ad%e6%9c%89-10w-%e4%b8%aa-key-%e6%98%af%e4%bb%a5%e6%9f%90%e4%b8%aa%e5%9b%ba%e5%ae%9a%e7%9a%84%e5%b7%b2%e7%9f%a5%e7%9a%84%e5%89%8d%e7%bc%80%e5%bc%80%e5%a4%b4%e7%9a%84%e5%a6%82%e6%9e%9c%e5%b0%86%e5%ae%83%e4%bb%ac%e5%85%a8%e9%83%a8%e6%89%be%e5%87%ba%e6%9d%a5">#</a>
+</h2>
+<pre tabindex="0"><code>使用 keys 指令可以扫出指定模式的 key 列表。对方接着追问：如果这个 Redis 正在给线上的业务提供服务，那使用 keys 指令会有什么问题？
+这个时候你要回答 Redis 关键的一个特性：Redis 的单线程的。keys 指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢
+复。这个时候可以使用 scan 指令，scan 指令可以无阻塞的提取出指定模式的key 列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整
+体所花费的时间会比直接用 keys 指令长。
+</code></pre><h2 id="如果有大量的-key-需要设置同一时间过期一般需要注意什么">
+  如果有大量的 key 需要设置同一时间过期，一般需要注意什么？
+  <a class="anchor" href="#%e5%a6%82%e6%9e%9c%e6%9c%89%e5%a4%a7%e9%87%8f%e7%9a%84-key-%e9%9c%80%e8%a6%81%e8%ae%be%e7%bd%ae%e5%90%8c%e4%b8%80%e6%97%b6%e9%97%b4%e8%bf%87%e6%9c%9f%e4%b8%80%e8%88%ac%e9%9c%80%e8%a6%81%e6%b3%a8%e6%84%8f%e4%bb%80%e4%b9%88">#</a>
+</h2>
+<pre tabindex="0"><code>如果大量的 key 过期时间设置的过于集中，到过期的那个时间点，Redis 可能会出现短暂的卡顿现象。一般需要在时间上加一个随机值，使得过期时间 分散
+一些。
+</code></pre><h2 id="使用过-redis-分布式锁么它是什么回事">
+  使用过 Redis 分布式锁么，它是什么回事
+  <a class="anchor" href="#%e4%bd%bf%e7%94%a8%e8%bf%87-redis-%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e4%b9%88%e5%ae%83%e6%98%af%e4%bb%80%e4%b9%88%e5%9b%9e%e4%ba%8b">#</a>
+</h2>
+<pre tabindex="0"><code>1.先拿 setnx 来争抢锁，抢到之后，再用 expire 给锁加一个过期时间防止锁忘
+记了释放。setnx和expire不是原子操作,一旦redis宕机，expire没有设置成功，锁就无法释放,
+2.2.6.12版本后set可以实现setnx和expire这是原子操作
+</code></pre><h2 id="redis和mysql一致性">
+  redis和mysql一致性
+  <a class="anchor" href="#redis%e5%92%8cmysql%e4%b8%80%e8%87%b4%e6%80%a7">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//先更新mysql 再删除redis
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">更新时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">先更新mysql</span>,<span style="color:#a6e22e">然后删除redis</span>,<span style="color:#a6e22e">查询时</span> <span style="color:#a6e22e">no</span> <span style="color:#a6e22e">cache</span>,<span style="color:#a6e22e">查询mysql</span>,<span style="color:#a6e22e">然后更新redis</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.</span><span style="color:#a6e22e">问题</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">c1更新mysql</span>,<span style="color:#a6e22e">删除</span> <span style="color:#a6e22e">redis</span>,<span style="color:#a6e22e">c3查询redis</span>,<span style="color:#a6e22e">查询mysql</span>,<span style="color:#a6e22e">c2更新mysql</span>,<span style="color:#a6e22e">删除redis</span>,<span style="color:#a6e22e">c3同步redis结论是redis保存的是c1的数据</span><span style="color:#960050;background-color:#1e0010">，</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">不是最新的</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.</span><span style="color:#a6e22e">在删除redis时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其他请求拿到的还是旧数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//延时双删
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">为了保证最终redis是最新的数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">更新时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">先删除redis</span>,<span style="color:#a6e22e">再更新mysql</span>,<span style="color:#a6e22e">延迟删除redis</span>
+</span></span></code></pre></div><h2 id="缓存可能出现的问题">
+  缓存可能出现的问题
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e5%8f%af%e8%83%bd%e5%87%ba%e7%8e%b0%e7%9a%84%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<pre tabindex="0"><code>数据不一致
+缓存雪崩
+缓存穿透
+缓存并发竞争
+</code></pre><h2 id="缓存击穿某热点数据失效">
+  缓存击穿（某热点数据失效）
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e5%87%bb%e7%a9%bf%e6%9f%90%e7%83%ad%e7%82%b9%e6%95%b0%e6%8d%ae%e5%a4%b1%e6%95%88">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//原因
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">高并发流量</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">访问的这个数据是热点数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">请求的数据在</span> <span style="color:#a6e22e">DB</span> <span style="color:#a6e22e">中存在</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但是</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">存的那一份已经过期</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">后端需要从</span> <span style="color:#a6e22e">DB</span> <span style="color:#a6e22e">从加载数据并写到</span> <span style="color:#a6e22e">Redis</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//解决
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">过期时间</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">随机值</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">过期时间</span>=<span style="color:#a6e22e">baes</span> <span style="color:#a6e22e">时间</span><span style="color:#f92672">+</span><span style="color:#a6e22e">随机时间</span><span style="color:#960050;background-color:#1e0010">）：</span><span style="color:#a6e22e">让数据在未来一段时间内慢慢过期</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">避免瞬时全部过期</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对</span> <span style="color:#a6e22e">DB</span> <span style="color:#a6e22e">造成过大压力</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">预先把热门数据提前存入</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并设热门数据的过期时间超大值</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">使用锁</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">先获取分布式锁</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">获取锁成功才执行数据库查询和写数据到缓存的操作</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">获取锁失败</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">则说明当前有线程在执行数据库查询操作</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">当前线程睡眠一段时间在重试</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">这样只让一个请求去数据库读取数据</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="缓存穿透redis-mysql都不存在数据">
+  缓存穿透(redis mysql都不存在数据)
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e7%a9%bf%e9%80%8fredis-mysql%e9%83%bd%e4%b8%8d%e5%ad%98%e5%9c%a8%e6%95%b0%e6%8d%ae">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//原因
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">意味着有特殊请求在查询一个不存在的数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">即数据不存在</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">也不存在于数据库</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//解决
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">缓存空值</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">当请求的数据不存在</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">也不存在数据库的时候</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">设置一个缺省值</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">比如</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">None</span><span style="color:#960050;background-color:#1e0010">）。</span><span style="color:#a6e22e">当后续再次进行查询则直接返回空值或者缺省值</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">布隆过滤器</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">在数据写入数据库的同时将这个</span> <span style="color:#a6e22e">ID</span> <span style="color:#a6e22e">同步到到布隆过滤器中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">当请求的</span> <span style="color:#a6e22e">id</span> <span style="color:#a6e22e">不存在布隆过滤器中则说明该请求查询的数据一定没有在数据库中保存</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就不要去数据库查询了</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">布隆过滤器</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">分配一块内存空间做</span> <span style="color:#a6e22e">bit</span> <span style="color:#a6e22e">数组</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">数组的</span> <span style="color:#a6e22e">bit</span> <span style="color:#a6e22e">位初始值全部设为</span> <span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">添加</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">key经过多个hash组函数计算</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">的k位置置为1</span>.<span style="color:#a6e22e">判断key是否存在时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">计算多个hansh组函数的k位置是否都是1</span>)
+</span></span></code></pre></div><h2 id="缓存雪崩大量数据同时失效">
+  缓存雪崩（大量数据同时失效）
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e9%9b%aa%e5%b4%a9%e5%a4%a7%e9%87%8f%e6%95%b0%e6%8d%ae%e5%90%8c%e6%97%b6%e5%a4%b1%e6%95%88">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//原因
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">缓存雪崩指的是大量的请求无法在</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">缓存系统中处理</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">请求全部打到数据库</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">导致数据库压力激增</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">甚至宕机</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">大量数据同时过期</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">导致大量请求需要查询数据库并写到缓存</span><span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">故障宕机</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">缓存系统异常</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//解决
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">过期时间添加随机值</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">要避免给大量的数据设置一样的过期时间</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">过期时间</span> = <span style="color:#a6e22e">baes</span> <span style="color:#a6e22e">时间</span><span style="color:#f92672">+</span> <span style="color:#a6e22e">随机时间</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">较小的随机数</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">比如随机增加</span> <span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">~</span><span style="color:#ae81ff">5</span> <span style="color:#a6e22e">分钟</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">接口限流</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">一个</span> <span style="color:#a6e22e">Redis</span> <span style="color:#a6e22e">实例能支撑</span> <span style="color:#ae81ff">10</span> <span style="color:#a6e22e">万的</span> <span style="color:#a6e22e">QPS</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">而一个数据库实例只有</span> <span style="color:#ae81ff">1000</span> <span style="color:#a6e22e">QPS</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">服务熔断就是当从缓存获取数据发现异常</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">则直接返回错误数据给前端</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">防止所有流量打到数据库导致宕机</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="缓存预热">
+  缓存预热
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e9%a2%84%e7%83%ad">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">缓存没有数据时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">预先把热点数据加载好</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="redis分布式锁问题">
+  redis分布式锁问题
+  <a class="anchor" href="#redis%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<pre tabindex="0"><code>redis是单线程执行，当处理请求A时，请求B也可以得到响应，并被添加到队列中等待执行。
+
+加锁问题：A加锁+过期时间，但是A在内部执行过长或者其他问题，在redis过期时间后，还没执行完毕，redis会自动删除key。这时B发现没锁，申请加锁+过期时间，B在内部执行中，A完毕后要释放锁会释放B的锁的问题：这时就需要使用luaScript脚本，找到key和对应的A设置的value,匹配才能删除。否则不能删除。
+
+A在加锁后的过期时间后，redis删除了key,此时A还在处理共享资源，B加锁也进入共享资源内，资源不能互斥问题：此时需要第一个加锁的在过期时间要删除时，用守护进程自动延期时间。相关代码github.com/jefferyjob/go-redislock
+</code></pre><h2 id="set底层实现">
+  set底层实现
+  <a class="anchor" href="#set%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0">#</a>
+</h2>
+<pre tabindex="0"><code>Set 数据结构的底层实现通常是通过哈希表（Hash Table）来实现,哈希表的值则被设置为一个固定的常量（比如 NULL）
+</code></pre></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#redis特点">redis特点</a></li>
+    <li><a href="#redis数据结构用途">redis数据结构，用途</a></li>
+    <li><a href="#redis-是单进程单线程的">Redis 是单进程单线程的？</a></li>
+    <li><a href="#redis-多线程是怎么做到无锁的">Redis 多线程是怎么做到无锁的？</a></li>
+    <li><a href="#redis-一个字符串类型的值能存储最大容量是多少">redis 一个字符串类型的值能存储最大容量是多少？</a></li>
+    <li><a href="#redis-的持久化机制是什么各自的优缺点">Redis 的持久化机制是什么？各自的优缺点？</a></li>
+    <li><a href="#redis-常见性能问题和解决方案">Redis 常见性能问题和解决方案</a></li>
+    <li><a href="#redis-过期减删除策略">redis 过期减删除策略？</a></li>
+    <li><a href="#为什么redis需要把所有数据放到内存中">为什么redis需要把所有数据放到内存中？</a></li>
+    <li><a href="#redis同步机制了解吗">redis同步机制了解吗？</a></li>
+    <li><a href="#redis淘汰策略">redis淘汰策略</a></li>
+    <li><a href="#redis-应用场景">redis 应用场景？</a></li>
+    <li><a href="#假如-redis-里面有-1-亿个-key其中有-10w-个-key-是以某个固定的已知的前缀开头的如果将它们全部找出来">假如 Redis 里面有 1 亿个 key，其中有 10w 个 key 是以某个固定的已知的前缀开头的，如果将它们全部找出来？</a></li>
+    <li><a href="#如果有大量的-key-需要设置同一时间过期一般需要注意什么">如果有大量的 key 需要设置同一时间过期，一般需要注意什么？</a></li>
+    <li><a href="#使用过-redis-分布式锁么它是什么回事">使用过 Redis 分布式锁么，它是什么回事</a></li>
+    <li><a href="#redis和mysql一致性">redis和mysql一致性</a></li>
+    <li><a href="#缓存可能出现的问题">缓存可能出现的问题</a></li>
+    <li><a href="#缓存击穿某热点数据失效">缓存击穿（某热点数据失效）</a></li>
+    <li><a href="#缓存穿透redis-mysql都不存在数据">缓存穿透(redis mysql都不存在数据)</a></li>
+    <li><a href="#缓存雪崩大量数据同时失效">缓存雪崩（大量数据同时失效）</a></li>
+    <li><a href="#缓存预热">缓存预热</a></li>
+    <li><a href="#redis分布式锁问题">redis分布式锁问题</a></li>
+    <li><a href="#set底层实现">set底层实现</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

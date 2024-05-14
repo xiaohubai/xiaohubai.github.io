@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Redis on Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/tags/redis/</link>
+    <description>Recent content in Redis on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 May 2024 13:47:42 +0800</lastBuildDate>
+    <atom:link href="https://xiaohubai.github.io/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>redis内存满了怎么办？</title>
+      <link>https://xiaohubai.github.io/posts/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description> maxmemory # redis 设置最大使用内存 maxmemory，默认资源超过maxmemory后，不允许新key加入 7种淘汰策略 # volatile-lru：淘汰那些设置了过期时间且最近最少被访问的数据 volatile-random：随机淘汰，腾出坑位给新人； volatile-ttl：淘汰设置了过期时间key，谁最接近时间就先淘汰谁 allkeys-lru：淘汰最近最少上一线干活的职员； allkeys-lfu：淘汰最少上一线干活的公务员； allkeys-random：随机淘汰职员，为新兵腾出空位。 淘汰执行过程 # 客户端发送新命令到服务端； 服务端收到客户端命令，Redis 检查内存使用情况，如果大于 maxmemory 限制，则根据策略驱逐数据。执行新命令，否则执行新命令 使用场景 # allkeys-lru 使用场景有明显的冷热数据区分，充分利用 LRU 算法把最近最常访问的数据保留，有限的内存提高访问性能 allkeys-random 使用场景数据没有明显的冷热分别，所有的数据分布查询比较均衡，让其随机选择淘汰数据 volatile-lru 业务场景有一些数据不能删除，比如置顶新闻、视频，这时候我们为这些数据不设置过期时间，这样的话数据就不会被删除，该策略就会去根据 LRU 算法去淘汰那些设置了过期时间且最近最少被访问的数据 </description>
+    </item>
+  </channel>
+</rss>

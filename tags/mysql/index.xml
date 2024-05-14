@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mysql on Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/tags/mysql/</link>
+    <description>Recent content in Mysql on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 May 2024 13:47:42 +0800</lastBuildDate>
+    <atom:link href="https://xiaohubai.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>gorm自制日志</title>
+      <link>https://xiaohubai.github.io/posts/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</guid>
+      <description>第三方包 # gorm.io/gorm/logger 示例 # package boot import ( &amp;#34;context&amp;#34; &amp;#34;fmt&amp;#34; &amp;#34;io/ioutil&amp;#34; &amp;#34;log&amp;#34; &amp;#34;os&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/xiaohubai/alpha/config&amp;#34; &amp;#34;go.uber.org/zap&amp;#34; &amp;#34;gorm.io/gorm/logger&amp;#34; &amp;#34;gorm.io/gorm/utils&amp;#34; ) type cfg struct { SlowThreshold time.Duration Colorful bool LogLevel logger.LogLevel } type traceRecorder struct { logger.Interface BeginAt time.Time SQL string RowsAffected int64 Err error } func (t traceRecorder) New() *traceRecorder { return &amp;amp;traceRecorder{Interface: t.Interface, BeginAt: time.Now()} } func (t *traceRecorder) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) { t.</description>
+    </item>
+    <item>
+      <title>sql语句性能优化</title>
+      <link>https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</guid>
+      <description>1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。 2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。 3、应尽量避免在 WHERE 子句中使用 != 或 &amp;lt;&amp;gt; 操作符。MySQL 只有对以下操作符才使用索引：&amp;lt;，&amp;lt;=，=，&amp;gt;，&amp;gt;=，BETWEEN，IN，以及某些时候的 LIKE。 4、应尽量避免在 WHERE 子句中使用 OR 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，可以使用 UNION 合并查询：select id from t where num=10 union all select id from t where num=20。 5、IN 和 NOT IN 也要慎用，否则会导致全表扫描。对于连续的数值，能用 BETWEEN 就不要用 IN：select id from t where num between 1 and 3。、 6、下面的查询也将导致全表扫描：select id from t where name like‘%abc%’ 或者select id from t where name like‘%abc’若要提高效率，可以考虑全文检索。而select id from t where name like‘abc%’才用到索引。 7、如果在 WHERE 子句中使用参数，也会导致全表扫描。 8、应尽量避免在 WHERE 子句中对字段进行表达式操作，应尽量避免在 WHERE 子句中对字段进行函数操作。 9、很多时候用 EXISTS 代替 IN 是一个好的选择：select num from a where num in(select num from b)。用下面的语句替换：select num from a where exists(select 1 from b where num=a.</description>
+    </item>
+  </channel>
+</rss>

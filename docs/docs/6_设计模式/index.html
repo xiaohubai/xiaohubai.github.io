@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="设计模式 # 创建型 //在一些情况下，要创建的对象需要一系列复杂的初始化操作，比如查配置文件、查数据库表、初始化成员对象等，如果把这些逻辑放在构造函数中，会极大影响代码的可读性。不妨定义一个类来专门负责对象的创建，这样的类就是工厂类，这种做法就是工厂模式 简单工厂模式:根据传入的入参，生成不同的结构体的接口方法(有一个具体的工厂类，可以根据传入参数，生产不同的产品)，由一个对象负责所有具体类的实例化。 工厂方法模式:解决根据简单工厂入参的判断问题，（只需要知道具体工厂名，即可生产对应产品），将对象创建从由一个对象负责所有具体类的实例化，变成由一群子类来负责对具体类的实例化，从而将过程解耦 抽象工厂模式：子类会越来越多，可以将产品进行分组，每组中的不同产品由同一个工厂类的不同方法来创建。 创建者模式:将一个复杂对象的构建分离成多个简单对象的构建组合;(将一个复杂的对象的构造和表示分离，使同样的构造过程可以创建不同的产品。) 原型模式:使对象能复制自身，并且暴露到接口中，使客户端面向接口编程时，不知道接口实际对象的情况下生成新的对象。 单例模式: 结构型模式 外观模式 适配器模式 代理模式 组合模式 享元模式 装饰模式 桥模式 行为型模式 中介者模式: 观察者模式: 命令模式: 迭代器模式: 模板方法模式: 策略模式: 状态模式: 备忘录模式: 解释器模式: 职责链模式: 访问者模式: 创建型 # 简单工厂模式 # //简单工厂模式有一个具体的工厂类，可以根据传入的入参，生产不同的产品 func main() { f := getFruit(&#34;apple&#34;) fmt.Println(f.Fruit()) } type FruitFactory interface { Fruit() string } func getFruit(t string) FruitFactory { switch t { case &#34;apple&#34;: return &amp;apple{} case &#34;banana&#34;: return &amp;banana{} } return nil } type apple struct{} func (*apple) Fruit() string { return &#34;我是苹果，我很好吃&#34; } type banana struct{} func (*banana) Fruit() string { return &#34;我是香蕉，我最好吃了&#34; } 工厂方法模式 # //工厂方法 调用方只需要知道具体工厂名即可生成对应产品 //工厂方法模式使用子类的方式延迟生成对象到子类中实现。 func main() { apple := appleFactory{} fmt.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="设计模式" />
+<meta property="og:description" content="设计模式 # 创建型 //在一些情况下，要创建的对象需要一系列复杂的初始化操作，比如查配置文件、查数据库表、初始化成员对象等，如果把这些逻辑放在构造函数中，会极大影响代码的可读性。不妨定义一个类来专门负责对象的创建，这样的类就是工厂类，这种做法就是工厂模式 简单工厂模式:根据传入的入参，生成不同的结构体的接口方法(有一个具体的工厂类，可以根据传入参数，生产不同的产品)，由一个对象负责所有具体类的实例化。 工厂方法模式:解决根据简单工厂入参的判断问题，（只需要知道具体工厂名，即可生产对应产品），将对象创建从由一个对象负责所有具体类的实例化，变成由一群子类来负责对具体类的实例化，从而将过程解耦 抽象工厂模式：子类会越来越多，可以将产品进行分组，每组中的不同产品由同一个工厂类的不同方法来创建。 创建者模式:将一个复杂对象的构建分离成多个简单对象的构建组合;(将一个复杂的对象的构造和表示分离，使同样的构造过程可以创建不同的产品。) 原型模式:使对象能复制自身，并且暴露到接口中，使客户端面向接口编程时，不知道接口实际对象的情况下生成新的对象。 单例模式: 结构型模式 外观模式 适配器模式 代理模式 组合模式 享元模式 装饰模式 桥模式 行为型模式 中介者模式: 观察者模式: 命令模式: 迭代器模式: 模板方法模式: 策略模式: 状态模式: 备忘录模式: 解释器模式: 职责链模式: 访问者模式: 创建型 # 简单工厂模式 # //简单工厂模式有一个具体的工厂类，可以根据传入的入参，生产不同的产品 func main() { f := getFruit(&#34;apple&#34;) fmt.Println(f.Fruit()) } type FruitFactory interface { Fruit() string } func getFruit(t string) FruitFactory { switch t { case &#34;apple&#34;: return &amp;apple{} case &#34;banana&#34;: return &amp;banana{} } return nil } type apple struct{} func (*apple) Fruit() string { return &#34;我是苹果，我很好吃&#34; } type banana struct{} func (*banana) Fruit() string { return &#34;我是香蕉，我最好吃了&#34; } 工厂方法模式 # //工厂方法 调用方只需要知道具体工厂名即可生成对应产品 //工厂方法模式使用子类的方式延迟生成对象到子类中实现。 func main() { apple := appleFactory{} fmt." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" /><meta property="article:section" content="docs" />
+
+
+
+<title>设计模式 | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="active">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>设计模式</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#创建型">创建型</a>
+      <ul>
+        <li><a href="#简单工厂模式">简单工厂模式</a></li>
+        <li><a href="#工厂方法模式">工厂方法模式</a></li>
+        <li><a href="#抽象工厂模式">抽象工厂模式</a></li>
+        <li><a href="#创建者模式">创建者模式</a></li>
+        <li><a href="#原型模式">原型模式</a></li>
+        <li><a href="#单例模式">单例模式</a></li>
+      </ul>
+    </li>
+    <li><a href="#结构型模式">结构型模式</a>
+      <ul>
+        <li><a href="#外观模式">外观模式</a></li>
+        <li><a href="#适配器模式">适配器模式</a></li>
+        <li><a href="#代理模式">代理模式</a></li>
+        <li><a href="#组合模式">组合模式</a></li>
+        <li><a href="#享元模式">享元模式</a></li>
+        <li><a href="#装饰模式">装饰模式</a></li>
+        <li><a href="#桥模式">桥模式</a></li>
+      </ul>
+    </li>
+    <li><a href="#行为型模式">行为型模式</a>
+      <ul>
+        <li><a href="#中介者模式">中介者模式</a></li>
+        <li><a href="#观察者模式">观察者模式</a></li>
+        <li><a href="#命令模式">命令模式</a></li>
+        <li><a href="#迭代器模式">迭代器模式</a></li>
+        <li><a href="#模板方法模式">模板方法模式</a></li>
+        <li><a href="#策略模式">策略模式</a></li>
+        <li><a href="#状态模式">状态模式</a></li>
+        <li><a href="#备忘录模式">备忘录模式</a></li>
+        <li><a href="#解释器模式">解释器模式</a></li>
+        <li><a href="#职责链模式">职责链模式</a></li>
+        <li><a href="#访问者模式">访问者模式</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="设计模式">
+  设计模式
+  <a class="anchor" href="#%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f">#</a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">创建型</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//在一些情况下，要创建的对象需要一系列复杂的初始化操作，比如查配置文件、查数据库表、初始化成员对象等，如果把这些逻辑放在构造函数中，会极大影响代码的可读性。不妨定义一个类来专门负责对象的创建，这样的类就是工厂类，这种做法就是工厂模式
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">简单工厂模式</span>:<span style="color:#a6e22e">根据传入的入参</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">生成不同的结构体的接口方法</span>(<span style="color:#a6e22e">有一个具体的工厂类</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可以根据传入参数</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">生产不同的产品</span>)<span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">由一个对象负责所有具体类的实例化</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">工厂方法模式</span>:<span style="color:#a6e22e">解决根据简单工厂入参的判断问题</span><span style="color:#960050;background-color:#1e0010">，（</span><span style="color:#a6e22e">只需要知道具体工厂名</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">即可生产对应产品</span><span style="color:#960050;background-color:#1e0010">），</span><span style="color:#a6e22e">将对象创建从由一个对象负责所有具体类的实例化</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">变成由一群子类来负责对具体类的实例化</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">从而将过程解耦</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">抽象工厂模式</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">子类会越来越多</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可以将产品进行分组</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">每组中的不同产品由同一个工厂类的不同方法来创建</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">创建者模式</span>:<span style="color:#a6e22e">将一个复杂对象的构建分离成多个简单对象的构建组合</span>;(<span style="color:#a6e22e">将一个复杂的对象的构造和表示分离</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">使同样的构造过程可以创建不同的产品</span><span style="color:#960050;background-color:#1e0010">。</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">原型模式</span>:<span style="color:#a6e22e">使对象能复制自身</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并且暴露到接口中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">使客户端面向接口编程时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不知道接口实际对象的情况下生成新的对象</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">单例模式</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">结构型模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">外观模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">适配器模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">代理模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">组合模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">享元模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">装饰模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">桥模式</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">行为型模式</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">中介者模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">观察者模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">命令模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">迭代器模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">模板方法模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">策略模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">状态模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">备忘录模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">解释器模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">职责链模式</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">访问者模式</span>:
+</span></span></code></pre></div><h2 id="创建型">
+  创建型
+  <a class="anchor" href="#%e5%88%9b%e5%bb%ba%e5%9e%8b">#</a>
+</h2>
+<h3 id="简单工厂模式">
+  简单工厂模式
+  <a class="anchor" href="#%e7%ae%80%e5%8d%95%e5%b7%a5%e5%8e%82%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//简单工厂模式有一个具体的工厂类，可以根据传入的入参，生产不同的产品
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getFruit</span>(<span style="color:#e6db74">&#34;apple&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Fruit</span>())
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">FruitFactory</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Fruit</span>() <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getFruit</span>(<span style="color:#a6e22e">t</span> <span style="color:#66d9ef">string</span>) <span style="color:#a6e22e">FruitFactory</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">t</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;apple&#34;</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">apple</span>{}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;banana&#34;</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">banana</span>{}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">apple</span> <span style="color:#66d9ef">struct</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#f92672">*</span><span style="color:#a6e22e">apple</span>) <span style="color:#a6e22e">Fruit</span>() <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;我是苹果，我很好吃&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">banana</span> <span style="color:#66d9ef">struct</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#f92672">*</span><span style="color:#a6e22e">banana</span>) <span style="color:#a6e22e">Fruit</span>() <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;我是香蕉，我最好吃了&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="工厂方法模式">
+  工厂方法模式
+  <a class="anchor" href="#%e5%b7%a5%e5%8e%82%e6%96%b9%e6%b3%95%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//工厂方法 调用方只需要知道具体工厂名即可生成对应产品
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//工厂方法模式使用子类的方式延迟生成对象到子类中实现。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">apple</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">appleFactory</span>{}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">apple</span>.<span style="color:#a6e22e">Fruit</span>())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">banana</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bananaFactory</span>{}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">banana</span>.<span style="color:#a6e22e">Fruit</span>())
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Fruit</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Fruit</span>() <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">appleFactory</span> <span style="color:#66d9ef">struct</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#f92672">*</span><span style="color:#a6e22e">appleFactory</span>) <span style="color:#a6e22e">Fruit</span>() <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;我是苹果，我很好吃&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">bananaFactory</span> <span style="color:#66d9ef">struct</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#f92672">*</span><span style="color:#a6e22e">bananaFactory</span>) <span style="color:#a6e22e">Fruit</span>() <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;我是香蕉，我最好吃了&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="抽象工厂模式">
+  抽象工厂模式
+  <a class="anchor" href="#%e6%8a%bd%e8%b1%a1%e5%b7%a5%e5%8e%82%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">WuhanFruitFactory</span>{}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">ChooseApple</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Fruit</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">FruitInterface</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ChooseApple</span>() <span style="color:#a6e22e">ProductInterface</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ChooseBanana</span>() <span style="color:#a6e22e">ProductInterface</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ProductInterface</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Fruit</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">HainanApple</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">h</span> <span style="color:#a6e22e">HainanApple</span>) <span style="color:#a6e22e">Fruit</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;我是苹果，来自海南&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">HainanBanana</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">h</span> <span style="color:#a6e22e">HainanBanana</span>) <span style="color:#a6e22e">Fruit</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;我是香蕉，来自海南&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">WuhanApple</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">WuhanApple</span>) <span style="color:#a6e22e">Fruit</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;我是苹果，来自武汉&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">WuhanBanana</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">WuhanBanana</span>) <span style="color:#a6e22e">Fruit</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;我是香蕉，来自武汉&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">WuhanFruitFactory</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">WuhanFruitFactory</span>) <span style="color:#a6e22e">ChooseApple</span>() <span style="color:#a6e22e">ProductInterface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">WuhanApple</span>{}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">WuhanFruitFactory</span>) <span style="color:#a6e22e">ChooseBanana</span>() <span style="color:#a6e22e">ProductInterface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">WuhanBanana</span>{}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">HainanFruitFactory</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">gd</span> <span style="color:#a6e22e">HainanFruitFactory</span>) <span style="color:#a6e22e">ChooseApple</span>() <span style="color:#a6e22e">ProductInterface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">HainanApple</span>{}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">gd</span> <span style="color:#a6e22e">HainanFruitFactory</span>) <span style="color:#a6e22e">ChooseBanana</span>() <span style="color:#a6e22e">ProductInterface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">HainanBanana</span>{}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="创建者模式">
+  创建者模式
+  <a class="anchor" href="#%e5%88%9b%e5%bb%ba%e8%80%85%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//Builder 是生成器接口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Builder</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Part1</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Part2</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Part3</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Director</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">builder</span> <span style="color:#a6e22e">Builder</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// NewDirector ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewDirector</span>(<span style="color:#a6e22e">builder</span> <span style="color:#a6e22e">Builder</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">Director</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Director</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">builder</span>: <span style="color:#a6e22e">builder</span>,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//Construct Product
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">d</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Director</span>) <span style="color:#a6e22e">Construct</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">builder</span>.<span style="color:#a6e22e">Part1</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">builder</span>.<span style="color:#a6e22e">Part2</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">builder</span>.<span style="color:#a6e22e">Part3</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Builder1</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">result</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Builder1</span>) <span style="color:#a6e22e">Part1</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;1&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Builder1</span>) <span style="color:#a6e22e">Part2</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;2&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Builder1</span>) <span style="color:#a6e22e">Part3</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;3&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">b</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Builder1</span>) <span style="color:#a6e22e">GetResult</span>() <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">result</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="原型模式">
+  原型模式
+  <a class="anchor" href="#%e5%8e%9f%e5%9e%8b%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="单例模式">
+  单例模式
+  <a class="anchor" href="#%e5%8d%95%e4%be%8b%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h2 id="结构型模式">
+  结构型模式
+  <a class="anchor" href="#%e7%bb%93%e6%9e%84%e5%9e%8b%e6%a8%a1%e5%bc%8f">#</a>
+</h2>
+<h3 id="外观模式">
+  外观模式
+  <a class="anchor" href="#%e5%a4%96%e8%a7%82%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="适配器模式">
+  适配器模式
+  <a class="anchor" href="#%e9%80%82%e9%85%8d%e5%99%a8%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="代理模式">
+  代理模式
+  <a class="anchor" href="#%e4%bb%a3%e7%90%86%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="组合模式">
+  组合模式
+  <a class="anchor" href="#%e7%bb%84%e5%90%88%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="享元模式">
+  享元模式
+  <a class="anchor" href="#%e4%ba%ab%e5%85%83%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="装饰模式">
+  装饰模式
+  <a class="anchor" href="#%e8%a3%85%e9%a5%b0%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="桥模式">
+  桥模式
+  <a class="anchor" href="#%e6%a1%a5%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h2 id="行为型模式">
+  行为型模式
+  <a class="anchor" href="#%e8%a1%8c%e4%b8%ba%e5%9e%8b%e6%a8%a1%e5%bc%8f">#</a>
+</h2>
+<h3 id="中介者模式">
+  中介者模式
+  <a class="anchor" href="#%e4%b8%ad%e4%bb%8b%e8%80%85%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="观察者模式">
+  观察者模式
+  <a class="anchor" href="#%e8%a7%82%e5%af%9f%e8%80%85%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="命令模式">
+  命令模式
+  <a class="anchor" href="#%e5%91%bd%e4%bb%a4%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="迭代器模式">
+  迭代器模式
+  <a class="anchor" href="#%e8%bf%ad%e4%bb%a3%e5%99%a8%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="模板方法模式">
+  模板方法模式
+  <a class="anchor" href="#%e6%a8%a1%e6%9d%bf%e6%96%b9%e6%b3%95%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="策略模式">
+  策略模式
+  <a class="anchor" href="#%e7%ad%96%e7%95%a5%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="状态模式">
+  状态模式
+  <a class="anchor" href="#%e7%8a%b6%e6%80%81%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="备忘录模式">
+  备忘录模式
+  <a class="anchor" href="#%e5%a4%87%e5%bf%98%e5%bd%95%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="解释器模式">
+  解释器模式
+  <a class="anchor" href="#%e8%a7%a3%e9%87%8a%e5%99%a8%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="职责链模式">
+  职责链模式
+  <a class="anchor" href="#%e8%81%8c%e8%b4%a3%e9%93%be%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h3 id="访问者模式">
+  访问者模式
+  <a class="anchor" href="#%e8%ae%bf%e9%97%ae%e8%80%85%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#创建型">创建型</a>
+      <ul>
+        <li><a href="#简单工厂模式">简单工厂模式</a></li>
+        <li><a href="#工厂方法模式">工厂方法模式</a></li>
+        <li><a href="#抽象工厂模式">抽象工厂模式</a></li>
+        <li><a href="#创建者模式">创建者模式</a></li>
+        <li><a href="#原型模式">原型模式</a></li>
+        <li><a href="#单例模式">单例模式</a></li>
+      </ul>
+    </li>
+    <li><a href="#结构型模式">结构型模式</a>
+      <ul>
+        <li><a href="#外观模式">外观模式</a></li>
+        <li><a href="#适配器模式">适配器模式</a></li>
+        <li><a href="#代理模式">代理模式</a></li>
+        <li><a href="#组合模式">组合模式</a></li>
+        <li><a href="#享元模式">享元模式</a></li>
+        <li><a href="#装饰模式">装饰模式</a></li>
+        <li><a href="#桥模式">桥模式</a></li>
+      </ul>
+    </li>
+    <li><a href="#行为型模式">行为型模式</a>
+      <ul>
+        <li><a href="#中介者模式">中介者模式</a></li>
+        <li><a href="#观察者模式">观察者模式</a></li>
+        <li><a href="#命令模式">命令模式</a></li>
+        <li><a href="#迭代器模式">迭代器模式</a></li>
+        <li><a href="#模板方法模式">模板方法模式</a></li>
+        <li><a href="#策略模式">策略模式</a></li>
+        <li><a href="#状态模式">状态模式</a></li>
+        <li><a href="#备忘录模式">备忘录模式</a></li>
+        <li><a href="#解释器模式">解释器模式</a></li>
+        <li><a href="#职责链模式">职责链模式</a></li>
+        <li><a href="#访问者模式">访问者模式</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/posts/</link>
+    <description>Recent content in Posts on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 May 2024 13:47:42 +0800</lastBuildDate>
+    <atom:link href="https://xiaohubai.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>errgroup使用</title>
+      <link>https://xiaohubai.github.io/posts/errgroup%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/errgroup%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;p&gt;在go中errgroup包的使用，和源码分析&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>gin参数校验</title>
+      <link>https://xiaohubai.github.io/posts/gin%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/gin%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/</guid>
+      <description>第三方包 # github.com/go-playground/validator/v10 常用参数 # required //必填； len=11 //长度=11； min=3 //如果是数字，验证的是数据大小范围，最小值为3，如果是文本，验证的是最小长度为3， max=6 //如果是数字，验证的是数字最大值为6，如果是文本，验证的是最大长度为6 mail //验证邮箱 gt=3 //对于文本就是长度&amp;gt;=3 lt=6 //对于文本就是长度&amp;lt;=6 翻译中间件 # package middleware import ( &amp;#34;github.com/gin-gonic/gin&amp;#34; &amp;#34;github.com/gin-gonic/gin/binding&amp;#34; &amp;#34;github.com/go-playground/locales/en&amp;#34; &amp;#34;github.com/go-playground/locales/zh&amp;#34; ut &amp;#34;github.com/go-playground/universal-translator&amp;#34; validator &amp;#34;github.com/go-playground/validator/v10&amp;#34; enTranslations &amp;#34;github.com/go-playground/validator/v10/translations/en&amp;#34; zhTranslations &amp;#34;github.com/go-playground/validator/v10/translations/zh&amp;#34; ) func Translations() gin.HandlerFunc { return func(c *gin.Context) { //locale := .GetHeader(&amp;#34;Acept-Language&amp;#34;) locale := &amp;#34;zh&amp;#34; uni := ut.New(en.New(), zh.New()) trans, _ := uni.GetTranslator(locale) v, ok := binding.Validator.Engine().(*validator.Validate) if ok { switch locale { case &amp;#34;zh&amp;#34;: _ = zhTranslations.</description>
+    </item>
+    <item>
+      <title>gin记录请求,返回结果日志</title>
+      <link>https://xiaohubai.github.io/posts/gin%E8%AE%B0%E5%BD%95%E8%AF%B7%E6%B1%82%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/gin%E8%AE%B0%E5%BD%95%E8%AF%B7%E6%B1%82%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%97%A5%E5%BF%97/</guid>
+      <description>&lt;p&gt;gin的使用如何收集请求返回结果到日志&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>gorm自制日志</title>
+      <link>https://xiaohubai.github.io/posts/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</guid>
+      <description>第三方包 # gorm.io/gorm/logger 示例 # package boot import ( &amp;#34;context&amp;#34; &amp;#34;fmt&amp;#34; &amp;#34;io/ioutil&amp;#34; &amp;#34;log&amp;#34; &amp;#34;os&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/xiaohubai/alpha/config&amp;#34; &amp;#34;go.uber.org/zap&amp;#34; &amp;#34;gorm.io/gorm/logger&amp;#34; &amp;#34;gorm.io/gorm/utils&amp;#34; ) type cfg struct { SlowThreshold time.Duration Colorful bool LogLevel logger.LogLevel } type traceRecorder struct { logger.Interface BeginAt time.Time SQL string RowsAffected int64 Err error } func (t traceRecorder) New() *traceRecorder { return &amp;amp;traceRecorder{Interface: t.Interface, BeginAt: time.Now()} } func (t *traceRecorder) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) { t.</description>
+    </item>
+    <item>
+      <title>go垃圾回收机制</title>
+      <link>https://xiaohubai.github.io/posts/go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</guid>
+      <description>&lt;p&gt;go的垃圾回收机制三色标记法和写屏障技术&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>go接口方法重载</title>
+      <link>https://xiaohubai.github.io/posts/go%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/go%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD/</guid>
+      <description>源码 # package main import &amp;#34;fmt&amp;#34; type Log interface { Error() } type LocalLog struct { Level string `json:&amp;#34;level&amp;#34;` Key string `json:&amp;#34;key&amp;#34;` Msg string `json:&amp;#34;msg&amp;#34;` TraceId string `json:&amp;#34;trace_id&amp;#34;` } type Atta struct { Level string `json:&amp;#34;level&amp;#34;` Key string `json:&amp;#34;key&amp;#34;` Msg string `json:&amp;#34;msg&amp;#34;` TraceId string `json:&amp;#34;trace_id&amp;#34;` AttaId string `json:&amp;#34;atta_id&amp;#34;` } func CommError(obj Log) { obj.Error() } func (l *LocalLog) Error() { fmt.Println(l.Level, l.TraceId) } func (a *Atta) Error() { fmt.Println(a.Level, a.</description>
+    </item>
+    <item>
+      <title>go项目分层设计</title>
+      <link>https://xiaohubai.github.io/posts/go%E9%A1%B9%E7%9B%AE%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/go%E9%A1%B9%E7%9B%AE%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1/</guid>
+      <description>单系统 Project Layout 介绍 # ├── api (API) │ └── v1 (版本) ├── service (业务层) ├── model (结构体层) ├── dao (数据库操作) ├── middleware (中间件) ├── config (全局配置) ├── boot (初始组件) ├── router (路由控制) ├── plugin (组件具体实现) ├── utils (工具) ├── script (脚本) ├── docs (文档) ├── public (静态文件) ├── log (日志) ├── main.go (入口) ├── go.mod (项目依赖包版本) ├── go.sum (已下载的所有依赖版本) ├── Dockerfile (docker部署文件) └── README.md (项目说明) 大仓微服务 project layout # ├── api //所有proto文件定义，外部引用 │ └── user │ ├── user.</description>
+    </item>
+    <item>
+      <title>redis内存满了怎么办？</title>
+      <link>https://xiaohubai.github.io/posts/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description> maxmemory # redis 设置最大使用内存 maxmemory，默认资源超过maxmemory后，不允许新key加入 7种淘汰策略 # volatile-lru：淘汰那些设置了过期时间且最近最少被访问的数据 volatile-random：随机淘汰，腾出坑位给新人； volatile-ttl：淘汰设置了过期时间key，谁最接近时间就先淘汰谁 allkeys-lru：淘汰最近最少上一线干活的职员； allkeys-lfu：淘汰最少上一线干活的公务员； allkeys-random：随机淘汰职员，为新兵腾出空位。 淘汰执行过程 # 客户端发送新命令到服务端； 服务端收到客户端命令，Redis 检查内存使用情况，如果大于 maxmemory 限制，则根据策略驱逐数据。执行新命令，否则执行新命令 使用场景 # allkeys-lru 使用场景有明显的冷热数据区分，充分利用 LRU 算法把最近最常访问的数据保留，有限的内存提高访问性能 allkeys-random 使用场景数据没有明显的冷热分别，所有的数据分布查询比较均衡，让其随机选择淘汰数据 volatile-lru 业务场景有一些数据不能删除，比如置顶新闻、视频，这时候我们为这些数据不设置过期时间，这样的话数据就不会被删除，该策略就会去根据 LRU 算法去淘汰那些设置了过期时间且最近最少被访问的数据 </description>
+    </item>
+    <item>
+      <title>sql语句性能优化</title>
+      <link>https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</guid>
+      <description>1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。 2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。 3、应尽量避免在 WHERE 子句中使用 != 或 &amp;lt;&amp;gt; 操作符。MySQL 只有对以下操作符才使用索引：&amp;lt;，&amp;lt;=，=，&amp;gt;，&amp;gt;=，BETWEEN，IN，以及某些时候的 LIKE。 4、应尽量避免在 WHERE 子句中使用 OR 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，可以使用 UNION 合并查询：select id from t where num=10 union all select id from t where num=20。 5、IN 和 NOT IN 也要慎用，否则会导致全表扫描。对于连续的数值，能用 BETWEEN 就不要用 IN：select id from t where num between 1 and 3。、 6、下面的查询也将导致全表扫描：select id from t where name like‘%abc%’ 或者select id from t where name like‘%abc’若要提高效率，可以考虑全文检索。而select id from t where name like‘abc%’才用到索引。 7、如果在 WHERE 子句中使用参数，也会导致全表扫描。 8、应尽量避免在 WHERE 子句中对字段进行表达式操作，应尽量避免在 WHERE 子句中对字段进行函数操作。 9、很多时候用 EXISTS 代替 IN 是一个好的选择：select num from a where num in(select num from b)。用下面的语句替换：select num from a where exists(select 1 from b where num=a.</description>
+    </item>
+    <item>
+      <title>wsl2固定ip</title>
+      <link>https://xiaohubai.github.io/posts/wsl2%E5%9B%BA%E5%AE%9Aip/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/wsl2%E5%9B%BA%E5%AE%9Aip/</guid>
+      <description>解决wsl2重启 内网ip发生变化 # @echo off setlocal enabledelayedexpansion wsl --shutdown ::重新拉起来，并且用root的身份，启动ssh服务和docker服务 wsl -u root service docker start | findstr &amp;#34;Starting Docker&amp;#34; &amp;gt; nul if !errorlevel! equ 0 ( echo docker start success :: 看看我要的IP在不在 wsl -u root ip addr | findstr &amp;#34;172.21.0.2&amp;#34; &amp;gt; nul if !errorlevel! equ 0 ( echo wsl ip has set ) else ( wsl -u root ip addr add 172.21.0.2/24 broadcast 172.21.0.0 dev eth0 label eth0:1 echo set wsl ip success: 172.</description>
+    </item>
+    <item>
+      <title>wsl2设置root密码和登录</title>
+      <link>https://xiaohubai.github.io/posts/wsl2%E8%AE%BE%E7%BD%AEroot%E5%AF%86%E7%A0%81%E5%92%8C%E7%99%BB%E5%BD%95/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/wsl2%E8%AE%BE%E7%BD%AEroot%E5%AF%86%E7%A0%81%E5%92%8C%E7%99%BB%E5%BD%95/</guid>
+      <description> 设置root密码 # sudo passwd root root登录 # su </description>
+    </item>
+    <item>
+      <title>zap使用</title>
+      <link>https://xiaohubai.github.io/posts/zap/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/zap/</guid>
+      <description>第三方包 # go.uber.org/zap zap记录日志 # uber 开源的高性能日志库，面向高性能 package boot import ( &amp;#34;fmt&amp;#34; &amp;#34;path&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/xiaohubai/alpha/config&amp;#34; zaprotatelogs &amp;#34;github.com/lestrrat-go/file-rotatelogs&amp;#34; &amp;#34;go.uber.org/zap&amp;#34; &amp;#34;go.uber.org/zap/zapcore&amp;#34; ) var level zapcore.Level // Zap 日志组件 func Zap() (logger *zap.Logger) { level = zap.InfoLevel logger = zap.New(getEncoderCore()) logger.WithOptions(zap.AddCaller()) return logger } func getEncoderCore() (core zapcore.Core) { writer, err := GetWriteSyncer() // 使用file-rotatelogs进行日志分割 if err != nil { panic(fmt.Errorf(&amp;#34;Get Write Syncer Failed err:%v&amp;#34;, err.Error())) } return zapcore.NewCore(zapcore.NewJSONEncoder(getEncoderConfig()), writer, level) } func getEncoderConfig() (cfg zapcore.</description>
+    </item>
+    <item>
+      <title>控制协程运行时间</title>
+      <link>https://xiaohubai.github.io/posts/%E6%8E%A7%E5%88%B6%E5%8D%8F%E7%A8%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/%E6%8E%A7%E5%88%B6%E5%8D%8F%E7%A8%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</guid>
+      <description>&lt;p&gt;go控制协程运行时间，使用context.WithTimeout(newCtx, timeout)，用recover捕获异常情况&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>高并发时，数据一致性问题</title>
+      <link>https://xiaohubai.github.io/posts/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%97%B6%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%97%B6%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;p&gt;对于共享资源，在多用户访问、程序内、数据库中，怎么保证共享资源独占，数据一致性。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="kafka基本组件 # ZooKeeper # 负责保存 broker 集群元数据，并对控制器进行选举等操作 Broker # 消息中间件节点（服务器），一个节点就是一个broker，一个kafka集群由一个或多个broker组成 Producer (生产者) # 负责发布消息到 Kafka broker Consumer（消费者） # 消息消费者，向 Kafka broker 读取消息的客户端 Topic（主题） # 每条发布到 Kafka 集群的消息都有一个类别，这个类别被称为 Topic。（物理上不同 Topic 的消息分开存储，逻辑上一个 Topic 的消息虽然保存于一个或多个 broker 上，但用户只需指定消息的 Topic 即可生产或消费数据而不必关心数据存于何处） Partition # partition 默认一个topic有一个分区（partition） Partition 是物理上的概念，每个 Topic 包含一个或多个 Partition，数据存储最小单元， 分区分散存储在服务器不同节点上解决了一个海量数据如何存储的问题 Offset # offset 是消息在分区中的唯一标识，Kafka 通过它来保证消息在分区内的顺序性，不过 offset 并不跨越分区，也就是说，Kafka保证的是分区有序性而不是主题有序性。 Replication(副本) # Kafka 同一 Partition 的数据可以在多 Broker 上存在多个副本，通常只有主副本对外提供读写服务，当主副本所在 broker 崩溃或发生网络异常，Kafka 会在 Controller 的管理下会重新选择新的 Leader 副本对外提供读写服务。 kafka零拷贝机制保证读取数据高性能 # 消费者读取数据流程：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据）-》os cache 复制数据到kafka应用中-》kafka将数据（复制）发送到socket cache中-》socket cache 通过网卡传输给消费者 //零拷贝 kafka linux sendfile技术 ：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据） 从os cache直接将数据发送给网卡传输给消费者 //如何做到高性能？基于以下相当于 Kafka 完全基于内存提供数据的写和读 1.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="kafka" />
+<meta property="og:description" content="kafka基本组件 # ZooKeeper # 负责保存 broker 集群元数据，并对控制器进行选举等操作 Broker # 消息中间件节点（服务器），一个节点就是一个broker，一个kafka集群由一个或多个broker组成 Producer (生产者) # 负责发布消息到 Kafka broker Consumer（消费者） # 消息消费者，向 Kafka broker 读取消息的客户端 Topic（主题） # 每条发布到 Kafka 集群的消息都有一个类别，这个类别被称为 Topic。（物理上不同 Topic 的消息分开存储，逻辑上一个 Topic 的消息虽然保存于一个或多个 broker 上，但用户只需指定消息的 Topic 即可生产或消费数据而不必关心数据存于何处） Partition # partition 默认一个topic有一个分区（partition） Partition 是物理上的概念，每个 Topic 包含一个或多个 Partition，数据存储最小单元， 分区分散存储在服务器不同节点上解决了一个海量数据如何存储的问题 Offset # offset 是消息在分区中的唯一标识，Kafka 通过它来保证消息在分区内的顺序性，不过 offset 并不跨越分区，也就是说，Kafka保证的是分区有序性而不是主题有序性。 Replication(副本) # Kafka 同一 Partition 的数据可以在多 Broker 上存在多个副本，通常只有主副本对外提供读写服务，当主副本所在 broker 崩溃或发生网络异常，Kafka 会在 Controller 的管理下会重新选择新的 Leader 副本对外提供读写服务。 kafka零拷贝机制保证读取数据高性能 # 消费者读取数据流程：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据）-》os cache 复制数据到kafka应用中-》kafka将数据（复制）发送到socket cache中-》socket cache 通过网卡传输给消费者 //零拷贝 kafka linux sendfile技术 ：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据） 从os cache直接将数据发送给网卡传输给消费者 //如何做到高性能？基于以下相当于 Kafka 完全基于内存提供数据的写和读 1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/18_kafka/" /><meta property="article:section" content="docs" />
+
+
+
+<title>kafka | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/18_kafka/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="active">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>kafka</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#kafka基本组件">kafka基本组件</a>
+      <ul>
+        <li><a href="#zookeeper">ZooKeeper</a></li>
+        <li><a href="#broker">Broker</a></li>
+        <li><a href="#producer-生产者">Producer (生产者)</a></li>
+        <li><a href="#consumer消费者">Consumer（消费者）</a></li>
+        <li><a href="#topic主题">Topic（主题）</a></li>
+        <li><a href="#partition">Partition</a></li>
+        <li><a href="#offset">Offset</a></li>
+        <li><a href="#replication副本">Replication(副本)</a></li>
+      </ul>
+    </li>
+    <li><a href="#kafka零拷贝机制保证读取数据高性能">kafka零拷贝机制保证读取数据高性能</a></li>
+    <li><a href="#kafka-和-zookeeper-之间的关系">kafka 和 zookeeper 之间的关系</a></li>
+    <li><a href="#如何根据-offset-找到对应的-message">如何根据 offset 找到对应的 Message？</a></li>
+    <li><a href="#说一下什么是副本">说一下什么是副本？</a></li>
+    <li><a href="#说一下-kafka-的-isr-机制">说一下 kafka 的 ISR 机制？</a></li>
+    <li><a href="#kafka-如何保证对应topic的消息被写到相同的分区">kafka 如何保证对应topic的消息被写到相同的分区？</a></li>
+    <li><a href="#kafka-消费支持几种消费模式">kafka 消费支持几种消费模式？</a></li>
+    <li><a href="#kafka-如何保证数据的不重复和不丢失">kafka 如何保证数据的不重复和不丢失？</a></li>
+    <li><a href="#kafka-是如何清理过期数据的">kafka 是如何清理过期数据的？</a></li>
+    <li><a href="#kafka发送数据流程">kafka发送数据流程</a></li>
+    <li><a href="#kafka二分查找定位数据">kafka二分查找定位数据</a></li>
+    <li><a href="#第三方包">第三方包</a>
+      <ul>
+        <li><a href="#客户端示例">客户端示例</a></li>
+        <li><a href="#服务端示例">服务端示例</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="kafka基本组件">
+  kafka基本组件
+  <a class="anchor" href="#kafka%e5%9f%ba%e6%9c%ac%e7%bb%84%e4%bb%b6">#</a>
+</h2>
+<h3 id="zookeeper">
+  ZooKeeper
+  <a class="anchor" href="#zookeeper">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">负责保存</span> <span style="color:#a6e22e">broker</span> <span style="color:#a6e22e">集群元数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并对控制器进行选举等操作</span>
+</span></span></code></pre></div><h3 id="broker">
+  Broker
+  <a class="anchor" href="#broker">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">消息中间件节点</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">服务器</span><span style="color:#960050;background-color:#1e0010">），</span><span style="color:#a6e22e">一个节点就是一个broker</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">一个kafka集群由一个或多个broker组成</span>
+</span></span></code></pre></div><h3 id="producer-生产者">
+  Producer (生产者)
+  <a class="anchor" href="#producer-%e7%94%9f%e4%ba%a7%e8%80%85">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">负责发布消息到</span> <span style="color:#a6e22e">Kafka</span> <span style="color:#a6e22e">broker</span>
+</span></span></code></pre></div><h3 id="consumer消费者">
+  Consumer（消费者）
+  <a class="anchor" href="#consumer%e6%b6%88%e8%b4%b9%e8%80%85">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">消息消费者</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">向</span> <span style="color:#a6e22e">Kafka</span> <span style="color:#a6e22e">broker</span> <span style="color:#a6e22e">读取消息的客户端</span>
+</span></span></code></pre></div><h3 id="topic主题">
+  Topic（主题）
+  <a class="anchor" href="#topic%e4%b8%bb%e9%a2%98">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">每条发布到</span> <span style="color:#a6e22e">Kafka</span> <span style="color:#a6e22e">集群的消息都有一个类别</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这个类别被称为</span> <span style="color:#a6e22e">Topic</span><span style="color:#960050;background-color:#1e0010">。（</span><span style="color:#a6e22e">物理上不同</span> <span style="color:#a6e22e">Topic</span> <span style="color:#a6e22e">的消息分开存储</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">逻辑上一个</span> <span style="color:#a6e22e">Topic</span> <span style="color:#a6e22e">的消息虽然保存于一个或多个</span> <span style="color:#a6e22e">broker</span> <span style="color:#a6e22e">上</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但用户只需指定消息的</span> <span style="color:#a6e22e">Topic</span> <span style="color:#a6e22e">即可生产或消费数据而不必关心数据存于何处</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span></code></pre></div><h3 id="partition">
+  Partition
+  <a class="anchor" href="#partition">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">partition</span> <span style="color:#a6e22e">默认一个topic有一个分区</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">partition</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Partition</span> <span style="color:#a6e22e">是物理上的概念</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">每个</span> <span style="color:#a6e22e">Topic</span> <span style="color:#a6e22e">包含一个或多个</span> <span style="color:#a6e22e">Partition</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">数据存储最小单元</span><span style="color:#960050;background-color:#1e0010">，</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">分区分散存储在服务器不同节点上解决了一个海量数据如何存储的问题</span>
+</span></span></code></pre></div><h3 id="offset">
+  Offset
+  <a class="anchor" href="#offset">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">offset</span> <span style="color:#a6e22e">是消息在分区中的唯一标识</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">Kafka</span> <span style="color:#a6e22e">通过它来保证消息在分区内的顺序性</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不过</span> <span style="color:#a6e22e">offset</span> <span style="color:#a6e22e">并不跨越分区</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">也就是说</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">Kafka保证的是分区有序性而不是主题有序性</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h3 id="replication副本">
+  Replication(副本)
+  <a class="anchor" href="#replication%e5%89%af%e6%9c%ac">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">Kafka</span> <span style="color:#a6e22e">同一</span> <span style="color:#a6e22e">Partition</span> <span style="color:#a6e22e">的数据可以在多</span> <span style="color:#a6e22e">Broker</span> <span style="color:#a6e22e">上存在多个副本</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">通常只有主副本对外提供读写服务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">当主副本所在</span> <span style="color:#a6e22e">broker</span> <span style="color:#a6e22e">崩溃或发生网络异常</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">Kafka</span> <span style="color:#a6e22e">会在</span> <span style="color:#a6e22e">Controller</span> <span style="color:#a6e22e">的管理下会重新选择新的</span> <span style="color:#a6e22e">Leader</span> <span style="color:#a6e22e">副本对外提供读写服务</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="kafka零拷贝机制保证读取数据高性能">
+  kafka零拷贝机制保证读取数据高性能
+  <a class="anchor" href="#kafka%e9%9b%b6%e6%8b%b7%e8%b4%9d%e6%9c%ba%e5%88%b6%e4%bf%9d%e8%af%81%e8%af%bb%e5%8f%96%e6%95%b0%e6%8d%ae%e9%ab%98%e6%80%a7%e8%83%bd">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">消费者读取数据流程</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">消费者</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">发送请求到kafka服务</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">kafka服务去os</span> <span style="color:#a6e22e">cache</span> <span style="color:#a6e22e">缓存读取数据</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">缓存灭有就从磁盘读取数据</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">os</span> <span style="color:#a6e22e">cache</span> <span style="color:#a6e22e">复制数据到kafka应用中</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">kafka将数据</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">复制</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">发送到socket</span> <span style="color:#a6e22e">cache中</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">socket</span> <span style="color:#a6e22e">cache</span> <span style="color:#a6e22e">通过网卡传输给消费者</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//零拷贝
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">kafka</span> <span style="color:#a6e22e">linux</span> <span style="color:#a6e22e">sendfile技术</span> <span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">消费者</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">发送请求到kafka服务</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">kafka服务去os</span> <span style="color:#a6e22e">cache</span> <span style="color:#a6e22e">缓存读取数据</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">缓存灭有就从磁盘读取数据</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">从os</span> <span style="color:#a6e22e">cache直接将数据发送给网卡传输给消费者</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//如何做到高性能？基于以下相当于 Kafka 完全基于内存提供数据的写和读
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#ae81ff">1.</span><span style="color:#a6e22e">页缓存技术</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">数据写入</span> <span style="color:#a6e22e">os</span> <span style="color:#a6e22e">cache</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.</span><span style="color:#a6e22e">磁盘顺序写</span><span style="color:#960050;background-color:#1e0010">：</span> <span style="color:#a6e22e">追加文件末尾按照顺序的方式来写数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">内存相当</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3.</span><span style="color:#a6e22e">os</span> <span style="color:#a6e22e">cache直接发送数据</span>
+</span></span></code></pre></div><h2 id="kafka-和-zookeeper-之间的关系">
+  kafka 和 zookeeper 之间的关系
+  <a class="anchor" href="#kafka-%e5%92%8c-zookeeper-%e4%b9%8b%e9%97%b4%e7%9a%84%e5%85%b3%e7%b3%bb">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">kafka</span> <span style="color:#a6e22e">使用</span> <span style="color:#a6e22e">zookeeper</span> <span style="color:#a6e22e">来保存集群的元数据信息和消费者信息</span>(<span style="color:#a6e22e">偏移量</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">每个</span> <span style="color:#a6e22e">Broker</span> <span style="color:#a6e22e">服务器在启动时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">都会到</span> <span style="color:#a6e22e">Zookeeper</span> <span style="color:#a6e22e">上进行注册</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">即创建</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">brokers</span><span style="color:#f92672">/</span><span style="color:#a6e22e">ids</span><span style="color:#f92672">/</span>[<span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#a6e22e">N</span>] <span style="color:#a6e22e">的节点</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">然后写入</span> <span style="color:#a6e22e">IP</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">端口等信息</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">Broker</span> <span style="color:#a6e22e">创建的是临时节点</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以一旦</span> <span style="color:#a6e22e">Broker</span> <span style="color:#a6e22e">上线或者下线</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对应</span> <span style="color:#a6e22e">Broker</span> <span style="color:#a6e22e">节点也就被删除了</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">因此可以通过</span> <span style="color:#a6e22e">zookeeper</span> <span style="color:#a6e22e">上</span> <span style="color:#a6e22e">Broker</span> <span style="color:#a6e22e">节点的变化来动态表征</span> <span style="color:#a6e22e">Broker</span> <span style="color:#a6e22e">服务器的可用性</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="如何根据-offset-找到对应的-message">
+  如何根据 offset 找到对应的 Message？
+  <a class="anchor" href="#%e5%a6%82%e4%bd%95%e6%a0%b9%e6%8d%ae-offset-%e6%89%be%e5%88%b0%e5%af%b9%e5%ba%94%e7%9a%84-message">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">第一步</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">根据</span> <span style="color:#a6e22e">Offset</span> <span style="color:#a6e22e">找到所属的</span> <span style="color:#a6e22e">Segment</span> <span style="color:#a6e22e">文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">第二步</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">从</span> <span style="color:#a6e22e">Segment</span> <span style="color:#a6e22e">中获取对应</span> <span style="color:#a6e22e">Offset</span> <span style="color:#a6e22e">的消息数据</span>
+</span></span></code></pre></div><h2 id="说一下什么是副本">
+  说一下什么是副本？
+  <a class="anchor" href="#%e8%af%b4%e4%b8%80%e4%b8%8b%e4%bb%80%e4%b9%88%e6%98%af%e5%89%af%e6%9c%ac">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">kafka</span> <span style="color:#a6e22e">为了保证数据不丢失</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">从</span> <span style="color:#ae81ff">0.8.0</span> <span style="color:#a6e22e">版本开始引入了分区副本机制</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">在创建</span> <span style="color:#a6e22e">topic</span> <span style="color:#a6e22e">的时候指定</span> <span style="color:#a6e22e">replication</span><span style="color:#f92672">-</span><span style="color:#a6e22e">factor</span>,<span style="color:#a6e22e">默认副本为</span> <span style="color:#ae81ff">3</span> <span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">副本是相对</span> <span style="color:#a6e22e">partition</span> <span style="color:#a6e22e">而言的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">一个分区中包含一个或多个副本</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其中一个为leader</span> <span style="color:#a6e22e">副本</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其余为follower</span> <span style="color:#a6e22e">副本</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">各个副本位于不同的</span> <span style="color:#a6e22e">broker</span> <span style="color:#a6e22e">节点中</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">所有的读写操作都是经过</span> <span style="color:#a6e22e">Leader</span> <span style="color:#a6e22e">进行的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">同时</span> <span style="color:#a6e22e">follower</span> <span style="color:#a6e22e">会定期地去</span> <span style="color:#a6e22e">leader</span> <span style="color:#a6e22e">上复制数据</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">当</span> <span style="color:#a6e22e">Leader</span> <span style="color:#a6e22e">挂掉之后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其中一个</span> <span style="color:#a6e22e">follower</span> <span style="color:#a6e22e">会重新成为新的</span> <span style="color:#a6e22e">Leader</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">通过分区副本</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">引入了数据冗余</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">同时也提供了</span> <span style="color:#a6e22e">Kafka</span> <span style="color:#a6e22e">的数据可靠性</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="说一下-kafka-的-isr-机制">
+  说一下 kafka 的 ISR 机制？
+  <a class="anchor" href="#%e8%af%b4%e4%b8%80%e4%b8%8b-kafka-%e7%9a%84-isr-%e6%9c%ba%e5%88%b6">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">ISR</span> <span style="color:#a6e22e">是指与</span> <span style="color:#a6e22e">leader</span> <span style="color:#a6e22e">副本保持同步状态的副本集合</span>.<span style="color:#a6e22e">当</span> <span style="color:#a6e22e">ISR</span> <span style="color:#a6e22e">中的</span> <span style="color:#a6e22e">follower</span> <span style="color:#a6e22e">完成数据同步之后</span><span style="color:#960050;background-color:#1e0010">，</span> <span style="color:#a6e22e">leader</span> <span style="color:#a6e22e">就会给</span> <span style="color:#a6e22e">follower</span> <span style="color:#a6e22e">发送</span> <span style="color:#a6e22e">ack</span> ,<span style="color:#a6e22e">如果其中一个</span> <span style="color:#a6e22e">follower</span> <span style="color:#a6e22e">长时间未向</span> <span style="color:#a6e22e">leader</span> <span style="color:#a6e22e">同步数据</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">该</span> <span style="color:#a6e22e">follower</span> <span style="color:#a6e22e">将会被踢出</span> <span style="color:#a6e22e">ISR</span> <span style="color:#a6e22e">集合</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">该时间阈值由</span> <span style="color:#a6e22e">replica</span>.<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">max</span>.<span style="color:#a6e22e">ms</span> <span style="color:#a6e22e">参数设定</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">当</span> <span style="color:#a6e22e">leader</span> <span style="color:#a6e22e">发生故障后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">就会从</span> <span style="color:#a6e22e">ISR</span> <span style="color:#a6e22e">集合中重新选举出新的</span> <span style="color:#a6e22e">leader</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="kafka-如何保证对应topic的消息被写到相同的分区">
+  kafka 如何保证对应topic的消息被写到相同的分区？
+  <a class="anchor" href="#kafka-%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e5%af%b9%e5%ba%94topic%e7%9a%84%e6%b6%88%e6%81%af%e8%a2%ab%e5%86%99%e5%88%b0%e7%9b%b8%e5%90%8c%e7%9a%84%e5%88%86%e5%8c%ba">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">消息在不同的</span> <span style="color:#a6e22e">Partition</span> <span style="color:#a6e22e">是不能保证有序的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只有一个</span> <span style="color:#a6e22e">Partition</span> <span style="color:#a6e22e">内的消息是有序的</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">通过</span> <span style="color:#a6e22e">消息键</span> <span style="color:#a6e22e">和</span> <span style="color:#a6e22e">分区器</span> <span style="color:#a6e22e">来实现</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">分区器为键生成一个</span> <span style="color:#a6e22e">offset</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">然后使用</span> <span style="color:#a6e22e">offset</span> <span style="color:#a6e22e">对主题分区进行取模</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">为消息选取分区</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样就可以保证包含同一个键的消息会被写到同一个分区上</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="kafka-消费支持几种消费模式">
+  kafka 消费支持几种消费模式？
+  <a class="anchor" href="#kafka-%e6%b6%88%e8%b4%b9%e6%94%af%e6%8c%81%e5%87%a0%e7%a7%8d%e6%b6%88%e8%b4%b9%e6%a8%a1%e5%bc%8f">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">at</span> <span style="color:#a6e22e">most</span> <span style="color:#a6e22e">once</span> <span style="color:#a6e22e">模式</span> <span style="color:#a6e22e">最多一次</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">保证每一条消息</span> <span style="color:#a6e22e">commit</span> <span style="color:#a6e22e">成功之后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">再进行消费处理</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">消息可能会丢失</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但不会重复</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">at</span> <span style="color:#a6e22e">least</span> <span style="color:#a6e22e">once</span> <span style="color:#a6e22e">模式</span> <span style="color:#a6e22e">至少一次</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">保证每一条消息处理成功之后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">再进行commit</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">消息不会丢失</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但可能会重复</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">exactly</span> <span style="color:#a6e22e">once</span> <span style="color:#a6e22e">模式</span> <span style="color:#a6e22e">精确传递一次</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">将</span> <span style="color:#a6e22e">offset</span> <span style="color:#a6e22e">作为唯一</span> <span style="color:#a6e22e">id</span> <span style="color:#a6e22e">与消息同时处理</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并且保证处理的原子性</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">消息只会处理一次</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不丢失也不会重复</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">但这种方式很难做到</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="kafka-如何保证数据的不重复和不丢失">
+  kafka 如何保证数据的不重复和不丢失？
+  <a class="anchor" href="#kafka-%e5%a6%82%e4%bd%95%e4%bf%9d%e8%af%81%e6%95%b0%e6%8d%ae%e7%9a%84%e4%b8%8d%e9%87%8d%e5%a4%8d%e5%92%8c%e4%b8%8d%e4%b8%a2%e5%a4%b1">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">exactly</span> <span style="color:#a6e22e">once</span> <span style="color:#a6e22e">模式</span> <span style="color:#a6e22e">精确传递一次</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">将</span> <span style="color:#a6e22e">offset</span> <span style="color:#a6e22e">作为唯一</span> <span style="color:#a6e22e">id</span> <span style="color:#a6e22e">与消息同时处理</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并且保证处理的原子性</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">消息只会处理一次</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不丢失也不会重复</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">但这种方式很难做到</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">kafka</span> <span style="color:#a6e22e">默认的模式是</span> <span style="color:#a6e22e">at</span> <span style="color:#a6e22e">least</span> <span style="color:#a6e22e">once</span> <span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但这种模式可能会产生重复消费的问题</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以在业务逻辑必须做幂等设计</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">使用</span> <span style="color:#a6e22e">exactly</span> <span style="color:#a6e22e">Once</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">幂等操作</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可以保证数据不重复</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">不丢失</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="kafka-是如何清理过期数据的">
+  kafka 是如何清理过期数据的？
+  <a class="anchor" href="#kafka-%e6%98%af%e5%a6%82%e4%bd%95%e6%b8%85%e7%90%86%e8%bf%87%e6%9c%9f%e6%95%b0%e6%8d%ae%e7%9a%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//删除
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">cleanup</span>.<span style="color:#a6e22e">policy</span>=<span style="color:#a6e22e">delete</span> <span style="color:#a6e22e">启用删除策略</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">retention</span>.<span style="color:#a6e22e">hours</span>=<span style="color:#ae81ff">16</span>  <span style="color:#960050;background-color:#1e0010">#</span><span style="color:#a6e22e">清理超过指定时间清理</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">retention</span>.<span style="color:#a6e22e">bytes</span>=<span style="color:#ae81ff">1073741824</span> <span style="color:#960050;background-color:#1e0010">#</span><span style="color:#a6e22e">超过指定大小后</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">删除旧的消息</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//压缩
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">cleanup</span>.<span style="color:#a6e22e">policy</span>=<span style="color:#a6e22e">compact</span> <span style="color:#a6e22e">启用压缩策略</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">将数据压缩</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只保留每个</span> <span style="color:#a6e22e">key</span> <span style="color:#a6e22e">最后一个版本的数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">首先在</span> <span style="color:#a6e22e">broker</span> <span style="color:#a6e22e">的配置中设置</span> <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">cleaner</span>.<span style="color:#a6e22e">enable</span>=<span style="color:#66d9ef">true</span> <span style="color:#a6e22e">启用</span> <span style="color:#a6e22e">cleaner</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这个默认是关闭的</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="kafka发送数据流程">
+  kafka发送数据流程
+  <a class="anchor" href="#kafka%e5%8f%91%e9%80%81%e6%95%b0%e6%8d%ae%e6%b5%81%e7%a8%8b">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">生产者</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">生产数据到kafka服务</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">kafka服务写入os</span> <span style="color:#a6e22e">cache</span><span style="color:#f92672">-</span><span style="color:#960050;background-color:#1e0010">》</span><span style="color:#a6e22e">每隔一段时间fsync到磁盘</span>
+</span></span></code></pre></div><h2 id="kafka二分查找定位数据">
+  kafka二分查找定位数据
+  <a class="anchor" href="#kafka%e4%ba%8c%e5%88%86%e6%9f%a5%e6%89%be%e5%ae%9a%e4%bd%8d%e6%95%b0%e6%8d%ae">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">一条消息就有两个位置</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">offset</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">相对偏移量</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">相对位置</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">position</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">磁盘物理位置</span> <span style="color:#a6e22e">稀疏索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Kafka中采用了稀疏索引的方式读取索引</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">kafka每当写入了4k大小的日志</span><span style="color:#960050;background-color:#1e0010">（</span>.<span style="color:#a6e22e">log</span><span style="color:#960050;background-color:#1e0010">），</span><span style="color:#a6e22e">就往index里写入一个记录索引</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">其中会采用二分查找</span>.
+</span></span></code></pre></div><h2 id="第三方包">
+  第三方包
+  <a class="anchor" href="#%e7%ac%ac%e4%b8%89%e6%96%b9%e5%8c%85">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">github</span>.<span style="color:#a6e22e">com</span><span style="color:#f92672">/</span><span style="color:#a6e22e">Shopify</span><span style="color:#f92672">/</span><span style="color:#a6e22e">sarama</span>
+</span></span></code></pre></div><h3 id="客户端示例">
+  客户端示例
+  <a class="anchor" href="#%e5%ae%a2%e6%88%b7%e7%ab%af%e7%a4%ba%e4%be%8b">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">boot</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;errors&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;time&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/Shopify/sarama&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#e6db74">&#34;github.com/xiaohubai/alpha/config&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">client</span> <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">SyncProducer</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Kafka</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">cfg</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">NewConfig</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//sarama.WaitForAll  //数据推出的成功与否都与我无关了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">//sarama.WaitForLocal  //当local(leader)确认接收成功后，就可以返回了
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">//sarama.WaitForAll //当所有的leader和follower都接收成功时，才会返回
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">cfg</span>.<span style="color:#a6e22e">Producer</span>.<span style="color:#a6e22e">RequiredAcks</span> = <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">WaitForAll</span>          <span style="color:#75715e">// 发送完数据需要leader和follow都确认
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">cfg</span>.<span style="color:#a6e22e">Producer</span>.<span style="color:#a6e22e">Partitioner</span> = <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">NewRandomPartitioner</span> <span style="color:#75715e">// 新选出一个partition
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">cfg</span>.<span style="color:#a6e22e">Producer</span>.<span style="color:#a6e22e">Return</span>.<span style="color:#a6e22e">Successes</span> = <span style="color:#66d9ef">true</span>                   <span style="color:#75715e">// 成功交付的消息将在success channel返回
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">cfg</span>.<span style="color:#a6e22e">Producer</span>.<span style="color:#a6e22e">Retry</span>.<span style="color:#a6e22e">Max</span> = <span style="color:#ae81ff">3</span>                             <span style="color:#75715e">// 重试三次
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">cfg</span>.<span style="color:#a6e22e">Producer</span>.<span style="color:#a6e22e">Retry</span>.<span style="color:#a6e22e">Backoff</span> = <span style="color:#ae81ff">100</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 连接kafka
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">client</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">NewSyncProducer</span>(<span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">CONFIG</span>.<span style="color:#a6e22e">Kafka</span>.<span style="color:#a6e22e">Address</span>, <span style="color:#a6e22e">cfg</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		panic(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SendToKafka</span>(<span style="color:#a6e22e">topic</span>, <span style="color:#a6e22e">data</span> <span style="color:#66d9ef">string</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 构造一个消息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">msg</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">ProducerMessage</span>{}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">msg</span>.<span style="color:#a6e22e">Topic</span> = <span style="color:#a6e22e">topic</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">msg</span>.<span style="color:#a6e22e">Value</span> = <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">StringEncoder</span>(<span style="color:#a6e22e">data</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 发送消息
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">pid</span>, <span style="color:#a6e22e">offset</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">SendMessage</span>(<span style="color:#a6e22e">msg</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;pid:%v offset:%v\n&#34;</span>, <span style="color:#a6e22e">pid</span>, <span style="color:#a6e22e">offset</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="服务端示例">
+  服务端示例
+  <a class="anchor" href="#%e6%9c%8d%e5%8a%a1%e7%ab%af%e7%a4%ba%e4%be%8b">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">KafkaConsumer</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">cfg</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">NewConfig</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">NewConsumer</span>(<span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">CONFIG</span>.<span style="color:#a6e22e">Kafka</span>.<span style="color:#a6e22e">Address</span>, <span style="color:#a6e22e">cfg</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		panic(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">consumer</span> = <span style="color:#a6e22e">c</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">ReadFromKafka</span>(<span style="color:#e6db74">&#34;my_log&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ReadFromKafka</span>(<span style="color:#a6e22e">topic</span> <span style="color:#66d9ef">string</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">partitionList</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">consumer</span>.<span style="color:#a6e22e">Partitions</span>(<span style="color:#a6e22e">topic</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		panic(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">partition</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">partitionList</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">pc</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">consumer</span>.<span style="color:#a6e22e">ConsumePartition</span>(<span style="color:#a6e22e">topic</span>, int32(<span style="color:#a6e22e">partition</span>), <span style="color:#a6e22e">sarama</span>.<span style="color:#a6e22e">OffsetNewest</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			panic(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">pc</span>.<span style="color:#a6e22e">AsyncClose</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">msg</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">pc</span>.<span style="color:#a6e22e">Messages</span>() {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(string(<span style="color:#a6e22e">msg</span>.<span style="color:#a6e22e">Value</span>))
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#kafka基本组件">kafka基本组件</a>
+      <ul>
+        <li><a href="#zookeeper">ZooKeeper</a></li>
+        <li><a href="#broker">Broker</a></li>
+        <li><a href="#producer-生产者">Producer (生产者)</a></li>
+        <li><a href="#consumer消费者">Consumer（消费者）</a></li>
+        <li><a href="#topic主题">Topic（主题）</a></li>
+        <li><a href="#partition">Partition</a></li>
+        <li><a href="#offset">Offset</a></li>
+        <li><a href="#replication副本">Replication(副本)</a></li>
+      </ul>
+    </li>
+    <li><a href="#kafka零拷贝机制保证读取数据高性能">kafka零拷贝机制保证读取数据高性能</a></li>
+    <li><a href="#kafka-和-zookeeper-之间的关系">kafka 和 zookeeper 之间的关系</a></li>
+    <li><a href="#如何根据-offset-找到对应的-message">如何根据 offset 找到对应的 Message？</a></li>
+    <li><a href="#说一下什么是副本">说一下什么是副本？</a></li>
+    <li><a href="#说一下-kafka-的-isr-机制">说一下 kafka 的 ISR 机制？</a></li>
+    <li><a href="#kafka-如何保证对应topic的消息被写到相同的分区">kafka 如何保证对应topic的消息被写到相同的分区？</a></li>
+    <li><a href="#kafka-消费支持几种消费模式">kafka 消费支持几种消费模式？</a></li>
+    <li><a href="#kafka-如何保证数据的不重复和不丢失">kafka 如何保证数据的不重复和不丢失？</a></li>
+    <li><a href="#kafka-是如何清理过期数据的">kafka 是如何清理过期数据的？</a></li>
+    <li><a href="#kafka发送数据流程">kafka发送数据流程</a></li>
+    <li><a href="#kafka二分查找定位数据">kafka二分查找定位数据</a></li>
+    <li><a href="#第三方包">第三方包</a>
+      <ul>
+        <li><a href="#客户端示例">客户端示例</a></li>
+        <li><a href="#服务端示例">服务端示例</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

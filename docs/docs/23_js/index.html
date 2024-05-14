@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="字符串 # length 获取长度 indexOf() 字符串中指定文本首次出现的索引 lastIndexOf()字符串中指定文本最后一次出现的索引 search() 方法搜索特定值的字符串，并返回匹配的位置 slice() 提取字符串的某个部分并返回被提取的部分 substring()类似于 slice(),不同之处在于 substring() 无法接受负的索引 substr() 方法 类似于 slice(),不同之处在于第二个参数规定被提取部分的长度。 replace() 另一个值替换在字符串中指定的值,只替换首个匹配： /xxxx/ :正则写法不带引号 /xxxx/i :不区分大小写 /xxxx/g :替换所有匹配的 toUpperCase() 字符串大写 toLowerCase() 字符拆小写 concat() 连接两个或多个字符串 trim() 方法删除字符串两端的空白符： charAt() 方法返回字符串中指定下标（位置）的字符串 charCodeAt() 方法返回字符串中指定索引的字符 unicode 编码 split() 将字符串转换为数组：括号内是根据什么切割 数字 # toString() 将数值转化为字符串 toFixed() 返回字符串值，它包含了指定长度的数字： toPrecision() 返回字符串值，它包含了指定长度的数字： Number() 其它类型 转换为数字 parseInt(str) 去除小数点 取整 数组 # join() 返回一个新字符串，将所有数组元素结合为一个字符串 pop() 方法从数组中删除最后一个元素： push() 方法（在数组结尾处）向数组添加一个新的元素，返回新数组的长度 shift() 方法会删除首个数组元素，回被“位移出”的字符串： unshift() 方法（在开头）向数组添加新元素，返回新数组的长度。 sort() 方法以字母顺序对数组进行排序 (“25”大于100：str1.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="js" />
+<meta property="og:description" content="字符串 # length 获取长度 indexOf() 字符串中指定文本首次出现的索引 lastIndexOf()字符串中指定文本最后一次出现的索引 search() 方法搜索特定值的字符串，并返回匹配的位置 slice() 提取字符串的某个部分并返回被提取的部分 substring()类似于 slice(),不同之处在于 substring() 无法接受负的索引 substr() 方法 类似于 slice(),不同之处在于第二个参数规定被提取部分的长度。 replace() 另一个值替换在字符串中指定的值,只替换首个匹配： /xxxx/ :正则写法不带引号 /xxxx/i :不区分大小写 /xxxx/g :替换所有匹配的 toUpperCase() 字符串大写 toLowerCase() 字符拆小写 concat() 连接两个或多个字符串 trim() 方法删除字符串两端的空白符： charAt() 方法返回字符串中指定下标（位置）的字符串 charCodeAt() 方法返回字符串中指定索引的字符 unicode 编码 split() 将字符串转换为数组：括号内是根据什么切割 数字 # toString() 将数值转化为字符串 toFixed() 返回字符串值，它包含了指定长度的数字： toPrecision() 返回字符串值，它包含了指定长度的数字： Number() 其它类型 转换为数字 parseInt(str) 去除小数点 取整 数组 # join() 返回一个新字符串，将所有数组元素结合为一个字符串 pop() 方法从数组中删除最后一个元素： push() 方法（在数组结尾处）向数组添加一个新的元素，返回新数组的长度 shift() 方法会删除首个数组元素，回被“位移出”的字符串： unshift() 方法（在开头）向数组添加新元素，返回新数组的长度。 sort() 方法以字母顺序对数组进行排序 (“25”大于100：str1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/23_js/" /><meta property="article:section" content="docs" />
+
+
+
+<title>js | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/23_js/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="active">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>js</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#字符串">字符串</a></li>
+    <li><a href="#数字">数字</a></li>
+    <li><a href="#数组">数组</a></li>
+    <li><a href="#日期">日期</a></li>
+    <li><a href="#math">Math</a></li>
+    <li><a href="#循环">循环</a></li>
+    <li><a href="#类型转换">类型转换</a></li>
+    <li><a href="#let-const">let const</a></li>
+    <li><a href="#json">Json</a>
+      <ul>
+        <li><a href="#时间处理">时间处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#递归遍历格式化数据">递归遍历格式化数据</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="字符串">
+  字符串
+  <a class="anchor" href="#%e5%ad%97%e7%ac%a6%e4%b8%b2">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">length</span> <span style="color:#a6e22e">获取长度</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">indexOf</span>() <span style="color:#a6e22e">字符串中指定文本首次出现的索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">lastIndexOf</span>()<span style="color:#a6e22e">字符串中指定文本最后一次出现的索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">search</span>() <span style="color:#a6e22e">方法搜索特定值的字符串</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并返回匹配的位置</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">slice</span>() <span style="color:#a6e22e">提取字符串的某个部分并返回被提取的部分</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">substring</span>()<span style="color:#a6e22e">类似于</span> <span style="color:#a6e22e">slice</span>(),<span style="color:#a6e22e">不同之处在于</span> <span style="color:#a6e22e">substring</span>() <span style="color:#a6e22e">无法接受负的索引</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">substr</span>() <span style="color:#a6e22e">方法</span> <span style="color:#a6e22e">类似于</span> <span style="color:#a6e22e">slice</span>(),<span style="color:#a6e22e">不同之处在于第二个参数规定被提取部分的长度</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">replace</span>() <span style="color:#a6e22e">另一个值替换在字符串中指定的值</span>,<span style="color:#a6e22e">只替换首个匹配</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">/</span><span style="color:#a6e22e">xxxx</span><span style="color:#f92672">/</span> <span style="color:#f92672">:</span><span style="color:#a6e22e">正则写法不带引号</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">/</span><span style="color:#a6e22e">xxxx</span><span style="color:#f92672">/</span><span style="color:#a6e22e">i</span> <span style="color:#f92672">:</span><span style="color:#a6e22e">不区分大小写</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">/</span><span style="color:#a6e22e">xxxx</span><span style="color:#f92672">/</span><span style="color:#a6e22e">g</span> <span style="color:#f92672">:</span><span style="color:#a6e22e">替换所有匹配的</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">toUpperCase</span>() <span style="color:#a6e22e">字符串大写</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">toLowerCase</span>() <span style="color:#a6e22e">字符拆小写</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">concat</span>() <span style="color:#a6e22e">连接两个或多个字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">trim</span>() <span style="color:#a6e22e">方法删除字符串两端的空白符</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">charAt</span>() <span style="color:#a6e22e">方法返回字符串中指定下标</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">位置</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">的字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">charCodeAt</span>() <span style="color:#a6e22e">方法返回字符串中指定索引的字符</span> <span style="color:#a6e22e">unicode</span> <span style="color:#a6e22e">编码</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">split</span>() <span style="color:#a6e22e">将字符串转换为数组</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">括号内是根据什么切割</span>
+</span></span></code></pre></div><h2 id="数字">
+  数字
+  <a class="anchor" href="#%e6%95%b0%e5%ad%97">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">toString</span>() <span style="color:#a6e22e">将数值转化为字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">toFixed</span>()  <span style="color:#a6e22e">返回字符串值</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">它包含了指定长度的数字</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">toPrecision</span>() <span style="color:#a6e22e">返回字符串值</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">它包含了指定长度的数字</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Number() <span style="color:#a6e22e">其它类型</span> <span style="color:#a6e22e">转换为数字</span>
+</span></span><span style="display:flex;"><span>parseInt(<span style="color:#a6e22e">str</span>) <span style="color:#a6e22e">去除小数点</span> <span style="color:#a6e22e">取整</span>
+</span></span></code></pre></div><h2 id="数组">
+  数组
+  <a class="anchor" href="#%e6%95%b0%e7%bb%84">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">join</span>() <span style="color:#a6e22e">返回一个新字符串</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">将所有数组元素结合为一个字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">pop</span>() <span style="color:#a6e22e">方法从数组中删除最后一个元素</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">push</span>() <span style="color:#a6e22e">方法</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">在数组结尾处</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">向数组添加一个新的元素</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">返回新数组的长度</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">shift</span>() <span style="color:#a6e22e">方法会删除首个数组元素</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">回被</span><span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">位移出</span><span style="color:#960050;background-color:#1e0010">”</span><span style="color:#a6e22e">的字符串</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">unshift</span>() <span style="color:#a6e22e">方法</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">在开头</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">向数组添加新元素</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">返回新数组的长度</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sort</span>() <span style="color:#a6e22e">方法以字母顺序对数组进行排序</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#960050;background-color:#1e0010">“</span><span style="color:#ae81ff">25</span><span style="color:#960050;background-color:#1e0010">”</span><span style="color:#a6e22e">大于100</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">str1</span>.<span style="color:#a6e22e">sort</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">a</span>,<span style="color:#a6e22e">b</span>){<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span><span style="color:#f92672">-</span><span style="color:#a6e22e">b</span>}); <span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">随机顺序排序数组</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">sort</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>){<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0.5</span> <span style="color:#f92672">-</span> Math.<span style="color:#a6e22e">random</span>()}); <span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">对对象排序</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">cars</span>.<span style="color:#a6e22e">sort</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>){<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span>.<span style="color:#a6e22e">year</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">year</span>});)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">reverse</span>() <span style="color:#a6e22e">方法反转数组中的元素</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">max</span>.<span style="color:#a6e22e">apply</span>(<span style="color:#66d9ef">null</span>,<span style="color:#a6e22e">arr</span>); <span style="color:#a6e22e">查找数组中的最高值</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">min</span>.<span style="color:#a6e22e">apply</span>(<span style="color:#66d9ef">null</span>,<span style="color:#a6e22e">arr</span>); <span style="color:#a6e22e">查找数组中的最低值</span>
+</span></span></code></pre></div><h2 id="日期">
+  日期
+  <a class="anchor" href="#%e6%97%a5%e6%9c%9f">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">d</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">toUTCString</span>() <span style="color:#a6e22e">方法将日期转换为</span> <span style="color:#a6e22e">UTC</span> <span style="color:#a6e22e">字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">toDateString</span>() <span style="color:#a6e22e">方法将日期转换为更易读的格式</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getDate</span>()	<span style="color:#a6e22e">以数值返回天</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">1</span><span style="color:#f92672">-</span><span style="color:#ae81ff">31</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getDay</span>()	<span style="color:#a6e22e">以数值获取周名</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">6</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getFullYear</span>()	<span style="color:#a6e22e">获取四位的年</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">yyyy</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getHours</span>()	<span style="color:#a6e22e">获取小时</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">23</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getMilliseconds</span>()	<span style="color:#a6e22e">获取毫秒</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">999</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getMinutes</span>()	<span style="color:#a6e22e">获取分</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">59</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getMonth</span>()	<span style="color:#a6e22e">获取月</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">11</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getSeconds</span>()	<span style="color:#a6e22e">获取秒</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">59</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">d</span>.<span style="color:#a6e22e">getTime</span>()	<span style="color:#a6e22e">获取时间</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">从</span> <span style="color:#ae81ff">1970</span> <span style="color:#a6e22e">年</span> <span style="color:#ae81ff">1</span> <span style="color:#a6e22e">月</span> <span style="color:#ae81ff">1</span> <span style="color:#a6e22e">日至今</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>parseInt()
+</span></span></code></pre></div><h2 id="math">
+  Math
+  <a class="anchor" href="#math">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>Math.<span style="color:#a6e22e">round</span>(<span style="color:#a6e22e">x</span>) <span style="color:#a6e22e">的返回值是</span> <span style="color:#a6e22e">x</span> <span style="color:#a6e22e">四舍五入为最接近的整数</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">pow</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span>) <span style="color:#a6e22e">的返回值是</span> <span style="color:#a6e22e">x</span> <span style="color:#a6e22e">的</span> <span style="color:#a6e22e">y</span> <span style="color:#a6e22e">次幂</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">sqrt</span>(<span style="color:#a6e22e">x</span>) <span style="color:#a6e22e">返回</span> <span style="color:#a6e22e">x</span> <span style="color:#a6e22e">的平方根</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">abs</span>(<span style="color:#a6e22e">x</span>) <span style="color:#a6e22e">返回</span> <span style="color:#a6e22e">x</span> <span style="color:#a6e22e">的绝对</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">正</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">值</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">ceil</span>(<span style="color:#a6e22e">x</span>) <span style="color:#a6e22e">的返回值是</span> <span style="color:#a6e22e">x</span> <span style="color:#a6e22e">上舍入最接近的整数</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">floor</span>(<span style="color:#a6e22e">x</span>) <span style="color:#a6e22e">的返回值是</span> <span style="color:#a6e22e">x</span> <span style="color:#a6e22e">下舍入最接近的整数</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">sin</span>(<span style="color:#a6e22e">x</span>) <span style="color:#a6e22e">返回角</span> <span style="color:#a6e22e">x</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">以弧度计</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">的正弦</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">介于</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#a6e22e">与</span> <span style="color:#ae81ff">1</span> <span style="color:#a6e22e">之间的值</span><span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">cos</span>(<span style="color:#a6e22e">x</span>) <span style="color:#a6e22e">返回角</span> <span style="color:#a6e22e">x</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">以弧度计</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">的余弦</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">介于</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#a6e22e">与</span> <span style="color:#ae81ff">1</span> <span style="color:#a6e22e">之间的值</span><span style="color:#960050;background-color:#1e0010">）。</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">min</span>() <span style="color:#a6e22e">和</span> Math.<span style="color:#a6e22e">max</span>() <span style="color:#a6e22e">可用于查找参数列表中的最低或最高值</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>Math.<span style="color:#a6e22e">random</span>() <span style="color:#a6e22e">返回介于</span> <span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">包括</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">与</span> <span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">不包括</span><span style="color:#960050;background-color:#1e0010">）</span> <span style="color:#a6e22e">之间的随机数</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>(Math.<span style="color:#a6e22e">floor</span>(Math.<span style="color:#a6e22e">random</span>() <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span>);		<span style="color:#75715e">// 返回 0 至 9 之间的数)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>(Math.<span style="color:#a6e22e">floor</span>(Math.<span style="color:#a6e22e">random</span>() <span style="color:#f92672">*</span> <span style="color:#ae81ff">100</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;	<span style="color:#75715e">// 返回 1 至 100 之间的数）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>(Math.<span style="color:#a6e22e">floor</span>(Math.<span style="color:#a6e22e">random</span>() <span style="color:#f92672">*</span> (<span style="color:#a6e22e">max</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">min</span>) ) <span style="color:#f92672">+</span> <span style="color:#a6e22e">min</span>; <span style="color:#75715e">//返回介于 min（包括）和 max（不包括）之间的随机数）
+</span></span></span></code></pre></div><h2 id="循环">
+  循环
+  <a class="anchor" href="#%e5%be%aa%e7%8e%af">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">多次遍历代码块</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span><span style="color:#960050;background-color:#1e0010">/in - 遍历对象属性</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">当指定条件为</span> <span style="color:#66d9ef">true</span> <span style="color:#a6e22e">时循环一段代码块</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span><span style="color:#960050;background-color:#1e0010">/while - 当指定条件为 true 时循环一段代码块</span>
+</span></span></code></pre></div><h2 id="类型转换">
+  类型转换
+  <a class="anchor" href="#%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>Number() <span style="color:#a6e22e">转换数值</span>
+</span></span><span style="display:flex;"><span>String() <span style="color:#a6e22e">转换字符串</span>
+</span></span><span style="display:flex;"><span>Boolean() <span style="color:#a6e22e">转换布尔值</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="let-const">
+  let const
+  <a class="anchor" href="#let-const">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">使用</span> <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">关键词声明拥有块作用域的变量</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">在块</span> {} <span style="color:#a6e22e">内声明的变量无法从块外访问</span><span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">与let类似</span> <span style="color:#a6e22e">但是不能重新赋值</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">debugger</span> <span style="color:#a6e22e">关键词</span>
+</span></span></code></pre></div><h2 id="json">
+  Json
+  <a class="anchor" href="#json">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">parse</span>() <span style="color:#a6e22e">来把这个字符串转换为</span> <span style="color:#a6e22e">JavaScript</span> <span style="color:#a6e22e">对象</span>
+</span></span></code></pre></div><h3 id="时间处理">
+  时间处理
+  <a class="anchor" href="#%e6%97%b6%e9%97%b4%e5%a4%84%e7%90%86">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#75715e">// 时间戳
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">timestamp</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">timestamp</span>()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">timestamp</span>(){
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">round</span>(<span style="color:#66d9ef">new</span> Date()<span style="color:#f92672">/</span><span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//格式化时间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">res</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">formatDate</span>(<span style="color:#a6e22e">timestamp</span>, <span style="color:#e6db74">&#39;YYYY-MM-DD hh:mm:ss&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">formatDate</span>(<span style="color:#a6e22e">timestamp</span>, <span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;YYYY-MM-DD hh:mm:ss&#39;</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">timestamp</span> <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">timestamp</span>).<span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">13</span> <span style="color:#f92672">?</span> parseInt(<span style="color:#a6e22e">timestamp</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span> <span style="color:#f92672">:</span> parseInt(<span style="color:#a6e22e">timestamp</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">time</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date(<span style="color:#a6e22e">timestamp</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">YYYY</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getFullYear</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">MM</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMonth</span>() <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMonth</span>() <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMonth</span>() <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">DD</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getDate</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getDate</span>()) <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getDate</span>())
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">hh</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getHours</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getHours</span>() <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getHours</span>())
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">mm</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMinutes</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMinutes</span>() <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMinutes</span>())
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">ss</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getSeconds</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getSeconds</span>() <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getSeconds</span>())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">type_0</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">YYYY</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">MM</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">DD</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39; &#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">hh</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">mm</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">ss</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">type_1</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">YYYY</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">MM</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">DD</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">hh</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">mm</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">ss</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">type</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;YYYY-MM-DD hh:mm:ss&#39;</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">type_0</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">type_1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">formatCurrentDate</span>(<span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;YYYY-MM-DD hh:mm:ss&#39;</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">time</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date()
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">YYYY</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getFullYear</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">MM</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMonth</span>() <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMonth</span>() <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMonth</span>() <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">DD</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getDate</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getDate</span>()) <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getDate</span>())
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">hh</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getHours</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getHours</span>() <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getHours</span>())
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">mm</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMinutes</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMinutes</span>() <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getMinutes</span>())
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">ss</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getSeconds</span>() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getSeconds</span>() <span style="color:#f92672">:</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">getSeconds</span>())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">type_0</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">YYYY</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">MM</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">DD</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39; &#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">hh</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">mm</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;:&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">ss</span>    <span style="color:#75715e">//YYYY-MM-DD hh:mm:ss
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">type_1</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">YYYY</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">MM</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">DD</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">hh</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">mm</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">ss</span>          <span style="color:#75715e">//YYYYMMDDhhmmss
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">type</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;YYYY-MM-DD hh:mm:ss&#39;</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">type_0</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">type_1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="递归遍历格式化数据">
+  递归遍历格式化数据
+  <a class="anchor" href="#%e9%80%92%e5%bd%92%e9%81%8d%e5%8e%86%e6%a0%bc%e5%bc%8f%e5%8c%96%e6%95%b0%e6%8d%ae">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">menuListFormat</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">tableData</span>, <span style="color:#a6e22e">list</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">list</span>.<span style="color:#a6e22e">forEach</span>(<span style="color:#a6e22e">item</span> =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">tData</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">path</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">path</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">name</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">component</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">component</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">ID</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">ID</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">parentID</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">parentID</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">title</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">title</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">icon</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">icon</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">hidden</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">hidden</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">keepAlive</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">keepAlive</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">sort</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">sort</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">roleIDs</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">meta</span>.<span style="color:#a6e22e">roleIDs</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">redirect</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">redirect</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">children</span><span style="color:#f92672">:</span> []
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">tableData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">tData</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">children</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">menuListFormat</span>(<span style="color:#a6e22e">tData</span>.<span style="color:#a6e22e">children</span>, <span style="color:#a6e22e">item</span>.<span style="color:#a6e22e">children</span>)
+</span></span><span style="display:flex;"><span>  })
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#字符串">字符串</a></li>
+    <li><a href="#数字">数字</a></li>
+    <li><a href="#数组">数组</a></li>
+    <li><a href="#日期">日期</a></li>
+    <li><a href="#math">Math</a></li>
+    <li><a href="#循环">循环</a></li>
+    <li><a href="#类型转换">类型转换</a></li>
+    <li><a href="#let-const">let const</a></li>
+    <li><a href="#json">Json</a>
+      <ul>
+        <li><a href="#时间处理">时间处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#递归遍历格式化数据">递归遍历格式化数据</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

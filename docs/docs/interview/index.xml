@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>面试题集 on Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/docs/docs/interview/</link>
+    <description>Recent content in 面试题集 on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://xiaohubai.github.io/docs/docs/interview/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/docker/</guid>
+      <description> docker COPY和ADD指令区别？ # copy ：将本地文件拷入容器内 add：除了将本地文件拷入容器内，还具有本地归档解压和支持远程网址访问（常用于本地自动解压归档文件到容器中） Docker 映像（image）是什么？ # Docker image 是 Docker 容器的源。映像（Images）通过 Docker build 命令创建， Docker 容器（container）是什么？ # Docker 容器包含其所有运行依赖环境,但与其它容器共享操作系统内核的应用，它运行在独立的主机操作系统用户空间进程中并不紧密依赖特定的基础平台 Docker 中心（hub）什么概念？ # 云端镜像仓库，可以打tag发布公共，私有镜像到远程仓库。 Docker 的资源隔离是怎么实现的 # Docker通过命名空间、控制组、容器镜像和安全配置等多种手段来实现对容器的资源隔禆，从而保证容器之间的独立性和安全性。 </description>
+    </item>
+    <item>
+      <title>Es</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/es/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/es/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Go</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/go/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/go/</guid>
+      <description>代码问题 # 指针问题 # //使用副本的方式。所以m[stu.Name]=&amp;amp;stu实际上一致指向同一个指针， 最终该指针的值为遍历的最后一个struct的值拷贝 //副本值的指针-》指向真实指针-》真实值，随着遍历，真实指针移动到最后一个值 type student struct { Name string Age int } func pase_student() { m := make(map[string]*student) stus := []student{ {Name: &amp;#34;zhou&amp;#34;, Age: 24}, {Name: &amp;#34;li&amp;#34;, Age: 23}, {Name: &amp;#34;wang&amp;#34;, Age: 22}, } for _, stu := range stus { //值拷贝，没有存真实的切片[i]地址，只是一个指向真实切片的指针 m[stu.Name] = &amp;amp;stu //m[stu.Name] = &amp;amp;stus[i] 可以这种方式修改value真实地址 } } defer问题 # func calc(index string, a, b int) int { ret := a + b fmt.</description>
+    </item>
+    <item>
+      <title>Grpc</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/grpc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/grpc/</guid>
+      <description> 微服务 # 微服务的优势 # 独立开发 独立部署 故障隔离 混合技术栈 粒度缩放 微服务特点算法 # 解耦—系统内的服务很大程度上是分离的。 组件化—微服务被视为可以轻松更换和升级的独立组件 业务能力—微服务非常简单，专注于单一功能 自治—开发人员和团队可以彼此独立工作，从而提高速度 分散治理—重点是使用正确的工具来做正确的工作。 </description>
+    </item>
+    <item>
+      <title>Js</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/js/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/js/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kafka</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/kafka/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/kafka/</guid>
+      <description> kafka怎么保证数据消费一次且仅消费一次？使用消息队列如何保证幂等性？ # 保证消息不丢失： Kafka 为生产者提供一个选项叫做“acks”，当这个选项被设置为“all”时，生产者发送的每一条消息除了发给 Leader 外还会发给所有的 ISR，并且必须得到 Leader 和所有 ISR 的确认后才被认为发送成功。这样，只有 Leader 和所有的 ISR 都挂了，消息才会丢失。 保证被消费一次： 幂等性： 生产者：在 Kafka0.11 版本和 Pulsar 中都支持“producer idempotency”的特性，翻译过来就是生产过程的幂等性，特性保证消息虽然可能在生产端产生重复，但是最终在消息队列存储时只会存储一份。 每一个生产者一个唯一的 ID，并且为生产的每一条消息赋予一个唯一 ID，消息队列的服务端会存储 &amp;lt; 生产者 ID，最后一条消息 ID&amp;gt; 的映射。当某一个生产者产生新的消息时，消息队列服务端会比对消息 ID 是否与存储的最后一条 ID 一致，如果一致，就认为是重复的消息，服务端会自动丢弃。 消费端：通用层和业务层，mysql增加事务，判断判断是否存在，再写入。 或者：乐观锁给这条信息加一个版本号，判断版本号是否是未更新的，否则不更新 kafka如何保证消息的顺序 # Kafka通过分区来保证消息的顺序性。在Kafka中，每个主题（topic）都被分为一个或多个分区（partition），每个分区内的消息是有序的。因此，如果您希望保证特定主题内的消息顺序，可以将该主题的分区数设置为1，这样所有的消息都会按照其写入的顺序进行存储和检索。 Kafka还可以通过消息的键（key）来保证特定键的消息被发送到同一个分区，从而保证特定键的消息在该分区内是有序的。这种方式适用于需要对特定实体的消息进行顺序处理的场景。 </description>
+    </item>
+    <item>
+      <title>Mysql</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/mysql/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/mysql/</guid>
+      <description>数据库 # 关系型和非关系型数据库的区别？ # 关系型数据库 采用关系模型组织数据 保持数据的一致性 数据更新开销比较小 支持复杂查询(带where子句的查询) 非关系型数据库 无需经过sql层的解析，读写效率高 基于键值对，读写性能高，易于扩展 支持多种类型数据的存储，如图片、文档 扩展性强，适合数据量大高可用的日志系统，地理位置存储系统 详细说一下一条 MySQL 语句执行的步骤？ # 客户端请求-&amp;gt;连接器（验证身份，给与权限） 查询缓存（存在缓存直接返回，不存在计息往后执行） 分析器（对sql进行词法分析和语法分析） 优化器（对执行的sql优化选择最优的执行方案） 执行器（先看用户是否有执行权限）-&amp;gt;去引擎层获取数据返回（如开启查询缓存，则缓存查询结果） 怎么理解数据库的索引？ # 索引类似于书籍的目录,通过使用索引，数据库系统可以在执行查询时更快地定位到符合特定条件的数据行，从而提高查询性能。不必全表扫描 索引并非没有代价的。它们需要额外的存储空间，并且在插入、更新和删除数据时需要维护，这可能会导致一些性能开销 MySQL 索引的优缺点？ # 提高数据查询的效率，就像书的目录一样 创建唯一性索引，可以保证数据表每一行记录的唯一性 帮助引擎层避免排序和临时表 将随机io变为顺序io，加速表和表之间的连接 创建、维护索引需要消耗时间，对表的数据进行增加、删除 修改时索引也要动态维护，会降低这些执行的效率 索引也是需要占物理空间 索引的三种常见底层数据结构以及优缺点 # 哈希表 适用于等值查询的场景，不适合范围查询 有序数组 适用于静态存储引擎，等值和范围查询性能好，但更新数据成本高 搜索树 索引的常见类型以及它是如何发挥作用的？ # 根据叶子节点的内容，索引分为主键索引和非主键索引 主键索引的叶子节点存的整行数据，在InnoDB里也被称为聚簇索引。 非主键索引叶子节点存的主键的值，在InnoDB里也被称为二级索引。 什么时聚簇索引何时用聚簇非聚簇索引？ # 聚簇索引：将数据存储与索引放到了一块，找到索引也就找到了数据 非聚簇索引：将数据存储和索引结构分开，索引结构的叶子节点指向数据对应行， 索引的几种类型？ # 主键索引：数据列不允许重复，不允许为NULL,一个表只能有一个主键 唯一索引：数据列不允许重复，允许为NULL,一个表允许多个列创建唯一索引 普通索引：没有唯一性限制，允许为NULL 全文索引：效率上是模糊查询的N倍 MySQL 存储引擎 MyISAM 与 InnoDB 区别 # 1.锁粒度方面：由于锁粒度不同，InnoDB 比 MyISAM 支持更高的并发;InnoDB 的锁粒度为行锁、MyISAM 的锁粒度为表锁、行锁需要对每一行进行加锁， 2.</description>
+    </item>
+    <item>
+      <title>Redis</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/redis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/redis/</guid>
+      <description>Redis高性能的 key-value 数据库 # redis特点 # 1.Redis 支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时 候可以再次加载进行使用。 2.Redis 不仅仅支持简单的 key-value 类型的数据，同时还提供 list， set，zset，hash 等数据结构的存储。 3.Redis 支持数据的备份，即 master-slave 模式的数据备份。 4.性能极高 – Redis 能读的速度是 110000 次/s,写的速度是 81000 次/s 5.原子 – Redis 的所有操作都是原子性的，意思就是要么成功执行要么失败完全不执行。单个操作是原子性的。多个操作也支持事务，即原子性， 通过 MULTI 和 EXEC 指令包起来。 redis数据结构，用途 # string（字符串），hash（哈希），list（列表），set（集合）及 zsetsorted set：有序集合。 1.String：用于存储字符串值，常用于缓存、计数器、分布式锁等场景。 2.Hash：用于存储键值对集合，常用于存储对象的属性，如用户信息、商品信息等。 3.List：用于存储有序的字符串元素列表，常用于消息队列、栈等场景。 4.Set：用于存储字符串元素的无序集合，常用于去重、共同好友等场景。 5.Sorted Set：用于存储字符串元素及其分数的有序集合，常用于排行榜、范围查询等场景。 Redis 是单进程单线程的？ # Redis v6之前是单进程单线程的，原因是CPU 通常不会成为性能瓶颈，瓶颈往往是内存和网络，因此单线程足够了，redis 利用队列技术将并发访问变为串行访问，消 除了传统数据库串行控制的开销。 //好处： 1.避免过多的上下文切换开销 2.避免同步机制的开销 3.简单可维护：引入多线程必须的同步机制，那么所有的底层数据结构都必须实现成线程安全的，这无疑又使得 Redis 的实现变得更加复杂。 v6之后(多线程网络模型)Redis在6.0支持的多线程，并不是说指令操作的多线程，而是针对网络IO的多线程支持 针对网络IO的处理方式改成了多线程，通过多线程并行的方式提升了网络IO的处理效率。 但是对于客户端指令的执行过程，还是使用单线程方式来执行。 Redis 多线程是怎么做到无锁的？ # redis 多线程的模型是主线程负责搜集任务，放入全局读队列 clients_pending_read 和全局写队列 clients_pending_write，主线程在将队列中的任务以轮训的方式分发到每个线程对应的队列（list *io_threads_list[128]） 主线程将任务分发到子线程的队列中,等待所有子线程处理完所有任务,继续收集任务到全局队列.</description>
+    </item>
+    <item>
+      <title>Vue</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/vue/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/vue/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>深层技术</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/</guid>
+      <description> 高并发访问时避免冲突的方法? # 程序内使用互斥锁保护共享资源 使用事务来确保一系列操作的原子性，从而避免数据不一致或冲突。 分布式锁来保护共享资源，确保在不同节点上的并发访问不会产生冲突。 并发访问转化为顺序访问，通过消息队列等方式来串行化处理请求，避免并发冲突。 缓存来减轻数据库或其他资源的压力，通过缓存有效地降低并发访问对共享资源的冲突 并发与并行的区别 # 并发:系统中同时具有多个活动的部分，并且这些活动在一段时间内都在进行 并行:系统中同时具有多个活动的部分，并且这些活动在同一时刻进行 并发来提高系统的吞吐量和响应性，而通过并行来提高系统的计算能力。 用户从客户端访问一个页面，webserver如何主动的给这个页面推送一个通知 # 使用WebSocket，当用户访问一个页面时，前端给后端发送一个请求带上用户信息，后端接收到后，使用用户id建立一个WebSocket,前后端建立WebSocket后，后端给用户推送一个通知 </description>
+    </item>
+    <item>
+      <title>算法</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/%E7%AE%97%E6%B3%95/</guid>
+      <description> 1.斐波那契数列 Fibonacci,F(0)=1，F(1)=1, F(n)=F(n - 1)+F(n - 2)（n ≥ 2，n ∈ N*） # func Fibonacci(n int) int { if n &amp;lt;= 2 { return 1 } return Fibonacci(n-1) + Fibonacci(n-2) } func Fibonacci(n int) int { if n &amp;lt;= 2 { return 1 } sum := 0 n1 := 0 n2 := 1 for i := 1; i &amp;lt; n; i++ { sum = n1 + n2 n1 = n2 n2 = sum } return sum } </description>
+    </item>
+    <item>
+      <title>网络编程</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</guid>
+      <description>OSI七层和TCP/IP四层？ # 第七层：应用层（Telnet,HTTP80,FTP,TFTP,NFS,SMTP,SNMP,DNS） 第六层：表示层 (定义数据格式、加密、代码转换) 第五层：会话层 (开始、控制和结束一个会话,接收数据何时结束) 第四次：传输层 (TCP，UDP) 第三层：网络层 (包传输进行定义IP、ICMP、IGMP、RIP、OSPF、BGP) 第二层：数据传输层 (单个链路上如何传输数据SLIP、CSLIP、PPP、ARP、RARP、MTU) 第一层：物理层 (传输介质) 第四层：应用层 第三层：传输层 第二层：应用层 第一层：网络接口层 http状态码 # // 2** 请求成功 200 请求成功执行。 201 (已创建)请求成功并且服务器创建了新的资源。 202 （已接受） 服务器已接受请求，但尚未处理 203 （非授权信息） 204 （无内容） 服务器成功处理了请求，但没有返回任何内容。 // 3** 重定向 301 （永久移动） 请求的网页已永久移动到新位置。 //4** 客户端错误 400 客户端错误。 401 （未授权） 请求要求身份验证。 403 （禁止访问） 服务器拒绝请求。 404 （未找到） 资源找不到，可以是 URL 或 RESTful 资源。 405 （方法禁用） 禁用请求中指定的方法。 408 （请求超时） 服务器等候请求时发生超时。 414 （请求的 URI 过长） // 5** 服务器错误 500 （服务器内部错误） 服务器遇到错误，无法完成请求。 501 （尚未实施） 服务器不具备完成请求的功能。 502 （错误网关） 服务器作为网关或代理，从上游服务器收到无效响应。 503 （服务不可用） 服务器目前无法使用 504 （网关超时） 服务器作为网关或代理，但是没有及时从上游服务器收到请求。 505 （HTTP 版本不受支持） 服务器不支持请求中所用的 HTTP 协议版本。 linux进程通信方式？ # 管道，有名管道 信号 消息队列 共享内存 信号量 套接字 socket 进程、线程、协程的区别 # 一般一个程序就是一个进程，如果一个进程不总是执行计算型任务，会导致cpu浪费，在cpu少的情况下是通过进程不停的上下文切换，实现同时运行多个进程。 进程拥有自己独立的堆和栈，既不共享堆，亦不共享栈，进程由操作系统调度。一个进程由一个或多个线程组成。 线程是一个进程中代码的不同执行路线；拥有自己独立的栈和共享的堆，进程间相互独立，但同一个进程内的各个线程之间共享着同样的代码和全局数据；多线程比多进程之间更容易共享数据，在上下文切换中线程一般比进程更高效。 协程是比线程更加轻量级的存在，由程序员自己写程序管理的轻量级线程。创建协程时，会从进程的堆中分配一段内存作为协程的栈。线程的栈一般是M级别，协程为K级别，go协程更夸张到2到4KB。 进程资源分配的基本单位，线程是执行的单位，多个线程共享进程资源。进程需要特殊的机制，管道，消息队列等。 线程之间可以通过共享内存方式通信，线程间通信相对简单。 线程切换开销较小，因为线程共享进程的资源，切换时不需要切换内存空间。 协程是用户态的轻量级线程，调度完全用户控制，协程的创建，切换销毁都在用户空间完成，不需要内核的参与，开销非常小。协程用于处理IO密集以及异步非阻塞的代码 可以将一个浏览器视为一个进程，每个打开的标签页或窗口视为一个线程，而在每个线程内部可以使用多个协程来处理不同的任务。这种比喻可以帮助理解进程、线程和协程之间的关系，以及它们在并发编程中的作用。 开多个线程和开多个协程会有什么区别 # 调度方式：线程的调度由操作系统内核实现，采用抢占式调度方式，依赖各种锁来确保线程安全。而协程的调度则由用户态的具体调度器进行，不需要内核的参与。 协程的切换不需要经过用户态与内核态的切换，且切换时只需要保存极少的状态值,线程的切换涉及到内核态的上下文切换，开销相对较大。 资源占用：协程属于用户态轻量级的线程，占用的内存较少。而线程需要操作系统为其分配独立的栈空间和其他系统资源，因此资源占用相对较多。 并发能力：协程依托于线程，可以在单线程中实现高并发。多个协程可由一个或多个线程管理，协程的调度发生在其所在的线程中。而线程的数量受限于系统的物理CPU核心数，因此并发能力相对受限。 协程的优势？ # 1.</description>
+    </item>
+  </channel>
+</rss>

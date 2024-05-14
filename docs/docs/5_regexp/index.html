@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="校验数字的表达式 # 1 数字：^[0-9]*$ 2 n位的数字：^\d{n}$ 3 至少n位的数字：^\d{n,}$ 4 m-n位的数字：^\d{m,n}$ 5 零和非零开头的数字：^(0|[1-9][0-9]*)$ 6 非零开头的最多带两位小数的数字：^([1-9][0-9]*)&#43;(.[0-9]{1,2})?$ 7 带1-2位小数的正数或负数：^(\-)?\d&#43;(\.\d{1,2})?$ 8 正数、负数、和小数：^(\-|\&#43;)?\d&#43;(\.\d&#43;)?$ 9 有两位小数的正实数：^[0-9]&#43;(.[0-9]{2})?$ 10 有1~3位小数的正实数：^[0-9]&#43;(.[0-9]{1,3})?$ 11 非零的正整数：^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\&#43;?[1-9][0-9]*$ 12 非零的负整数：^\-[1-9][]0-9&#34;*$ 或 ^-[1-9]\d*$ 13 非负整数：^\d&#43;$ 或 ^[1-9]\d*|0$ 14 非正整数：^-[1-9]\d*|0$ 或 ^((-\d&#43;)|(0&#43;))$ 15 非负浮点数：^\d&#43;(\.\d&#43;)?$ 或 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0&#43;|0$ 16 非正浮点数：^((-\d&#43;(\.\d&#43;)?)|(0&#43;(\.0&#43;)?))$ 或 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0&#43;|0$ 17 正浮点数：^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$ 或 ^(([0-9]&#43;\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]&#43;)|([0-9]*[1-9][0-9]*))$ 18 负浮点数：^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$ 或 ^(-(([0-9]&#43;\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]&#43;)|([0-9]*[1-9][0-9]*)))$ 19 浮点数：^(-?\d&#43;)(\.\d&#43;)?$ 或 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0&#43;|0)$ 校验字符的表达式 # 1 汉字：^[\u4e00-\u9fa5]{0,}$ 2 英文和数字：^[A-Za-z0-9]&#43;$ 或 ^[A-Za-z0-9]{4,40}$ 3 长度为3-20的所有字符：^.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="regexp" />
+<meta property="og:description" content="校验数字的表达式 # 1 数字：^[0-9]*$ 2 n位的数字：^\d{n}$ 3 至少n位的数字：^\d{n,}$ 4 m-n位的数字：^\d{m,n}$ 5 零和非零开头的数字：^(0|[1-9][0-9]*)$ 6 非零开头的最多带两位小数的数字：^([1-9][0-9]*)&#43;(.[0-9]{1,2})?$ 7 带1-2位小数的正数或负数：^(\-)?\d&#43;(\.\d{1,2})?$ 8 正数、负数、和小数：^(\-|\&#43;)?\d&#43;(\.\d&#43;)?$ 9 有两位小数的正实数：^[0-9]&#43;(.[0-9]{2})?$ 10 有1~3位小数的正实数：^[0-9]&#43;(.[0-9]{1,3})?$ 11 非零的正整数：^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\&#43;?[1-9][0-9]*$ 12 非零的负整数：^\-[1-9][]0-9&#34;*$ 或 ^-[1-9]\d*$ 13 非负整数：^\d&#43;$ 或 ^[1-9]\d*|0$ 14 非正整数：^-[1-9]\d*|0$ 或 ^((-\d&#43;)|(0&#43;))$ 15 非负浮点数：^\d&#43;(\.\d&#43;)?$ 或 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0&#43;|0$ 16 非正浮点数：^((-\d&#43;(\.\d&#43;)?)|(0&#43;(\.0&#43;)?))$ 或 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0&#43;|0$ 17 正浮点数：^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$ 或 ^(([0-9]&#43;\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]&#43;)|([0-9]*[1-9][0-9]*))$ 18 负浮点数：^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$ 或 ^(-(([0-9]&#43;\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]&#43;)|([0-9]*[1-9][0-9]*)))$ 19 浮点数：^(-?\d&#43;)(\.\d&#43;)?$ 或 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0&#43;|0)$ 校验字符的表达式 # 1 汉字：^[\u4e00-\u9fa5]{0,}$ 2 英文和数字：^[A-Za-z0-9]&#43;$ 或 ^[A-Za-z0-9]{4,40}$ 3 长度为3-20的所有字符：^." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/5_regexp/" /><meta property="article:section" content="docs" />
+
+
+
+<title>regexp | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/5_regexp/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="active">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>regexp</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#校验数字的表达式">校验数字的表达式</a></li>
+    <li><a href="#校验字符的表达式">校验字符的表达式</a></li>
+    <li><a href="#特殊需求表达式">特殊需求表达式</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="校验数字的表达式">
+  校验数字的表达式
+  <a class="anchor" href="#%e6%a0%a1%e9%aa%8c%e6%95%b0%e5%ad%97%e7%9a%84%e8%a1%a8%e8%be%be%e5%bc%8f">#</a>
+</h2>
+<pre tabindex="0"><code class="language-RegExp" data-lang="RegExp">1 数字：^[0-9]*$
+
+2 n位的数字：^\d{n}$
+
+3 至少n位的数字：^\d{n,}$
+
+4 m-n位的数字：^\d{m,n}$
+
+5 零和非零开头的数字：^(0|[1-9][0-9]*)$
+
+6 非零开头的最多带两位小数的数字：^([1-9][0-9]*)+(.[0-9]{1,2})?$
+
+7 带1-2位小数的正数或负数：^(\-)?\d+(\.\d{1,2})?$
+
+8 正数、负数、和小数：^(\-|\+)?\d+(\.\d+)?$
+
+9 有两位小数的正实数：^[0-9]+(.[0-9]{2})?$
+
+10 有1~3位小数的正实数：^[0-9]+(.[0-9]{1,3})?$
+
+11 非零的正整数：^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\+?[1-9][0-9]*$
+
+12 非零的负整数：^\-[1-9][]0-9&#34;*$ 或 ^-[1-9]\d*$
+
+13 非负整数：^\d+$ 或 ^[1-9]\d*|0$
+
+14 非正整数：^-[1-9]\d*|0$ 或 ^((-\d+)|(0+))$
+
+15 非负浮点数：^\d+(\.\d+)?$ 或 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$
+
+16 非正浮点数：^((-\d+(\.\d+)?)|(0+(\.0+)?))$ 或 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$
+
+17 正浮点数：^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$ 或 ^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$
+
+18 负浮点数：^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$ 或 ^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$
+
+19 浮点数：^(-?\d+)(\.\d+)?$ 或 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$
+</code></pre><h2 id="校验字符的表达式">
+  校验字符的表达式
+  <a class="anchor" href="#%e6%a0%a1%e9%aa%8c%e5%ad%97%e7%ac%a6%e7%9a%84%e8%a1%a8%e8%be%be%e5%bc%8f">#</a>
+</h2>
+<pre tabindex="0"><code class="language-RegExp" data-lang="RegExp">1 汉字：^[\u4e00-\u9fa5]{0,}$
+
+2 英文和数字：^[A-Za-z0-9]+$ 或 ^[A-Za-z0-9]{4,40}$
+
+3 长度为3-20的所有字符：^.{3,20}$
+
+4 由26个英文字母组成的字符串：^[A-Za-z]+$
+
+5 由26个大写英文字母组成的字符串：^[A-Z]+$
+
+6 由26个小写英文字母组成的字符串：^[a-z]+$
+
+7 由数字和26个英文字母组成的字符串：^[A-Za-z0-9]+$
+
+8 由数字、26个英文字母或者下划线组成的字符串：^\w+$ 或 ^\w{3,20}$
+
+9 中文、英文、数字包括下划线：^[\u4E00-\u9FA5A-Za-z0-9_]+$
+
+10 中文、英文、数字但不包括下划线等符号：^[\u4E00-\u9FA5A-Za-z0-9]+$ 或 ^[\u4E00-\u9FA5A-Za-z0-9]{2,20}$
+
+11 可以输入含有^%&amp;&#39;,;=?$\&#34;等字符：[^%&amp;&#39;,;=?$\x22]+
+
+12 禁止输入含有~的字符：[^~\x22]+
+</code></pre><h2 id="特殊需求表达式">
+  特殊需求表达式
+  <a class="anchor" href="#%e7%89%b9%e6%ae%8a%e9%9c%80%e6%b1%82%e8%a1%a8%e8%be%be%e5%bc%8f">#</a>
+</h2>
+<pre tabindex="0"><code class="language-RegExp" data-lang="RegExp">1 Email地址：^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$
+
+2 域名：[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(/.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+/.?
+
+3 InternetURL：[a-zA-z]+://[^\s]* 或 ^http://([\w-]+\.)+[\w-]+(/[\w-./?%&amp;=]*)?$
+
+4 手机号码：^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$
+
+5 电话号码(&#34;XXX-XXXXXXX&#34;、&#34;XXXX-XXXXXXXX&#34;、&#34;XXX-XXXXXXX&#34;、&#34;XXX-XXXXXXXX&#34;、&#34;XXXXXXX&#34;和&#34;XXXXXXXX)：^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$
+
+6 国内电话号码(0511-4405222、021-87888822)：\d{3}-\d{8}|\d{4}-\d{7}
+
+7 身份证号(15位、18位数字)：^\d{15}|\d{18}$
+
+8 短身份证号码(数字、字母x结尾)：^([0-9]){7,18}(x|X)?$ 或 ^\d{8,18}|[0-9x]{8,18}|[0-9X]{8,18}?$
+
+9 帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)：^[a-zA-Z][a-zA-Z0-9_]{4,15}$
+
+10 密码(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)：^[a-zA-Z]\w{5,17}$
+
+11 强密码(必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间)：^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$
+
+12 日期格式：^\d{4}-\d{1,2}-\d{1,2}
+
+13 一年的12个月(01～09和1～12)：^(0?[1-9]|1[0-2])$
+
+14 一个月的31天(01～09和1～31)：^((0?[1-9])|((1|2)[0-9])|30|31)$
+
+15 钱的输入格式：
+
+16 1.有四种钱的表示形式我们可以接受:&#34;10000.00&#34; 和 &#34;10,000.00&#34;, 和没有 &#34;分&#34; 的 &#34;10000&#34; 和 &#34;10,000&#34;：^[1-9][0-9]*$
+
+17 2.这表示任意一个不以0开头的数字,但是,这也意味着一个字符&#34;0&#34;不通过,所以我们采用下面的形式：^(0|[1-9][0-9]*)$
+
+18 3.一个0或者一个不以0开头的数字.我们还可以允许开头有一个负号：^(0|-?[1-9][0-9]*)$
+
+19 4.这表示一个0或者一个可能为负的开头不为0的数字.让用户以0开头好了.把负号的也去掉,因为钱总不能是负的吧.下面我们要加的是说明可能的小数部分：^[0-9]+(.[0-9]+)?$
+
+20 5.必须说明的是,小数点后面至少应该有1位数,所以&#34;10.&#34;是不通过的,但是 &#34;10&#34; 和 &#34;10.2&#34; 是通过的：^[0-9]+(.[0-9]{2})?$
+
+21 6.这样我们规定小数点后面必须有两位,如果你认为太苛刻了,可以这样：^[0-9]+(.[0-9]{1,2})?$
+
+22 7.这样就允许用户只写一位小数.下面我们该考虑数字中的逗号了,我们可以这样：^[0-9]{1,3}(,[0-9]{3})*(.[0-9]{1,2})?$
+
+23 8.1到3个数字,后面跟着任意个 逗号+3个数字,逗号成为可选,而不是必须：^([0-9]+|[0-9]{1,3}(,[0-9]{3})*)(.[0-9]{1,2})?$
+
+24 备注：这就是最终结果了,别忘了&#34;+&#34;可以用&#34;*&#34;替代如果你觉得空字符串也可以接受的话(奇怪,为什么?)最后,别忘了在用函数时去掉去掉那个反斜杠,一般的错误都在这里
+
+25 xml文件：^([a-zA-Z]+-?)+[a-zA-Z0-9]+\\.[x|X][m|M][l|L]$
+
+26 中文字符的正则表达式：[\u4e00-\u9fa5]
+
+27 双字节字符：[^\x00-\xff] (包括汉字在内，可以用来计算字符串的长度(一个双字节字符长度计2，ASCII字符计1))
+
+28 空白行的正则表达式：\n\s*\r (可以用来删除空白行)
+
+29 HTML标记的正则表达式：&lt;(\S*?)[^&gt;]*&gt;.*?&lt;/\1&gt;|&lt;.*? /&gt; (网上流传的版本太糟糕，上面这个也仅仅能部分，对于复杂的嵌套标记依旧无能为力)
+
+30 首尾空白字符的正则表达式：^\s*|\s*$或(^\s*)|(\s*$) (可以用来删除行首行尾的空白字符(包括空格、制表符、换页符等等)，非常有用的表达式)
+
+31 腾讯QQ号：[1-9][0-9]{4,} (腾讯QQ号从10000开始)
+
+
+32 中国邮政编码：[1-9]\d{5}(?!\d) (中国邮政编码为6位数字) 33 IP地址：\d+\.\d+\.\d+\.\d+ (提取IP地址时有用) 34 IP地址：((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d))
+</code></pre></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#校验数字的表达式">校验数字的表达式</a></li>
+    <li><a href="#校验字符的表达式">校验字符的表达式</a></li>
+    <li><a href="#特殊需求表达式">特殊需求表达式</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

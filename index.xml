@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Introduction on Xiaohu&#39;s Blog</title>
+    <link>https://xiaohubai.github.io/</link>
+    <description>Recent content in Introduction on Xiaohu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 May 2024 13:47:42 +0800</lastBuildDate>
+    <atom:link href="https://xiaohubai.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/docker/</guid>
+      <description> docker COPY和ADD指令区别？ # copy ：将本地文件拷入容器内 add：除了将本地文件拷入容器内，还具有本地归档解压和支持远程网址访问（常用于本地自动解压归档文件到容器中） Docker 映像（image）是什么？ # Docker image 是 Docker 容器的源。映像（Images）通过 Docker build 命令创建， Docker 容器（container）是什么？ # Docker 容器包含其所有运行依赖环境,但与其它容器共享操作系统内核的应用，它运行在独立的主机操作系统用户空间进程中并不紧密依赖特定的基础平台 Docker 中心（hub）什么概念？ # 云端镜像仓库，可以打tag发布公共，私有镜像到远程仓库。 Docker 的资源隔离是怎么实现的 # Docker通过命名空间、控制组、容器镜像和安全配置等多种手段来实现对容器的资源隔禆，从而保证容器之间的独立性和安全性。 </description>
+    </item>
+    <item>
+      <title>Es</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/es/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/es/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Go</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/go/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/go/</guid>
+      <description>代码问题 # 指针问题 # //使用副本的方式。所以m[stu.Name]=&amp;amp;stu实际上一致指向同一个指针， 最终该指针的值为遍历的最后一个struct的值拷贝 //副本值的指针-》指向真实指针-》真实值，随着遍历，真实指针移动到最后一个值 type student struct { Name string Age int } func pase_student() { m := make(map[string]*student) stus := []student{ {Name: &amp;#34;zhou&amp;#34;, Age: 24}, {Name: &amp;#34;li&amp;#34;, Age: 23}, {Name: &amp;#34;wang&amp;#34;, Age: 22}, } for _, stu := range stus { //值拷贝，没有存真实的切片[i]地址，只是一个指向真实切片的指针 m[stu.Name] = &amp;amp;stu //m[stu.Name] = &amp;amp;stus[i] 可以这种方式修改value真实地址 } } defer问题 # func calc(index string, a, b int) int { ret := a + b fmt.</description>
+    </item>
+    <item>
+      <title>Grpc</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/grpc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/grpc/</guid>
+      <description> 微服务 # 微服务的优势 # 独立开发 独立部署 故障隔离 混合技术栈 粒度缩放 微服务特点算法 # 解耦—系统内的服务很大程度上是分离的。 组件化—微服务被视为可以轻松更换和升级的独立组件 业务能力—微服务非常简单，专注于单一功能 自治—开发人员和团队可以彼此独立工作，从而提高速度 分散治理—重点是使用正确的工具来做正确的工作。 </description>
+    </item>
+    <item>
+      <title>Js</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/js/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/js/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kafka</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/kafka/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/kafka/</guid>
+      <description> kafka怎么保证数据消费一次且仅消费一次？使用消息队列如何保证幂等性？ # 保证消息不丢失： Kafka 为生产者提供一个选项叫做“acks”，当这个选项被设置为“all”时，生产者发送的每一条消息除了发给 Leader 外还会发给所有的 ISR，并且必须得到 Leader 和所有 ISR 的确认后才被认为发送成功。这样，只有 Leader 和所有的 ISR 都挂了，消息才会丢失。 保证被消费一次： 幂等性： 生产者：在 Kafka0.11 版本和 Pulsar 中都支持“producer idempotency”的特性，翻译过来就是生产过程的幂等性，特性保证消息虽然可能在生产端产生重复，但是最终在消息队列存储时只会存储一份。 每一个生产者一个唯一的 ID，并且为生产的每一条消息赋予一个唯一 ID，消息队列的服务端会存储 &amp;lt; 生产者 ID，最后一条消息 ID&amp;gt; 的映射。当某一个生产者产生新的消息时，消息队列服务端会比对消息 ID 是否与存储的最后一条 ID 一致，如果一致，就认为是重复的消息，服务端会自动丢弃。 消费端：通用层和业务层，mysql增加事务，判断判断是否存在，再写入。 或者：乐观锁给这条信息加一个版本号，判断版本号是否是未更新的，否则不更新 kafka如何保证消息的顺序 # Kafka通过分区来保证消息的顺序性。在Kafka中，每个主题（topic）都被分为一个或多个分区（partition），每个分区内的消息是有序的。因此，如果您希望保证特定主题内的消息顺序，可以将该主题的分区数设置为1，这样所有的消息都会按照其写入的顺序进行存储和检索。 Kafka还可以通过消息的键（key）来保证特定键的消息被发送到同一个分区，从而保证特定键的消息在该分区内是有序的。这种方式适用于需要对特定实体的消息进行顺序处理的场景。 </description>
+    </item>
+    <item>
+      <title>Mysql</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/mysql/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/mysql/</guid>
+      <description>数据库 # 关系型和非关系型数据库的区别？ # 关系型数据库 采用关系模型组织数据 保持数据的一致性 数据更新开销比较小 支持复杂查询(带where子句的查询) 非关系型数据库 无需经过sql层的解析，读写效率高 基于键值对，读写性能高，易于扩展 支持多种类型数据的存储，如图片、文档 扩展性强，适合数据量大高可用的日志系统，地理位置存储系统 详细说一下一条 MySQL 语句执行的步骤？ # 客户端请求-&amp;gt;连接器（验证身份，给与权限） 查询缓存（存在缓存直接返回，不存在计息往后执行） 分析器（对sql进行词法分析和语法分析） 优化器（对执行的sql优化选择最优的执行方案） 执行器（先看用户是否有执行权限）-&amp;gt;去引擎层获取数据返回（如开启查询缓存，则缓存查询结果） 怎么理解数据库的索引？ # 索引类似于书籍的目录,通过使用索引，数据库系统可以在执行查询时更快地定位到符合特定条件的数据行，从而提高查询性能。不必全表扫描 索引并非没有代价的。它们需要额外的存储空间，并且在插入、更新和删除数据时需要维护，这可能会导致一些性能开销 MySQL 索引的优缺点？ # 提高数据查询的效率，就像书的目录一样 创建唯一性索引，可以保证数据表每一行记录的唯一性 帮助引擎层避免排序和临时表 将随机io变为顺序io，加速表和表之间的连接 创建、维护索引需要消耗时间，对表的数据进行增加、删除 修改时索引也要动态维护，会降低这些执行的效率 索引也是需要占物理空间 索引的三种常见底层数据结构以及优缺点 # 哈希表 适用于等值查询的场景，不适合范围查询 有序数组 适用于静态存储引擎，等值和范围查询性能好，但更新数据成本高 搜索树 索引的常见类型以及它是如何发挥作用的？ # 根据叶子节点的内容，索引分为主键索引和非主键索引 主键索引的叶子节点存的整行数据，在InnoDB里也被称为聚簇索引。 非主键索引叶子节点存的主键的值，在InnoDB里也被称为二级索引。 什么时聚簇索引何时用聚簇非聚簇索引？ # 聚簇索引：将数据存储与索引放到了一块，找到索引也就找到了数据 非聚簇索引：将数据存储和索引结构分开，索引结构的叶子节点指向数据对应行， 索引的几种类型？ # 主键索引：数据列不允许重复，不允许为NULL,一个表只能有一个主键 唯一索引：数据列不允许重复，允许为NULL,一个表允许多个列创建唯一索引 普通索引：没有唯一性限制，允许为NULL 全文索引：效率上是模糊查询的N倍 MySQL 存储引擎 MyISAM 与 InnoDB 区别 # 1.锁粒度方面：由于锁粒度不同，InnoDB 比 MyISAM 支持更高的并发;InnoDB 的锁粒度为行锁、MyISAM 的锁粒度为表锁、行锁需要对每一行进行加锁， 2.</description>
+    </item>
+    <item>
+      <title>Redis</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/redis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/redis/</guid>
+      <description>Redis高性能的 key-value 数据库 # redis特点 # 1.Redis 支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时 候可以再次加载进行使用。 2.Redis 不仅仅支持简单的 key-value 类型的数据，同时还提供 list， set，zset，hash 等数据结构的存储。 3.Redis 支持数据的备份，即 master-slave 模式的数据备份。 4.性能极高 – Redis 能读的速度是 110000 次/s,写的速度是 81000 次/s 5.原子 – Redis 的所有操作都是原子性的，意思就是要么成功执行要么失败完全不执行。单个操作是原子性的。多个操作也支持事务，即原子性， 通过 MULTI 和 EXEC 指令包起来。 redis数据结构，用途 # string（字符串），hash（哈希），list（列表），set（集合）及 zsetsorted set：有序集合。 1.String：用于存储字符串值，常用于缓存、计数器、分布式锁等场景。 2.Hash：用于存储键值对集合，常用于存储对象的属性，如用户信息、商品信息等。 3.List：用于存储有序的字符串元素列表，常用于消息队列、栈等场景。 4.Set：用于存储字符串元素的无序集合，常用于去重、共同好友等场景。 5.Sorted Set：用于存储字符串元素及其分数的有序集合，常用于排行榜、范围查询等场景。 Redis 是单进程单线程的？ # Redis v6之前是单进程单线程的，原因是CPU 通常不会成为性能瓶颈，瓶颈往往是内存和网络，因此单线程足够了，redis 利用队列技术将并发访问变为串行访问，消 除了传统数据库串行控制的开销。 //好处： 1.避免过多的上下文切换开销 2.避免同步机制的开销 3.简单可维护：引入多线程必须的同步机制，那么所有的底层数据结构都必须实现成线程安全的，这无疑又使得 Redis 的实现变得更加复杂。 v6之后(多线程网络模型)Redis在6.0支持的多线程，并不是说指令操作的多线程，而是针对网络IO的多线程支持 针对网络IO的处理方式改成了多线程，通过多线程并行的方式提升了网络IO的处理效率。 但是对于客户端指令的执行过程，还是使用单线程方式来执行。 Redis 多线程是怎么做到无锁的？ # redis 多线程的模型是主线程负责搜集任务，放入全局读队列 clients_pending_read 和全局写队列 clients_pending_write，主线程在将队列中的任务以轮训的方式分发到每个线程对应的队列（list *io_threads_list[128]） 主线程将任务分发到子线程的队列中,等待所有子线程处理完所有任务,继续收集任务到全局队列.</description>
+    </item>
+    <item>
+      <title>Vue</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/vue/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/vue/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>深层技术</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/</guid>
+      <description> 高并发访问时避免冲突的方法? # 程序内使用互斥锁保护共享资源 使用事务来确保一系列操作的原子性，从而避免数据不一致或冲突。 分布式锁来保护共享资源，确保在不同节点上的并发访问不会产生冲突。 并发访问转化为顺序访问，通过消息队列等方式来串行化处理请求，避免并发冲突。 缓存来减轻数据库或其他资源的压力，通过缓存有效地降低并发访问对共享资源的冲突 并发与并行的区别 # 并发:系统中同时具有多个活动的部分，并且这些活动在一段时间内都在进行 并行:系统中同时具有多个活动的部分，并且这些活动在同一时刻进行 并发来提高系统的吞吐量和响应性，而通过并行来提高系统的计算能力。 用户从客户端访问一个页面，webserver如何主动的给这个页面推送一个通知 # 使用WebSocket，当用户访问一个页面时，前端给后端发送一个请求带上用户信息，后端接收到后，使用用户id建立一个WebSocket,前后端建立WebSocket后，后端给用户推送一个通知 </description>
+    </item>
+    <item>
+      <title>算法</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/%E7%AE%97%E6%B3%95/</guid>
+      <description> 1.斐波那契数列 Fibonacci,F(0)=1，F(1)=1, F(n)=F(n - 1)+F(n - 2)（n ≥ 2，n ∈ N*） # func Fibonacci(n int) int { if n &amp;lt;= 2 { return 1 } return Fibonacci(n-1) + Fibonacci(n-2) } func Fibonacci(n int) int { if n &amp;lt;= 2 { return 1 } sum := 0 n1 := 0 n2 := 1 for i := 1; i &amp;lt; n; i++ { sum = n1 + n2 n1 = n2 n2 = sum } return sum } </description>
+    </item>
+    <item>
+      <title>网络编程</title>
+      <link>https://xiaohubai.github.io/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</guid>
+      <description>OSI七层和TCP/IP四层？ # 第七层：应用层（Telnet,HTTP80,FTP,TFTP,NFS,SMTP,SNMP,DNS） 第六层：表示层 (定义数据格式、加密、代码转换) 第五层：会话层 (开始、控制和结束一个会话,接收数据何时结束) 第四次：传输层 (TCP，UDP) 第三层：网络层 (包传输进行定义IP、ICMP、IGMP、RIP、OSPF、BGP) 第二层：数据传输层 (单个链路上如何传输数据SLIP、CSLIP、PPP、ARP、RARP、MTU) 第一层：物理层 (传输介质) 第四层：应用层 第三层：传输层 第二层：应用层 第一层：网络接口层 http状态码 # // 2** 请求成功 200 请求成功执行。 201 (已创建)请求成功并且服务器创建了新的资源。 202 （已接受） 服务器已接受请求，但尚未处理 203 （非授权信息） 204 （无内容） 服务器成功处理了请求，但没有返回任何内容。 // 3** 重定向 301 （永久移动） 请求的网页已永久移动到新位置。 //4** 客户端错误 400 客户端错误。 401 （未授权） 请求要求身份验证。 403 （禁止访问） 服务器拒绝请求。 404 （未找到） 资源找不到，可以是 URL 或 RESTful 资源。 405 （方法禁用） 禁用请求中指定的方法。 408 （请求超时） 服务器等候请求时发生超时。 414 （请求的 URI 过长） // 5** 服务器错误 500 （服务器内部错误） 服务器遇到错误，无法完成请求。 501 （尚未实施） 服务器不具备完成请求的功能。 502 （错误网关） 服务器作为网关或代理，从上游服务器收到无效响应。 503 （服务不可用） 服务器目前无法使用 504 （网关超时） 服务器作为网关或代理，但是没有及时从上游服务器收到请求。 505 （HTTP 版本不受支持） 服务器不支持请求中所用的 HTTP 协议版本。 linux进程通信方式？ # 管道，有名管道 信号 消息队列 共享内存 信号量 套接字 socket 进程、线程、协程的区别 # 一般一个程序就是一个进程，如果一个进程不总是执行计算型任务，会导致cpu浪费，在cpu少的情况下是通过进程不停的上下文切换，实现同时运行多个进程。 进程拥有自己独立的堆和栈，既不共享堆，亦不共享栈，进程由操作系统调度。一个进程由一个或多个线程组成。 线程是一个进程中代码的不同执行路线；拥有自己独立的栈和共享的堆，进程间相互独立，但同一个进程内的各个线程之间共享着同样的代码和全局数据；多线程比多进程之间更容易共享数据，在上下文切换中线程一般比进程更高效。 协程是比线程更加轻量级的存在，由程序员自己写程序管理的轻量级线程。创建协程时，会从进程的堆中分配一段内存作为协程的栈。线程的栈一般是M级别，协程为K级别，go协程更夸张到2到4KB。 进程资源分配的基本单位，线程是执行的单位，多个线程共享进程资源。进程需要特殊的机制，管道，消息队列等。 线程之间可以通过共享内存方式通信，线程间通信相对简单。 线程切换开销较小，因为线程共享进程的资源，切换时不需要切换内存空间。 协程是用户态的轻量级线程，调度完全用户控制，协程的创建，切换销毁都在用户空间完成，不需要内核的参与，开销非常小。协程用于处理IO密集以及异步非阻塞的代码 可以将一个浏览器视为一个进程，每个打开的标签页或窗口视为一个线程，而在每个线程内部可以使用多个协程来处理不同的任务。这种比喻可以帮助理解进程、线程和协程之间的关系，以及它们在并发编程中的作用。 开多个线程和开多个协程会有什么区别 # 调度方式：线程的调度由操作系统内核实现，采用抢占式调度方式，依赖各种锁来确保线程安全。而协程的调度则由用户态的具体调度器进行，不需要内核的参与。 协程的切换不需要经过用户态与内核态的切换，且切换时只需要保存极少的状态值,线程的切换涉及到内核态的上下文切换，开销相对较大。 资源占用：协程属于用户态轻量级的线程，占用的内存较少。而线程需要操作系统为其分配独立的栈空间和其他系统资源，因此资源占用相对较多。 并发能力：协程依托于线程，可以在单线程中实现高并发。多个协程可由一个或多个线程管理，协程的调度发生在其所在的线程中。而线程的数量受限于系统的物理CPU核心数，因此并发能力相对受限。 协程的优势？ # 1.</description>
+    </item>
+    <item>
+      <title>常识</title>
+      <link>https://xiaohubai.github.io/docs/docs/2_%E5%B8%B8%E8%AF%86/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/2_%E5%B8%B8%E8%AF%86/</guid>
+      <description> 数学 # 百分比 # 假设比如公司共有 13人，男的8个人，女的5个人。求男女各占总数的百分比。 男占公司员工比例8/13*100%=61.5%。 女占公司员工比例5/13*100%=38.5%(四舍五入)。 百分数化小数：去掉百分号，小数点左移两位。如：75%可化为0.75 小数化百分数：加上百分号，小数点右移两位。如：0.62可化为62% 计量单位 # 公斤=kg 1斤=500g 1斤=10两 1 吨 [t] = 2000 斤 1 吨 [t] = 1000 千克 [kg] 公里=km 1里=500米 1公里(km) = 1千米(km) </description>
+    </item>
+    <item>
+      <title>各种工具安装</title>
+      <link>https://xiaohubai.github.io/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/</guid>
+      <description>彻底卸载禁用snap # sudo vim /etc/apt/preferences.d/nosnap.pref https://www.cnblogs.com/learner-and-helper-YZY/p/17654961.html oh-my-zsh # sudo apt install zsh -y sh -c &amp;#34;$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)&amp;#34; git # 配置github用户 git config --global user.name &amp;#34;youname&amp;#34; git config --global user.email &amp;#34;youname@qq.com&amp;#34; 配置ssh key ssh-keygen -m PEM -t ed25519 -C &amp;#34;yourname@qq.com&amp;#34; # id_ed25519.pub内容 粘贴到远端github的setting-&amp;gt;SSH and GPG keys下 ssh -T git@github.com 配置github和公司仓库地址 cd ~/.ssh &amp;amp;&amp;amp; vim config Host github.com Hostname github.com Port 22 User git PreferredAuthentications publickey IdentityFile ~/.ssh/id_github Host e.</description>
+    </item>
+    <item>
+      <title>linux</title>
+      <link>https://xiaohubai.github.io/docs/docs/4_linux/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/4_linux/</guid>
+      <description>常用命令 # su passwd root //为ubuntu的root用户设置密码 sudo passwd root adduser user //新建用户 passwd user //修改用户密码 // chmod -v u+w /etc/sudoers //添加sudoers文件可写权限 vim /etc/sudoers xiaohu ALL=(ALL:ALL) NOPASSWD: ALL // chown -R docker //更改目录及其子目录文件的归属 chmod -R docker //更改目录及其子目录文件的权限 cat /etc/issue //查看操作系统 uname -a //查看内核版本 exit //退出当前登陆 which bash //查找bash可执行二进制文件位置 whereis bash //查找所有bash的文件 whatis bash //bash是干什么的 clear //清除屏幕内容 pwd //当前目录地址 touch fn //创建文件 mkdir dirname //创建目录 mkdir -p dirname //递归创建目录 ln -s fn link //给指定文件创建一个软链接 cat fn //显示整个内容 more fn //逐屏显示某文件内容,空格翻页,q退出 less fn //b向上翻一页,d向后翻半页,/搜索，n向下查找,N向上查找 head -3 fn //显示文件头部3行 tail -3 fn //显示文件尾3行 tail -f fn //持续显示文件尾部数据，可用于监控日志 wc fn //统计文件有多少行，多少个单词,多少个字节数 grep &amp;#34;info&amp;#34; fn //在文件中查找出现过info的内容 grep -r &amp;#34;info&amp;#34; dirname //递归查找dirname目录下info的内容+文件地址 whoami //显示登录用户 passwd user //修改用户密码 deluser user //删除用户 groupdel user //删除用户组 ps //查看当前会话进程 ps ax //查看所有进程 ps aux //查看所有进程详细信息 ps -u user //查看某用户进程 ps axjf //列出进程树 ps aux | grep httpd //查看名为 httpd 的所有进程 kill 287391 //杀死进程 kill -9 3829 //强制杀死进程 top //查看最活跃的进程 nohup main.</description>
+    </item>
+    <item>
+      <title>regexp</title>
+      <link>https://xiaohubai.github.io/docs/docs/5_regexp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/5_regexp/</guid>
+      <description>校验数字的表达式 # 1 数字：^[0-9]*$ 2 n位的数字：^\d{n}$ 3 至少n位的数字：^\d{n,}$ 4 m-n位的数字：^\d{m,n}$ 5 零和非零开头的数字：^(0|[1-9][0-9]*)$ 6 非零开头的最多带两位小数的数字：^([1-9][0-9]*)+(.[0-9]{1,2})?$ 7 带1-2位小数的正数或负数：^(\-)?\d+(\.\d{1,2})?$ 8 正数、负数、和小数：^(\-|\+)?\d+(\.\d+)?$ 9 有两位小数的正实数：^[0-9]+(.[0-9]{2})?$ 10 有1~3位小数的正实数：^[0-9]+(.[0-9]{1,3})?$ 11 非零的正整数：^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\+?[1-9][0-9]*$ 12 非零的负整数：^\-[1-9][]0-9&amp;#34;*$ 或 ^-[1-9]\d*$ 13 非负整数：^\d+$ 或 ^[1-9]\d*|0$ 14 非正整数：^-[1-9]\d*|0$ 或 ^((-\d+)|(0+))$ 15 非负浮点数：^\d+(\.\d+)?$ 或 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$ 16 非正浮点数：^((-\d+(\.\d+)?)|(0+(\.0+)?))$ 或 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$ 17 正浮点数：^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$ 或 ^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$ 18 负浮点数：^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$ 或 ^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$ 19 浮点数：^(-?\d+)(\.\d+)?$ 或 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$ 校验字符的表达式 # 1 汉字：^[\u4e00-\u9fa5]{0,}$ 2 英文和数字：^[A-Za-z0-9]+$ 或 ^[A-Za-z0-9]{4,40}$ 3 长度为3-20的所有字符：^.</description>
+    </item>
+    <item>
+      <title>设计模式</title>
+      <link>https://xiaohubai.github.io/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</guid>
+      <description>设计模式 # 创建型 //在一些情况下，要创建的对象需要一系列复杂的初始化操作，比如查配置文件、查数据库表、初始化成员对象等，如果把这些逻辑放在构造函数中，会极大影响代码的可读性。不妨定义一个类来专门负责对象的创建，这样的类就是工厂类，这种做法就是工厂模式 简单工厂模式:根据传入的入参，生成不同的结构体的接口方法(有一个具体的工厂类，可以根据传入参数，生产不同的产品)，由一个对象负责所有具体类的实例化。 工厂方法模式:解决根据简单工厂入参的判断问题，（只需要知道具体工厂名，即可生产对应产品），将对象创建从由一个对象负责所有具体类的实例化，变成由一群子类来负责对具体类的实例化，从而将过程解耦 抽象工厂模式：子类会越来越多，可以将产品进行分组，每组中的不同产品由同一个工厂类的不同方法来创建。 创建者模式:将一个复杂对象的构建分离成多个简单对象的构建组合;(将一个复杂的对象的构造和表示分离，使同样的构造过程可以创建不同的产品。) 原型模式:使对象能复制自身，并且暴露到接口中，使客户端面向接口编程时，不知道接口实际对象的情况下生成新的对象。 单例模式: 结构型模式 外观模式 适配器模式 代理模式 组合模式 享元模式 装饰模式 桥模式 行为型模式 中介者模式: 观察者模式: 命令模式: 迭代器模式: 模板方法模式: 策略模式: 状态模式: 备忘录模式: 解释器模式: 职责链模式: 访问者模式: 创建型 # 简单工厂模式 # //简单工厂模式有一个具体的工厂类，可以根据传入的入参，生产不同的产品 func main() { f := getFruit(&amp;#34;apple&amp;#34;) fmt.Println(f.Fruit()) } type FruitFactory interface { Fruit() string } func getFruit(t string) FruitFactory { switch t { case &amp;#34;apple&amp;#34;: return &amp;amp;apple{} case &amp;#34;banana&amp;#34;: return &amp;amp;banana{} } return nil } type apple struct{} func (*apple) Fruit() string { return &amp;#34;我是苹果，我很好吃&amp;#34; } type banana struct{} func (*banana) Fruit() string { return &amp;#34;我是香蕉，我最好吃了&amp;#34; } 工厂方法模式 # //工厂方法 调用方只需要知道具体工厂名即可生成对应产品 //工厂方法模式使用子类的方式延迟生成对象到子类中实现。 func main() { apple := appleFactory{} fmt.</description>
+    </item>
+    <item>
+      <title>shell</title>
+      <link>https://xiaohubai.github.io/docs/docs/7_shell/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/7_shell/</guid>
+      <description>shell脚本 # shell命令 # str=&amp;#34;hello word !&amp;#34; # 定义变量,没有数据类型的概念，全是字符串，单引号用于保留字符的字面含义，各种特殊字符在单引号里面，双引号的美元符号（$）、反引号（`）和反斜杠（\）有特殊含义 (()) # 整数进行算术运算,((i++)),((i--)) [[]] # 条件判断，==，&amp;amp;&amp;amp;，|| {} # 取出变量值 &amp;amp;&amp;amp; -a # and || -o # or -n str1 # 判断字符串不为空（长度大于零） -z str1 # 判断字符串为空（长度等于零） echo ${str} # 查看变量内容 ${#str} # 返回字符串长度 echo ${str:4:4} # 获取子串，不会改变原始字符串 str2=&amp;#34;$str$str1&amp;#34; # 字符串拼接，可以有空格 str3=$(($str+$str1)) # 整型运算 a[0]=&amp;#34;2&amp;#34; # 定义数组 a=( foo bar &amp;#34;a b c&amp;#34; 42 ) # 定义数组 ${a[0]} # 取得数组中的元素 ${#a[@]} # 取得数组的长度 ${#a[i]} # 取得数组中某个变量的长度 (${a1[@]} ${a2[@]}) # 两个数组拼接 unset a[5] # 删除数组元素，unset a 删除整个数组 read # 接收命令行输入 -p提示 ####### if ######### if [ &amp;#34;$varname&amp;#34; = &amp;#34;foo&amp;#34; ]; then echo &amp;#34;this is foo&amp;#34; elif [ &amp;#34;$varname&amp;#34; = &amp;#34;bar&amp;#34; ]; then echo &amp;#34;this is bar&amp;#34; else echo &amp;#34;neither&amp;#34; fi ##### case ########## case expression in pattern1 ) statements ;; pattern2 ) statements ;; * ) otherwise ;; esac ######for######### for i in {1.</description>
+    </item>
+    <item>
+      <title>docker</title>
+      <link>https://xiaohubai.github.io/docs/docs/8_docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/8_docker/</guid>
+      <description>docker命令 # sudo systemctl start docker //启动 sudo systemctl enable docker.service //开机启动 docker ps -a //查看所有容器 docker ps //查看正在运行的容器 docker stop 容器 //停止容器 docker start 容器 docker restart 容器 docker rm 容器 //删除容器 docker images //查看所有镜像 docker rmi 镜像 //删除镜像 docker logs -f -t --tail n 容器 //查看容器日志最新的第n条数据(f:跟踪日志输出；-t:显示时间戳；--tail:列出最新的n条日志) docker inspect 容器 //查看容器详细信息 docker exec -it 容器 bash //进入运行的容器 docker exec -u 0 -it kibana /bim/bash //root权限进入容器 docker stats //查看当前运行容器 (解释:https://www.</description>
+    </item>
+    <item>
+      <title>dockerfile</title>
+      <link>https://xiaohubai.github.io/docs/docs/9_dockerfile/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/9_dockerfile/</guid>
+      <description>命令 # FROM： //指定基础镜像 MAINTAINER： //作者信息 RUN： //运行Linux系统的命令 CMD： //指定容器启动执行的命令（CMD用于指定在容器启动时所要执行的命令，而RUN用于指定镜像构建时所要执行的命令） LABEL： //指定生成镜像的源数据标签 EXPOSE： //指定镜像容器监听端口号 ENV： //设置环境变量 ADD： //对压缩文件进行解压缩，将本机数据或远程文件（url）添加到容器指定的目录 COPY： //复制宿主机数据到镜像内部使用（与ADD不同，不会自动解压文件，也不能访问网络资源） WORKDIR： //切换到镜像容器中的指定目录中,终端默认登陆的进来工作目录 VOLUME： //挂载数据卷到镜像容器中，持久化目录 USER： //指定运行容器的用户 ARG： //指定镜像的版本号信息 ONBUILD： //创建镜像，作为其他镜像的基础镜像运行操作指令 ENTRYPOINT： //配置容器启动后执行的命令，并且不可被 docker run 提供的参数覆盖 实例 # FROM golang:1.20.3 AS builder WORKDIR /src COPY . /src RUN export GOPROXY=https://goproxy.io &amp;amp;&amp;amp; make build FROM debian:stable-slim LABEL MAINTAINER=&amp;#34;xiaohubai@outlook.com&amp;#34; RUN apt-get update &amp;amp;&amp;amp; apt-get install -y --no-install-recommends \ ca-certificates \ netbase \ &amp;amp;&amp;amp; rm -rf /var/lib/apt/lists/ \ &amp;amp;&amp;amp; apt-get autoremove -y &amp;amp;&amp;amp; apt-get autoclean -y WORKDIR /app COPY --from=builder /src/server /app COPY --from=builder /src/rbac_model.</description>
+    </item>
+    <item>
+      <title>docker-compose</title>
+      <link>https://xiaohubai.github.io/docs/docs/10_docker-compose/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/10_docker-compose/</guid>
+      <description>docker-compose.yml # version: &amp;#39;3&amp;#39; ## 遇到容器不停重启，首先怀疑是挂载目录读写执行权限问题 services: #### mysql #### mysql: image: bitnami/mysql:8.0 container_name: mysql restart: always ports: - &amp;#34;3306:3306&amp;#34; volumes: - /usr/local/volumes/mysql:/bitnami/mysql environment: - TZ=Asia/Shanghai - MYSQL_ROOT_USER=root - MYSQL_ROOT_PASSWORD=123456 - MYSQL_DATABASE=go-layout - MYSQL_CHARACTER_SET=utf8mb4 - MYSQL_COLLATE=utf8mb4_general_ci #### redis #### redis: image: redis:7.0.0 container_name: redis restart: always ports: - &amp;#34;6379:6379&amp;#34; command: redis-server --appendonly yes --requirepass &amp;#34;123456&amp;#34; volumes: - /usr/local/volumes/redis/redis.conf:/etc/redis.conf - /usr/local/volumes/redis/data:/data environment: - TZ=Asia/Shanghai #### jaeger #### jaeger: image: jaegertracing/all-in-one:1.37 container_name: jaeger restart: always ports: - &amp;#34;5775:5775/udp&amp;#34; - &amp;#34;6831:6831/udp&amp;#34; - &amp;#34;6832:6832/udp&amp;#34; - &amp;#34;5778:5778&amp;#34; - &amp;#34;14268:14268&amp;#34; - &amp;#34;9411:9411&amp;#34; - &amp;#34;16686:16686&amp;#34; environment: - TZ=Asia/Shanghai - COLLECTOR_ZIPKIN_HTTP_PORT=9411 #### prometheus #### ## 注意数据集data要保证其他用户可读写，直接设置777 prometheus: image: bitnami/prometheus:2.</description>
+    </item>
+    <item>
+      <title>git</title>
+      <link>https://xiaohubai.github.io/docs/docs/11_git/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/11_git/</guid>
+      <description>命令 # git remote -v //查看远程管理分支 git remote rm origin //删除关联的origin远程库 git branch //查看分支 git branch -D 分支 //强制删除分支 git push -f origin test:test //强制推送 git checkout -b 分支 //创建分支，并进入分支 git checkout 分支 //切换分支 git merge dev //将分支dev合并到当前分支内(切换到目标分支) git reset --hard 030bfd0393a55ead2c6b9a3dc3312a6932e9d0ae //代码回退到某一个时间戳 git log //查看commit记录 git remote prune origin //远程、本地已经删除分支，本地缓存还有分支名称 git reset --soft HEAD^ //撤销本次commit，不删除git add添加的内容 git reset --soft HEAD~2 //撤销最近两次的commit，不删除git add添加的内容 git commit --amend //修改注释 这时候会进入vim编辑器，修改完成你要的注释后保存即可 git reflog //显示所有发生的commit git branch dev_xhubai_core_unitTest HEAD@{692} // 找回本地删除的分支 git merge --squash 分支 //压缩合并commit git fetch --tags //拉取远程tag git tag v0.</description>
+    </item>
+    <item>
+      <title>go</title>
+      <link>https://xiaohubai.github.io/docs/docs/12_go/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/12_go/</guid>
+      <description>类型转换 # string # 1. int int8 int16 int32 str:=strconv.Itoa(int(value)) 2. int64 str:=strconv.FormatInt(value, 10) 3. uint uint8 uint16 uint32 str:=strconv.FormatUint(uint64(value), 10) 4. uint64 str:=strconv.FormatUint(value, 10) 5. float32 str:=strconv.FormatFloat(float64(value), &amp;#39;f&amp;#39;, -1, 32) 6. float64 str:=strconv.FormatFloat(value, &amp;#39;f&amp;#39;, -1, 64) 7. bool str:=strconv.FormatBool(value) 8. []byte str:=string(value) 9. time.Time if value.IsZero() { return &amp;#34;&amp;#34; } return value.String() 10. *time.Time if value == nil { return &amp;#34;&amp;#34; } return value.String() int # 1. int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float32 float64 i:=int(int64(value)) 2.</description>
+    </item>
+    <item>
+      <title>mysql</title>
+      <link>https://xiaohubai.github.io/docs/docs/13_mysql/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/13_mysql/</guid>
+      <description>mysql基础 # 事务ACID # A:Atomicity (原子性)：事务中的操作要么都发生，要么都不发生。 C:Consistency(一致性)：事务开始之前和事务结束以后，数据库的完整性约束没有被破坏。 I:Isolation(隔离性)：多个事务并发访问时，事务之间是隔离的，一个事务不应该影响其它事务运行效果。 D:Durability(持久性)：，该事务所对数据库所作的更改便持久的保存在数据库之中，并不会被回滚。 事务四种隔离级别 # RU :Read uncommitted：(读未提交)：最低级别，任何情况都无法保证。可能产生脏读，不可重复读，幻读． RC :Read committed : (读已提交)：可避免脏读的发生。 RR :Repeatable read: (可重复读)即在一个事务读取数据的过程中，其他事务不允许修改数据，所以解决了不可重复读． S :Serializable (串行化)：最高的隔离级别,某一时刻只能有一个事务操作数据库 脏读 不可重复读 幻读 # 脏读: ：事务A读取数据库某一数据，事务B在此过程中修改了该数据，但没有提交，此时事务A读取的可能是脏数据，一旦事务B回滚，事务A便是脏读． 不可重复读：事务A需要在此次事务中多次读取同一个数据，在此期间，事务B修改了该数据并提交，导致事务A多次读取的数据不一样，因此称为不可重复读． 幻读：涉及两个数据库的更新操作，比如事务A更新整个数据库，还未更新完时，事务B在此过程中插入一行，在此之后，事务A发现数据库中还有一行没有更新，好像产生了幻觉一样． 乐观锁 悲观锁 # //乐观锁 假设不会发生并发冲突，只在提交操作时检查是否违反数据完整性。 为数据增加一个版本标识，一般是通过为数据库表增加一个数字类型的 “version” 字段来实现。当读取数据时，将version字段的值一同读出，数据每更新一次，对此version值加一。当我们提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的version值进行比对，如果数据库表当前版本号与第一次取出来的version值相等，则予以更新，否则认为是过期数据 //悲观锁 假定会发生并发冲突，屏蔽一切可能违反数据完整性的操作 table中增加一个字段，名称无所谓，字段类型使用时间戳（timestamp）, 和上面的version类似，也是在更新提交的时候检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，如果一致则OK，否则就是版本冲突 每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。 乐观锁、悲观锁区别？ # 乐观锁适用于写比较少的情况下，即冲突真的很少发生的时候，这样可以省去了锁的开销，加大了系统的整个吞吐量 但如果经常产生冲突，上层应用会不断的进行retry，这样反倒是降低了性能，所以这种情况下用悲观锁 共享锁 # //执行语句后 加上 lock in share mode 对于多个不同的事务，对同一资源共享同一个锁（一个门上一把锁，多个钥匙），只用于select，对于update,insert,delete语句会自动加排它锁 排他锁 # //执行语句后加上 for update 对于多个不同的事务，对同一个资源只能有一把锁。 行锁 # MySQL InnoDB默认行级锁。行级锁都是基于索引的，如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住.</description>
+    </item>
+    <item>
+      <title>gorm</title>
+      <link>https://xiaohubai.github.io/docs/docs/14_gorm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/14_gorm/</guid>
+      <description> 代码生成 # gentool -dsn &amp;#34;root:123456@tcp(172.21.0.2:3306)/go-layout?charset=utf8mb4&amp;amp;parseTime=True&amp;amp;loc=Local&amp;#34; --modelPkgName=&amp;#34;./internal/data/model&amp;#34; -outPath=&amp;#34;./internal/data/gen&amp;#34; 常见问题 # gorm 做更新操作 要特别注意 默认值, 再不确定更新那个struct字段时,要求请求参数全部有值,gorm进行map[string]interface{}指定全部请求参数更新 gorm 统计总数 加上 delete_at is null 删除非真删除,只是delete_at 不为null </description>
+    </item>
+    <item>
+      <title>elasticsearch</title>
+      <link>https://xiaohubai.github.io/docs/docs/15_elasticsearch/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/15_elasticsearch/</guid>
+      <description>常用名称 # 索引（index）：数据库,一个可检索的文档对象的集合 类型（type):表,不常用，一般一个index下建一个type，默认为_doc 文档（document):一条记录 映射关系 （mapping），设置字段类型。如何索引数据 字段（Field）：doc组成部分 分片(shard)：索引的数据量太大时，需要水平拆分，分片在创建索引时创建，之后不能更改 副本(replica)：分片的 Copy，每个主分片都有一个或多个副本分片，当主分片异常时，副本可以提供数据的查询等操作。 脑裂现象 # // 原因 网络问题： 集群间的网络延迟导致一些节点访问不到 Master，认为 Master 挂掉了从而选举出新的 Master，并对 Master 上的分片和副本标红，分配新的主分片。 节点负载： 主节点的角色既为 Master 又为 Data，访问量较大时可能会导致 ES 停止响应（假死状态）造成大面积延迟，此时其他节点得不到主节点的响应认为主节点挂掉了，会重新选取主节点。 内存回收： 主节点的角色既为 Master 又为 Data，当 Data 节点上的 ES 进程占用的内存较大，引发 JVM 的大规模内存回收，造成 ES 进程失去响应。 // 解决 适当调大响应时间：减少误判。 通过参数 discovery.zen.ping_timeout 设置节点状态的响应时间，默认为 3s，可以适当调大。 选举触发：我们需要在候选集群中的节点的配置文件中设置参数 discovery.zen.munimum_master_nodes 的值。这个参数表示在选举主节点时需要参与选举的候选主节点的节点数，默认值是 1，官方建议取值(master_eligibel_nodes2)+1，其中 master_eligibel_nodes 为候选主节点的个数。 角色分离：即是上面我们提到的候选主节点和数据节点进行角色分离，这样可以减轻主节点的负担，防止主节点的假死状态发生，减少对主节点“已死”的误判。 mapping # //long, integer, short, byte, double, float, half_float, scaled_float（需配合scaling_factor（缩放因子）使用，存的是*缩放因子的整数；57.34的字段缩放因子为100，存起来就是5734） PUT my_index { &amp;#34;settings&amp;#34;: { &amp;#34;number_of_shards&amp;#34;: &amp;#34;1&amp;#34;, &amp;#34;number_of_replicas&amp;#34;: &amp;#34;0&amp;#34;, &amp;#34;analysis&amp;#34;: { &amp;#34;analyzer&amp;#34;: { &amp;#34;ik&amp;#34;: { &amp;#34;tokenizer&amp;#34;: &amp;#34;ik_max_word&amp;#34; } } } }, &amp;#34;mappings&amp;#34;: { &amp;#34;properties&amp;#34;: { &amp;#34;name&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;text&amp;#34;, &amp;#34;analyzer&amp;#34;: &amp;#34;ik&amp;#34; }, &amp;#34;path&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;text&amp;#34;, &amp;#34;analyzer&amp;#34;: &amp;#34;ik&amp;#34; } } } } { &amp;#34;settings&amp;#34;: { &amp;#34;number_of_shards&amp;#34;: 1, //分片数量 &amp;#34;number_of_replicas&amp;#34;: 0 //副本数量 }, &amp;#34;mappings&amp;#34;: { &amp;#34;properties&amp;#34;: { //字符串类型 &amp;#34;key1&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;text&amp;#34; //会分词、模糊搜索 }, &amp;#34;key2&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;keyword&amp;#34;,//不分词、作为整体进行搜索 &amp;#34;index&amp;#34;: true, //字段是否可被搜索，true(默认)或false &amp;#34;store&amp;#34;: false //字段值是否应与_source字段分开存储和检索。 true或false(默认) }, //数值型 &amp;#34;key3&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;byte&amp;#34; //-127到128 }, &amp;#34;key4&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;short&amp;#34; //-32768到32767 }, &amp;#34;key5&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;integer&amp;#34; //有符号的32位整数 }, &amp;#34;key6&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;float&amp;#34; //32位单精度 }, &amp;#34;key7&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;double&amp;#34; //双精度64位 }, &amp;#34;key8&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;long&amp;#34; //有符号的64位整数 }, //日期类型 &amp;#34;key9&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;date&amp;#34;, &amp;#34;format&amp;#34;: &amp;#34;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&amp;#34;, //日期格式，epoch_second(秒时间戳)，epoch_millis（毫秒时间戳），日期字符串 &amp;#34;ignore_malformed&amp;#34;: false //true:格式错误的数字将被忽略(默认)；false:格式错误的数字会引发异常并拒绝整个文档。 }, //布尔类型 &amp;#34;key10&amp;#34;: { &amp;#34;type&amp;#34;: &amp;#34;boolean&amp;#34; //false:(false,&amp;#34;false&amp;#34;,&amp;#34;off&amp;#34;,&amp;#34;no&amp;#34;,&amp;#34;0&amp;#34;,&amp;#34;&amp;#34;,0,&amp;#34;0.</description>
+    </item>
+    <item>
+      <title>grafana</title>
+      <link>https://xiaohubai.github.io/docs/docs/16_grafana/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/16_grafana/</guid>
+      <description> 语法 # //每分钟请求/响应数 sum(increase(fwd_req_request_counter[1m])) sum(increase(fwd_res_response_counter[1m])) // qps sum(irate(fwd_req_request_counter{}[1m])) sum(irate(fwd_res_response_counter{}[1m])) //请求P9x图 histogram_quantile(0.90, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) //响应P9x图 histogram_quantile(0.90, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) //请求最大耗时 sum(max_over_time(fwd_req_time_cost_gauge[15s])) //响应最大耗时 sum(max_over_time(fwd_res_time_cost_gauge[15s])) //每分钟ip数 count(increase(fwd_req_request_counter[1m])&amp;gt;0) count(increase(fwd_res_response_counter[1m])&amp;gt;0) 指标 # Gauge(仪表盘): 值是有变化的,如CPU使用率，有高有低 Counter(计数器):从程序开始，只增不减 Histogram(直方图): 把观测值归入的 bucket 的数量 Summary(摘要):与Histogram类似类型，用于表示一段时间内的数据采样结果,但它直接存储了分位数（通过客户端计算，然后展示出来），而不是通过区间计算 函数 # sum: 对瞬时向量求和, 加by(),按照字段分组: group by min: 最小值 可配合by max: 最大值 可配合by avg: 平均值 可配合by count: 瞬时向量个数求和,可配合by topk:对瞬时向量的值从大到小进行排列，并获取前N个值 可配合by bottomk 和topk相反 changes返回给定的区间向量中，对比于当前值，发生变化的元素的数量。 delta:返回区间向量中，第一个元素和最后一个元素之间的变化值须作用在gauge类型的指标 </description>
+    </item>
+    <item>
+      <title>grpc</title>
+      <link>https://xiaohubai.github.io/docs/docs/17_grpc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/17_grpc/</guid>
+      <description> proto3 # </description>
+    </item>
+    <item>
+      <title>redis</title>
+      <link>https://xiaohubai.github.io/docs/docs/19_redis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/19_redis/</guid>
+      <description>基础操作 # String（key-value） # get # # 返回字符串value,不存在-&amp;gt;nil,非字符串-&amp;gt;err get key set # # 设置key-value 字符串，存在value，覆盖;返回ok set key value set key value ex second # 设置键的过期时间为秒 set key value px millisecond # 设置键的过期时间为毫秒 set key value nx # 键不存在才设置 set key value xx # 只有键存在才设置 set key value ex second nx # 设置key的过期时间为秒，不存在才设置 strlen # # 返回value字符串长度，非字符串-&amp;gt;err strlen key append # # key存在，追加到value尾部，反之设为value append key value decr # # 数字value减一,不存在，key的值设为-1，非数字返回错误 decr key decrby # # 已存储的value,减去数字value decrby key 20 incr # # 数字加一，不存在key设为1，非数字-&amp;gt;err incr key incrby # # 已存储的value,减去数字value incrby key 20 incrbyfloat # # 已存储的value，加上数字浮点数 incrby key 20 getrange # # 返回字符串字串，两边都包含，-1：最后一个字符，-2倒数第二 getrange key 0 4 getset # # 覆盖旧字符串，返回旧字符串，value不是字符串-&amp;gt;err,key不存在-&amp;gt;nil getset key value mget # # 返回所有key的value,不存在对应value-&amp;gt;nil mget key1 key2 mset # # 设置多个key-value对,会覆盖旧值 mset key1 value1 key2 value2 psetex # # 设置key的生存时间，毫秒 psetex key time value setrange # # 从offset开始覆盖字符串 setrange key 6 value Hash # key ckey1 cvalue ckey2 cvalue2</description>
+    </item>
+    <item>
+      <title>kafka</title>
+      <link>https://xiaohubai.github.io/docs/docs/18_kafka/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/18_kafka/</guid>
+      <description>kafka基本组件 # ZooKeeper # 负责保存 broker 集群元数据，并对控制器进行选举等操作 Broker # 消息中间件节点（服务器），一个节点就是一个broker，一个kafka集群由一个或多个broker组成 Producer (生产者) # 负责发布消息到 Kafka broker Consumer（消费者） # 消息消费者，向 Kafka broker 读取消息的客户端 Topic（主题） # 每条发布到 Kafka 集群的消息都有一个类别，这个类别被称为 Topic。（物理上不同 Topic 的消息分开存储，逻辑上一个 Topic 的消息虽然保存于一个或多个 broker 上，但用户只需指定消息的 Topic 即可生产或消费数据而不必关心数据存于何处） Partition # partition 默认一个topic有一个分区（partition） Partition 是物理上的概念，每个 Topic 包含一个或多个 Partition，数据存储最小单元， 分区分散存储在服务器不同节点上解决了一个海量数据如何存储的问题 Offset # offset 是消息在分区中的唯一标识，Kafka 通过它来保证消息在分区内的顺序性，不过 offset 并不跨越分区，也就是说，Kafka保证的是分区有序性而不是主题有序性。 Replication(副本) # Kafka 同一 Partition 的数据可以在多 Broker 上存在多个副本，通常只有主副本对外提供读写服务，当主副本所在 broker 崩溃或发生网络异常，Kafka 会在 Controller 的管理下会重新选择新的 Leader 副本对外提供读写服务。 kafka零拷贝机制保证读取数据高性能 # 消费者读取数据流程：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据）-》os cache 复制数据到kafka应用中-》kafka将数据（复制）发送到socket cache中-》socket cache 通过网卡传输给消费者 //零拷贝 kafka linux sendfile技术 ：消费者-》发送请求到kafka服务-》kafka服务去os cache 缓存读取数据（缓存灭有就从磁盘读取数据） 从os cache直接将数据发送给网卡传输给消费者 //如何做到高性能？基于以下相当于 Kafka 完全基于内存提供数据的写和读 1.</description>
+    </item>
+    <item>
+      <title>swaggo</title>
+      <link>https://xiaohubai.github.io/docs/docs/20_swaggo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/20_swaggo/</guid>
+      <description>main总入口 # // @title Swagger Example API // @version 0.0.1 // @description 总入口 // @in header // @BasePath / Get不带参数跟Header请求 # // @Summary 接口描述 // @Tags 分类名称 // @Accept application/json // @Success 200 object result.Response 返回值 // @Router /api/get [get] Get带Query参数请求 # // @Summary 接口描述 // @Tags 分类名称 // @Accept application/json // @Param userId path integer true &amp;#34;用户ID&amp;#34; // @Success 200 object result.Response 返回值 // @Router /api/get/{userId} [get] Get带token请求 # // @Summary 接口描述 // @Tags 分类名称 // @Security ApiKeyAuth // @Accept application/json // @Param token header string true &amp;#34;登录信息&amp;#34; // @Success 200 object result.</description>
+    </item>
+    <item>
+      <title>validator</title>
+      <link>https://xiaohubai.github.io/docs/docs/21_validator/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/21_validator/</guid>
+      <description>go-playground/validator # https://github.com/go-playground/validator tag参数 # required //必填； len=11 //长度=11； min=3 //如果是数字，验证的是数据大小范围，最小值为3，如果是文本，验证的是最小长度为3， max=6 //如果是数字，验证的是数字最大值为6，如果是文本，验证的是最大长度为6 mail //验证邮箱 gt=3 //对于文本就是长度&amp;gt;=3 lt=6 //对于文本就是长度&amp;lt;=6 示例 # type Register struct { UserName string `form:&amp;#34;user_name&amp;#34; json:&amp;#34;user_name&amp;#34; binding:&amp;#34;required,min=1&amp;#34;` Pass string `form:&amp;#34;pass&amp;#34; json:&amp;#34;pass&amp;#34; binding:&amp;#34;required,min=6,max=20&amp;#34;` Captcha string `form:&amp;#34;captcha&amp;#34; json:&amp;#34;captcha&amp;#34; binding:&amp;#34;required,len=4&amp;#34;` Age float64 `form:&amp;#34;age&amp;#34; json:&amp;#34;age&amp;#34; binding:&amp;#34;required,min=1,max=200&amp;#34;` // 注意： 如果你的表单参数含有0值是允许提交的，必须用指针类型（*float64），而 float64 类型则认为 0 值不合格 Status *float64 `form:&amp;#34;status&amp;#34; json:&amp;#34;status&amp;#34; binding:&amp;#34;required,min=0,max=1&amp;#34;` } var r Register if err := c.ShouldBindJSON(&amp;amp;r); err != nil { //返回参数错误 } proto-gen-validate # https://github.</description>
+    </item>
+    <item>
+      <title>vue</title>
+      <link>https://xiaohubai.github.io/docs/docs/22_vue/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/22_vue/</guid>
+      <description> 新建项目 # pnpm init vite@latest pnpm create vite 生命周期函数 # data(): 定义该页面使用的变量 created(): 页面加载完成之前 执行 父组件-- &amp;gt; 子组件 mounted(): 页面加载完成之后，执行 子组件-- &amp;gt; 父组件 watch(): 监听一个值的变化，然后执行相应的函数 destroyed(): 离开页面后，会调用 销毁一些监听事件及定时函数 methods() ：事件方法执行 //vue3 onMounted() :用来在组件完成初始渲染并创建 DOM 节点后运行代码 ref reactive # ref和reactive是实现响应式数据的方法,即界面和数据同步，能实现实时更新 reactive:参数必须是一个对象，包括json数据和数组都可以，否则不具有响应式 ref:ref本质也是reactive,是reactive+简单值: ref(&amp;#34;&amp;#34;) 在vue中使用ref的值，不用通过.value获取 在js中使用ref的值，必须通过.value获取 </description>
+    </item>
+    <item>
+      <title>js</title>
+      <link>https://xiaohubai.github.io/docs/docs/23_js/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/23_js/</guid>
+      <description>字符串 # length 获取长度 indexOf() 字符串中指定文本首次出现的索引 lastIndexOf()字符串中指定文本最后一次出现的索引 search() 方法搜索特定值的字符串，并返回匹配的位置 slice() 提取字符串的某个部分并返回被提取的部分 substring()类似于 slice(),不同之处在于 substring() 无法接受负的索引 substr() 方法 类似于 slice(),不同之处在于第二个参数规定被提取部分的长度。 replace() 另一个值替换在字符串中指定的值,只替换首个匹配： /xxxx/ :正则写法不带引号 /xxxx/i :不区分大小写 /xxxx/g :替换所有匹配的 toUpperCase() 字符串大写 toLowerCase() 字符拆小写 concat() 连接两个或多个字符串 trim() 方法删除字符串两端的空白符： charAt() 方法返回字符串中指定下标（位置）的字符串 charCodeAt() 方法返回字符串中指定索引的字符 unicode 编码 split() 将字符串转换为数组：括号内是根据什么切割 数字 # toString() 将数值转化为字符串 toFixed() 返回字符串值，它包含了指定长度的数字： toPrecision() 返回字符串值，它包含了指定长度的数字： Number() 其它类型 转换为数字 parseInt(str) 去除小数点 取整 数组 # join() 返回一个新字符串，将所有数组元素结合为一个字符串 pop() 方法从数组中删除最后一个元素： push() 方法（在数组结尾处）向数组添加一个新的元素，返回新数组的长度 shift() 方法会删除首个数组元素，回被“位移出”的字符串： unshift() 方法（在开头）向数组添加新元素，返回新数组的长度。 sort() 方法以字母顺序对数组进行排序 (“25”大于100：str1.</description>
+    </item>
+    <item>
+      <title>scss</title>
+      <link>https://xiaohubai.github.io/docs/docs/24_scss/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://xiaohubai.github.io/docs/docs/24_scss/</guid>
+      <description> 优先级 # !important 行间样式 id选择器 class选择器 标签选择器 通配符选择器: * 继承 # //不可继承,但子元素使用inherit继承父元素的值. width border margin height padding. background float clear position top right bottom left overflow z-index content outline size vertical-align：垂直文本对齐 text-decoration：规定添加到文本的装饰 text-shadow：文本阴影效果 white-space：空白符的处理 unicode-bidi：设置文本的方向 //可继承: font：组合字体 font-family：规定元素的字体系列 font-weight：设置字体的粗细 font-size：设置字体的尺寸 font-style：定义字体的风格 text-indent：文本缩进 text-align：文本水平对齐 line-height：行高 color：文本颜色 visibility cursor page page-break-inside windows orphans text-indent、text-align 块级可继承 vh vw px # 1vh 等于视口高度的1% 1vw 等于视口宽度的1% px 像素 display(块,行内元素) :只是决定了宽高居中方式 # display: none //隐藏元素,将元素所占的位置一并隐藏 display: block //将元素强制转换为块级元素 display: inline //将元素强制转换为行内元素 display: inline-block //将元素强制转换为行内块元素,可设置宽高 display: flex/inline-flex //弹性,通过参数决定块或行 flex-direction: row（默认值）：主轴为水平方向，起点在左端。 row-reverse：主轴为水平方向，起点在右端。 column：主轴为垂直方向，起点在上沿。 column-reverse：主轴为垂直方向，起点在下沿。 flex-wrap: nowrap（默认）：不换行。 wrap：换行，第一行在上方。 wrap-reverse：换行，第一行在下方。 justify-content: flex-start（默认值）：左对齐 flex-end：右对齐 center： 居中 space-between：两端对齐，项目之间的间隔都相等。 space-around：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。 align-items: flex-start：交叉轴的起点对齐。 flex-end：交叉轴的终点对齐。 center：交叉轴的中点对齐。 baseline: 项目的第一行文字的基线对齐。 stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。 flex:拉伸 收缩 元素大小；默认值为0 1 auto(不拉伸,收缩/0不收缩,自动) position(定位) # //配合top，right，bottom left决定了该元素的最终位置。 position: relative; //相对定位,相对于上 左,父元素定位 position: absolute; //绝对定位,整个尺寸做基点定位 position: sticky; //吸附定位,元素到达某位置将其固定 position: fixed; //固定定位,不管滚动条怎么动，都在一个固定的位置 overflow # overflow:visible /内容不会被修剪，会呈现在元素框之外。 overflow:hidden //内容会被修剪，并且其余内容是不可见的。 overflow:scroll//内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。 overflow:auto //如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。 overflow:inherit //规定应该从父元素继承 overflow 属性的值。 text(文字对齐方式) # //文字对齐都使用line-height的值等于行高,然后text-align居中就OK text-align:left; //把文本排列到左边。默认值：由浏览器决定。 text-align:right; //把文本排列到右边。 text-align:center; //把文本排列到中间。 text-align:justify; //实现两端对齐文本效果。 font-weight: 600; //字体粗细 font-style: italic; //斜体 line-height: 0%; //单行文本所在的高度,当 line-height=height(文本高度等于容器高度,单行文本水平垂直居中) font-size: 12px; //字体大小 font-family: &amp;#39;Courier New&amp;#39;, Courier, monospace; //字体包样式 min-height: 60px; //最小高度 border(块加边框样式) # border-width: 11; //,粗细 border-style: solid; //实线 虚线 border-color: #333; //颜色 border-radius: 10px; //定义圆角 color(颜色) # color: #fff //前景色 background #333 //背景色 background-size cursor(鼠标样式) # cursor: pointer; //鼠标变成小手 margin(块外间距) # margin: auto; //块外间距 margin-top: auto; margin-left: auto; margin-right: 8px; margin-bottom: 12px; //下外边距 padding(块内间距) # padding: 3px; //四边同值 padding: 3px 3px; //上下 左右 padding: 3px 3px 3px 3px; //上 右 下 左 (正时针) padding-bottom padding-left padding-right padding-top calc(动态计算值) # width: calc(100% - 10px) 行内元素 # span 块元素 # p </description>
+    </item>
+    <item>
+      <title>errgroup使用</title>
+      <link>https://xiaohubai.github.io/posts/errgroup%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/errgroup%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;p&gt;在go中errgroup包的使用，和源码分析&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>gin参数校验</title>
+      <link>https://xiaohubai.github.io/posts/gin%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/gin%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/</guid>
+      <description>第三方包 # github.com/go-playground/validator/v10 常用参数 # required //必填； len=11 //长度=11； min=3 //如果是数字，验证的是数据大小范围，最小值为3，如果是文本，验证的是最小长度为3， max=6 //如果是数字，验证的是数字最大值为6，如果是文本，验证的是最大长度为6 mail //验证邮箱 gt=3 //对于文本就是长度&amp;gt;=3 lt=6 //对于文本就是长度&amp;lt;=6 翻译中间件 # package middleware import ( &amp;#34;github.com/gin-gonic/gin&amp;#34; &amp;#34;github.com/gin-gonic/gin/binding&amp;#34; &amp;#34;github.com/go-playground/locales/en&amp;#34; &amp;#34;github.com/go-playground/locales/zh&amp;#34; ut &amp;#34;github.com/go-playground/universal-translator&amp;#34; validator &amp;#34;github.com/go-playground/validator/v10&amp;#34; enTranslations &amp;#34;github.com/go-playground/validator/v10/translations/en&amp;#34; zhTranslations &amp;#34;github.com/go-playground/validator/v10/translations/zh&amp;#34; ) func Translations() gin.HandlerFunc { return func(c *gin.Context) { //locale := .GetHeader(&amp;#34;Acept-Language&amp;#34;) locale := &amp;#34;zh&amp;#34; uni := ut.New(en.New(), zh.New()) trans, _ := uni.GetTranslator(locale) v, ok := binding.Validator.Engine().(*validator.Validate) if ok { switch locale { case &amp;#34;zh&amp;#34;: _ = zhTranslations.</description>
+    </item>
+    <item>
+      <title>gin记录请求,返回结果日志</title>
+      <link>https://xiaohubai.github.io/posts/gin%E8%AE%B0%E5%BD%95%E8%AF%B7%E6%B1%82%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/gin%E8%AE%B0%E5%BD%95%E8%AF%B7%E6%B1%82%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%97%A5%E5%BF%97/</guid>
+      <description>&lt;p&gt;gin的使用如何收集请求返回结果到日志&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>gorm自制日志</title>
+      <link>https://xiaohubai.github.io/posts/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/gorm%E8%87%AA%E5%88%B6%E6%97%A5%E5%BF%97/</guid>
+      <description>第三方包 # gorm.io/gorm/logger 示例 # package boot import ( &amp;#34;context&amp;#34; &amp;#34;fmt&amp;#34; &amp;#34;io/ioutil&amp;#34; &amp;#34;log&amp;#34; &amp;#34;os&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/xiaohubai/alpha/config&amp;#34; &amp;#34;go.uber.org/zap&amp;#34; &amp;#34;gorm.io/gorm/logger&amp;#34; &amp;#34;gorm.io/gorm/utils&amp;#34; ) type cfg struct { SlowThreshold time.Duration Colorful bool LogLevel logger.LogLevel } type traceRecorder struct { logger.Interface BeginAt time.Time SQL string RowsAffected int64 Err error } func (t traceRecorder) New() *traceRecorder { return &amp;amp;traceRecorder{Interface: t.Interface, BeginAt: time.Now()} } func (t *traceRecorder) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) { t.</description>
+    </item>
+    <item>
+      <title>go垃圾回收机制</title>
+      <link>https://xiaohubai.github.io/posts/go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/</guid>
+      <description>&lt;p&gt;go的垃圾回收机制三色标记法和写屏障技术&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>go接口方法重载</title>
+      <link>https://xiaohubai.github.io/posts/go%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/go%E6%8E%A5%E5%8F%A3%E6%96%B9%E6%B3%95%E9%87%8D%E8%BD%BD/</guid>
+      <description>源码 # package main import &amp;#34;fmt&amp;#34; type Log interface { Error() } type LocalLog struct { Level string `json:&amp;#34;level&amp;#34;` Key string `json:&amp;#34;key&amp;#34;` Msg string `json:&amp;#34;msg&amp;#34;` TraceId string `json:&amp;#34;trace_id&amp;#34;` } type Atta struct { Level string `json:&amp;#34;level&amp;#34;` Key string `json:&amp;#34;key&amp;#34;` Msg string `json:&amp;#34;msg&amp;#34;` TraceId string `json:&amp;#34;trace_id&amp;#34;` AttaId string `json:&amp;#34;atta_id&amp;#34;` } func CommError(obj Log) { obj.Error() } func (l *LocalLog) Error() { fmt.Println(l.Level, l.TraceId) } func (a *Atta) Error() { fmt.Println(a.Level, a.</description>
+    </item>
+    <item>
+      <title>go项目分层设计</title>
+      <link>https://xiaohubai.github.io/posts/go%E9%A1%B9%E7%9B%AE%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/go%E9%A1%B9%E7%9B%AE%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1/</guid>
+      <description>单系统 Project Layout 介绍 # ├── api (API) │ └── v1 (版本) ├── service (业务层) ├── model (结构体层) ├── dao (数据库操作) ├── middleware (中间件) ├── config (全局配置) ├── boot (初始组件) ├── router (路由控制) ├── plugin (组件具体实现) ├── utils (工具) ├── script (脚本) ├── docs (文档) ├── public (静态文件) ├── log (日志) ├── main.go (入口) ├── go.mod (项目依赖包版本) ├── go.sum (已下载的所有依赖版本) ├── Dockerfile (docker部署文件) └── README.md (项目说明) 大仓微服务 project layout # ├── api //所有proto文件定义，外部引用 │ └── user │ ├── user.</description>
+    </item>
+    <item>
+      <title>redis内存满了怎么办？</title>
+      <link>https://xiaohubai.github.io/posts/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/redis%E5%86%85%E5%AD%98%E6%BB%A1%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E/</guid>
+      <description> maxmemory # redis 设置最大使用内存 maxmemory，默认资源超过maxmemory后，不允许新key加入 7种淘汰策略 # volatile-lru：淘汰那些设置了过期时间且最近最少被访问的数据 volatile-random：随机淘汰，腾出坑位给新人； volatile-ttl：淘汰设置了过期时间key，谁最接近时间就先淘汰谁 allkeys-lru：淘汰最近最少上一线干活的职员； allkeys-lfu：淘汰最少上一线干活的公务员； allkeys-random：随机淘汰职员，为新兵腾出空位。 淘汰执行过程 # 客户端发送新命令到服务端； 服务端收到客户端命令，Redis 检查内存使用情况，如果大于 maxmemory 限制，则根据策略驱逐数据。执行新命令，否则执行新命令 使用场景 # allkeys-lru 使用场景有明显的冷热数据区分，充分利用 LRU 算法把最近最常访问的数据保留，有限的内存提高访问性能 allkeys-random 使用场景数据没有明显的冷热分别，所有的数据分布查询比较均衡，让其随机选择淘汰数据 volatile-lru 业务场景有一些数据不能删除，比如置顶新闻、视频，这时候我们为这些数据不设置过期时间，这样的话数据就不会被删除，该策略就会去根据 LRU 算法去淘汰那些设置了过期时间且最近最少被访问的数据 </description>
+    </item>
+    <item>
+      <title>sql语句性能优化</title>
+      <link>https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/sql%E8%AF%AD%E5%8F%A5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</guid>
+      <description>1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 WHERE 及 ORDER BY 涉及的列上建立索引。 2、应尽量避免在 WHERE 子句中对字段进行 NULL 值判断，创建表时 NULL 是默认值，但大多数时候应该使用 NOT NULL，或者使用一个特殊的值，如 0，-1 作为默认值。 3、应尽量避免在 WHERE 子句中使用 != 或 &amp;lt;&amp;gt; 操作符。MySQL 只有对以下操作符才使用索引：&amp;lt;，&amp;lt;=，=，&amp;gt;，&amp;gt;=，BETWEEN，IN，以及某些时候的 LIKE。 4、应尽量避免在 WHERE 子句中使用 OR 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，可以使用 UNION 合并查询：select id from t where num=10 union all select id from t where num=20。 5、IN 和 NOT IN 也要慎用，否则会导致全表扫描。对于连续的数值，能用 BETWEEN 就不要用 IN：select id from t where num between 1 and 3。、 6、下面的查询也将导致全表扫描：select id from t where name like‘%abc%’ 或者select id from t where name like‘%abc’若要提高效率，可以考虑全文检索。而select id from t where name like‘abc%’才用到索引。 7、如果在 WHERE 子句中使用参数，也会导致全表扫描。 8、应尽量避免在 WHERE 子句中对字段进行表达式操作，应尽量避免在 WHERE 子句中对字段进行函数操作。 9、很多时候用 EXISTS 代替 IN 是一个好的选择：select num from a where num in(select num from b)。用下面的语句替换：select num from a where exists(select 1 from b where num=a.</description>
+    </item>
+    <item>
+      <title>wsl2固定ip</title>
+      <link>https://xiaohubai.github.io/posts/wsl2%E5%9B%BA%E5%AE%9Aip/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/wsl2%E5%9B%BA%E5%AE%9Aip/</guid>
+      <description>解决wsl2重启 内网ip发生变化 # @echo off setlocal enabledelayedexpansion wsl --shutdown ::重新拉起来，并且用root的身份，启动ssh服务和docker服务 wsl -u root service docker start | findstr &amp;#34;Starting Docker&amp;#34; &amp;gt; nul if !errorlevel! equ 0 ( echo docker start success :: 看看我要的IP在不在 wsl -u root ip addr | findstr &amp;#34;172.21.0.2&amp;#34; &amp;gt; nul if !errorlevel! equ 0 ( echo wsl ip has set ) else ( wsl -u root ip addr add 172.21.0.2/24 broadcast 172.21.0.0 dev eth0 label eth0:1 echo set wsl ip success: 172.</description>
+    </item>
+    <item>
+      <title>wsl2设置root密码和登录</title>
+      <link>https://xiaohubai.github.io/posts/wsl2%E8%AE%BE%E7%BD%AEroot%E5%AF%86%E7%A0%81%E5%92%8C%E7%99%BB%E5%BD%95/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/wsl2%E8%AE%BE%E7%BD%AEroot%E5%AF%86%E7%A0%81%E5%92%8C%E7%99%BB%E5%BD%95/</guid>
+      <description> 设置root密码 # sudo passwd root root登录 # su </description>
+    </item>
+    <item>
+      <title>zap使用</title>
+      <link>https://xiaohubai.github.io/posts/zap/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/zap/</guid>
+      <description>第三方包 # go.uber.org/zap zap记录日志 # uber 开源的高性能日志库，面向高性能 package boot import ( &amp;#34;fmt&amp;#34; &amp;#34;path&amp;#34; &amp;#34;time&amp;#34; &amp;#34;github.com/xiaohubai/alpha/config&amp;#34; zaprotatelogs &amp;#34;github.com/lestrrat-go/file-rotatelogs&amp;#34; &amp;#34;go.uber.org/zap&amp;#34; &amp;#34;go.uber.org/zap/zapcore&amp;#34; ) var level zapcore.Level // Zap 日志组件 func Zap() (logger *zap.Logger) { level = zap.InfoLevel logger = zap.New(getEncoderCore()) logger.WithOptions(zap.AddCaller()) return logger } func getEncoderCore() (core zapcore.Core) { writer, err := GetWriteSyncer() // 使用file-rotatelogs进行日志分割 if err != nil { panic(fmt.Errorf(&amp;#34;Get Write Syncer Failed err:%v&amp;#34;, err.Error())) } return zapcore.NewCore(zapcore.NewJSONEncoder(getEncoderConfig()), writer, level) } func getEncoderConfig() (cfg zapcore.</description>
+    </item>
+    <item>
+      <title>控制协程运行时间</title>
+      <link>https://xiaohubai.github.io/posts/%E6%8E%A7%E5%88%B6%E5%8D%8F%E7%A8%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/%E6%8E%A7%E5%88%B6%E5%8D%8F%E7%A8%8B%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</guid>
+      <description>&lt;p&gt;go控制协程运行时间，使用context.WithTimeout(newCtx, timeout)，用recover捕获异常情况&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>高并发时，数据一致性问题</title>
+      <link>https://xiaohubai.github.io/posts/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%97%B6%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Wed, 08 May 2024 13:47:42 +0800</pubDate>
+      <guid>https://xiaohubai.github.io/posts/%E9%AB%98%E5%B9%B6%E5%8F%91%E6%97%B6%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;p&gt;对于共享资源，在多用户访问、程序内、数据库中，怎么保证共享资源独占，数据一致性。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content=" 语法 # //每分钟请求/响应数 sum(increase(fwd_req_request_counter[1m])) sum(increase(fwd_res_response_counter[1m])) // qps sum(irate(fwd_req_request_counter{}[1m])) sum(irate(fwd_res_response_counter{}[1m])) //请求P9x图 histogram_quantile(0.90, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) //响应P9x图 histogram_quantile(0.90, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) //请求最大耗时 sum(max_over_time(fwd_req_time_cost_gauge[15s])) //响应最大耗时 sum(max_over_time(fwd_res_time_cost_gauge[15s])) //每分钟ip数 count(increase(fwd_req_request_counter[1m])&gt;0) count(increase(fwd_res_response_counter[1m])&gt;0) 指标 # Gauge(仪表盘): 值是有变化的,如CPU使用率，有高有低 Counter(计数器):从程序开始，只增不减 Histogram(直方图): 把观测值归入的 bucket 的数量 Summary(摘要):与Histogram类似类型，用于表示一段时间内的数据采样结果,但它直接存储了分位数（通过客户端计算，然后展示出来），而不是通过区间计算 函数 # sum: 对瞬时向量求和, 加by(),按照字段分组: group by min: 最小值 可配合by max: 最大值 可配合by avg: 平均值 可配合by count: 瞬时向量个数求和,可配合by topk:对瞬时向量的值从大到小进行排列，并获取前N个值 可配合by bottomk 和topk相反 changes返回给定的区间向量中，对比于当前值，发生变化的元素的数量。 delta:返回区间向量中，第一个元素和最后一个元素之间的变化值须作用在gauge类型的指标 ">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="grafana" />
+<meta property="og:description" content=" 语法 # //每分钟请求/响应数 sum(increase(fwd_req_request_counter[1m])) sum(increase(fwd_res_response_counter[1m])) // qps sum(irate(fwd_req_request_counter{}[1m])) sum(irate(fwd_res_response_counter{}[1m])) //请求P9x图 histogram_quantile(0.90, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_req_time_cost_histogram_bucket[1m])) by (le)) //响应P9x图 histogram_quantile(0.90, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.95, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) histogram_quantile(0.99, sum(rate(fwd_res_time_cost_histogram_bucket[1m])) by (le)) //请求最大耗时 sum(max_over_time(fwd_req_time_cost_gauge[15s])) //响应最大耗时 sum(max_over_time(fwd_res_time_cost_gauge[15s])) //每分钟ip数 count(increase(fwd_req_request_counter[1m])&gt;0) count(increase(fwd_res_response_counter[1m])&gt;0) 指标 # Gauge(仪表盘): 值是有变化的,如CPU使用率，有高有低 Counter(计数器):从程序开始，只增不减 Histogram(直方图): 把观测值归入的 bucket 的数量 Summary(摘要):与Histogram类似类型，用于表示一段时间内的数据采样结果,但它直接存储了分位数（通过客户端计算，然后展示出来），而不是通过区间计算 函数 # sum: 对瞬时向量求和, 加by(),按照字段分组: group by min: 最小值 可配合by max: 最大值 可配合by avg: 平均值 可配合by count: 瞬时向量个数求和,可配合by topk:对瞬时向量的值从大到小进行排列，并获取前N个值 可配合by bottomk 和topk相反 changes返回给定的区间向量中，对比于当前值，发生变化的元素的数量。 delta:返回区间向量中，第一个元素和最后一个元素之间的变化值须作用在gauge类型的指标 " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/16_grafana/" /><meta property="article:section" content="docs" />
+
+
+
+<title>grafana | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/16_grafana/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="active">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>grafana</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents"></nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="语法">
+  语法
+  <a class="anchor" href="#%e8%af%ad%e6%b3%95">#</a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//每分钟请求/响应数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">increase</span>(<span style="color:#a6e22e">fwd_req_request_counter</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>]))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">increase</span>(<span style="color:#a6e22e">fwd_res_response_counter</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// qps
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">irate</span>(<span style="color:#a6e22e">fwd_req_request_counter</span>{}[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>]))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">irate</span>(<span style="color:#a6e22e">fwd_res_response_counter</span>{}[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//请求P9x图
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">histogram_quantile</span>(<span style="color:#ae81ff">0.90</span>, <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">rate</span>(<span style="color:#a6e22e">fwd_req_time_cost_histogram_bucket</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])) <span style="color:#a6e22e">by</span> (<span style="color:#a6e22e">le</span>))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">histogram_quantile</span>(<span style="color:#ae81ff">0.95</span>, <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">rate</span>(<span style="color:#a6e22e">fwd_req_time_cost_histogram_bucket</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])) <span style="color:#a6e22e">by</span> (<span style="color:#a6e22e">le</span>))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">histogram_quantile</span>(<span style="color:#ae81ff">0.99</span>, <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">rate</span>(<span style="color:#a6e22e">fwd_req_time_cost_histogram_bucket</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])) <span style="color:#a6e22e">by</span> (<span style="color:#a6e22e">le</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//响应P9x图
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">histogram_quantile</span>(<span style="color:#ae81ff">0.90</span>, <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">rate</span>(<span style="color:#a6e22e">fwd_res_time_cost_histogram_bucket</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])) <span style="color:#a6e22e">by</span> (<span style="color:#a6e22e">le</span>))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">histogram_quantile</span>(<span style="color:#ae81ff">0.95</span>, <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">rate</span>(<span style="color:#a6e22e">fwd_res_time_cost_histogram_bucket</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])) <span style="color:#a6e22e">by</span> (<span style="color:#a6e22e">le</span>))
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">histogram_quantile</span>(<span style="color:#ae81ff">0.99</span>, <span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">rate</span>(<span style="color:#a6e22e">fwd_res_time_cost_histogram_bucket</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])) <span style="color:#a6e22e">by</span> (<span style="color:#a6e22e">le</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//请求最大耗时
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">max_over_time</span>(<span style="color:#a6e22e">fwd_req_time_cost_gauge</span>[<span style="color:#ae81ff">15</span><span style="color:#a6e22e">s</span>]))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//响应最大耗时
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">max_over_time</span>(<span style="color:#a6e22e">fwd_res_time_cost_gauge</span>[<span style="color:#ae81ff">15</span><span style="color:#a6e22e">s</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//每分钟ip数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">count</span>(<span style="color:#a6e22e">increase</span>(<span style="color:#a6e22e">fwd_req_request_counter</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])&gt;<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">count</span>(<span style="color:#a6e22e">increase</span>(<span style="color:#a6e22e">fwd_res_response_counter</span>[<span style="color:#ae81ff">1</span><span style="color:#a6e22e">m</span>])&gt;<span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><h1 id="指标">
+  指标
+  <a class="anchor" href="#%e6%8c%87%e6%a0%87">#</a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">Gauge</span>(<span style="color:#a6e22e">仪表盘</span>): <span style="color:#a6e22e">值是有变化的</span>,<span style="color:#a6e22e">如CPU使用率</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">有高有低</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Counter</span>(<span style="color:#a6e22e">计数器</span>):<span style="color:#a6e22e">从程序开始</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">只增不减</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Histogram</span>(<span style="color:#a6e22e">直方图</span>): <span style="color:#a6e22e">把观测值归入的</span> <span style="color:#a6e22e">bucket</span> <span style="color:#a6e22e">的数量</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Summary</span>(<span style="color:#a6e22e">摘要</span>):<span style="color:#a6e22e">与Histogram类似类型</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">用于表示一段时间内的数据采样结果</span>,<span style="color:#a6e22e">但它直接存储了分位数</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">通过客户端计算</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">然后展示出来</span><span style="color:#960050;background-color:#1e0010">），</span><span style="color:#a6e22e">而不是通过区间计算</span>
+</span></span></code></pre></div><h1 id="函数">
+  函数
+  <a class="anchor" href="#%e5%87%bd%e6%95%b0">#</a>
+</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">sum</span>: <span style="color:#a6e22e">对瞬时向量求和</span>, <span style="color:#a6e22e">加by</span>(),<span style="color:#a6e22e">按照字段分组</span>: <span style="color:#a6e22e">group</span> <span style="color:#a6e22e">by</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">min</span>: <span style="color:#a6e22e">最小值</span> <span style="color:#a6e22e">可配合by</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">max</span>: <span style="color:#a6e22e">最大值</span> <span style="color:#a6e22e">可配合by</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">avg</span>: <span style="color:#a6e22e">平均值</span> <span style="color:#a6e22e">可配合by</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">count</span>: <span style="color:#a6e22e">瞬时向量个数求和</span>,<span style="color:#a6e22e">可配合by</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">topk</span>:<span style="color:#a6e22e">对瞬时向量的值从大到小进行排列</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并获取前N个值</span> <span style="color:#a6e22e">可配合by</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">bottomk</span> <span style="color:#a6e22e">和topk相反</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">changes返回给定的区间向量中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">对比于当前值</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">发生变化的元素的数量</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">delta</span>:<span style="color:#a6e22e">返回区间向量中</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">第一个元素和最后一个元素之间的变化值须作用在gauge类型的指标</span>
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents"></nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

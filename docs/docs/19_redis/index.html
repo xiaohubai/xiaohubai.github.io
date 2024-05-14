@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="基础操作 # String（key-value） # get # # 返回字符串value,不存在-&gt;nil,非字符串-&gt;err get key set # # 设置key-value 字符串，存在value，覆盖;返回ok set key value set key value ex second # 设置键的过期时间为秒 set key value px millisecond # 设置键的过期时间为毫秒 set key value nx # 键不存在才设置 set key value xx # 只有键存在才设置 set key value ex second nx # 设置key的过期时间为秒，不存在才设置 strlen # # 返回value字符串长度，非字符串-&gt;err strlen key append # # key存在，追加到value尾部，反之设为value append key value decr # # 数字value减一,不存在，key的值设为-1，非数字返回错误 decr key decrby # # 已存储的value,减去数字value decrby key 20 incr # # 数字加一，不存在key设为1，非数字-&gt;err incr key incrby # # 已存储的value,减去数字value incrby key 20 incrbyfloat # # 已存储的value，加上数字浮点数 incrby key 20 getrange # # 返回字符串字串，两边都包含，-1：最后一个字符，-2倒数第二 getrange key 0 4 getset # # 覆盖旧字符串，返回旧字符串，value不是字符串-&gt;err,key不存在-&gt;nil getset key value mget # # 返回所有key的value,不存在对应value-&gt;nil mget key1 key2 mset # # 设置多个key-value对,会覆盖旧值 mset key1 value1 key2 value2 psetex # # 设置key的生存时间，毫秒 psetex key time value setrange # # 从offset开始覆盖字符串 setrange key 6 value Hash # key ckey1 cvalue ckey2 cvalue2">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="redis" />
+<meta property="og:description" content="基础操作 # String（key-value） # get # # 返回字符串value,不存在-&gt;nil,非字符串-&gt;err get key set # # 设置key-value 字符串，存在value，覆盖;返回ok set key value set key value ex second # 设置键的过期时间为秒 set key value px millisecond # 设置键的过期时间为毫秒 set key value nx # 键不存在才设置 set key value xx # 只有键存在才设置 set key value ex second nx # 设置key的过期时间为秒，不存在才设置 strlen # # 返回value字符串长度，非字符串-&gt;err strlen key append # # key存在，追加到value尾部，反之设为value append key value decr # # 数字value减一,不存在，key的值设为-1，非数字返回错误 decr key decrby # # 已存储的value,减去数字value decrby key 20 incr # # 数字加一，不存在key设为1，非数字-&gt;err incr key incrby # # 已存储的value,减去数字value incrby key 20 incrbyfloat # # 已存储的value，加上数字浮点数 incrby key 20 getrange # # 返回字符串字串，两边都包含，-1：最后一个字符，-2倒数第二 getrange key 0 4 getset # # 覆盖旧字符串，返回旧字符串，value不是字符串-&gt;err,key不存在-&gt;nil getset key value mget # # 返回所有key的value,不存在对应value-&gt;nil mget key1 key2 mset # # 设置多个key-value对,会覆盖旧值 mset key1 value1 key2 value2 psetex # # 设置key的生存时间，毫秒 psetex key time value setrange # # 从offset开始覆盖字符串 setrange key 6 value Hash # key ckey1 cvalue ckey2 cvalue2" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/19_redis/" /><meta property="article:section" content="docs" />
+
+
+
+<title>redis | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/19_redis/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="active">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>redis</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#基础操作">基础操作</a>
+      <ul>
+        <li><a href="#stringkey-value">String（key-value）</a></li>
+        <li><a href="#hash">Hash</a></li>
+        <li><a href="#list-key-value1value2">List (key-value1,value2)</a></li>
+        <li><a href="#set-key1key2">Set (key1,key2)</a></li>
+        <li><a href="#sortedset有序集合">SortedSet(有序集合)</a></li>
+      </ul>
+    </li>
+    <li><a href="#持久化">持久化</a>
+      <ul>
+        <li><a href="#rdb">RDB</a></li>
+        <li><a href="#aof">AOF</a></li>
+      </ul>
+    </li>
+    <li><a href="#redis和mysql-数据一致">redis和mysql 数据一致</a>
+      <ul>
+        <li><a href="#先更新mysql-再删除redis">先更新mysql 再删除redis</a></li>
+        <li><a href="#延时双删">延时双删</a></li>
+      </ul>
+    </li>
+    <li><a href="#缓存击穿某热点数据失效">缓存击穿（某热点数据失效）</a></li>
+    <li><a href="#缓存穿透redis-mysql都不存在数据">缓存穿透(redis mysql都不存在数据)</a></li>
+    <li><a href="#缓存雪崩大量数据同时失效">缓存雪崩（大量数据同时失效）</a></li>
+    <li><a href="#redis分布式锁问题">redis分布式锁问题</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="基础操作">
+  基础操作
+  <a class="anchor" href="#%e5%9f%ba%e7%a1%80%e6%93%8d%e4%bd%9c">#</a>
+</h2>
+<h3 id="stringkey-value">
+  String（key-value）
+  <a class="anchor" href="#stringkey-value">#</a>
+</h3>
+<h4 id="get">
+  get
+  <a class="anchor" href="#get">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回字符串value,不存在-&gt;nil,非字符串-&gt;err</span>
+</span></span><span style="display:flex;"><span>get key
+</span></span></code></pre></div><h4 id="set">
+  set
+  <a class="anchor" href="#set">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 设置key-value 字符串，存在value，覆盖;返回ok</span>
+</span></span><span style="display:flex;"><span>set key value
+</span></span><span style="display:flex;"><span>set key value ex second <span style="color:#75715e"># 设置键的过期时间为秒</span>
+</span></span><span style="display:flex;"><span>set key value px millisecond <span style="color:#75715e"># 设置键的过期时间为毫秒</span>
+</span></span><span style="display:flex;"><span>set key value nx <span style="color:#75715e"># 键不存在才设置</span>
+</span></span><span style="display:flex;"><span>set key value xx <span style="color:#75715e"># 只有键存在才设置</span>
+</span></span><span style="display:flex;"><span>set key value ex second nx <span style="color:#75715e"># 设置key的过期时间为秒，不存在才设置</span>
+</span></span></code></pre></div><h4 id="strlen">
+  strlen
+  <a class="anchor" href="#strlen">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回value字符串长度，非字符串-&gt;err</span>
+</span></span><span style="display:flex;"><span>strlen key
+</span></span></code></pre></div><h4 id="append">
+  append
+  <a class="anchor" href="#append">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># key存在，追加到value尾部，反之设为value</span>
+</span></span><span style="display:flex;"><span>append key value
+</span></span></code></pre></div><h4 id="decr">
+  decr
+  <a class="anchor" href="#decr">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 数字value减一,不存在，key的值设为-1，非数字返回错误</span>
+</span></span><span style="display:flex;"><span>decr key
+</span></span></code></pre></div><h4 id="decrby">
+  decrby
+  <a class="anchor" href="#decrby">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 已存储的value,减去数字value</span>
+</span></span><span style="display:flex;"><span>decrby key <span style="color:#ae81ff">20</span>
+</span></span></code></pre></div><h4 id="incr">
+  incr
+  <a class="anchor" href="#incr">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 数字加一，不存在key设为1，非数字-&gt;err</span>
+</span></span><span style="display:flex;"><span>incr key
+</span></span></code></pre></div><h4 id="incrby">
+  incrby
+  <a class="anchor" href="#incrby">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 已存储的value,减去数字value</span>
+</span></span><span style="display:flex;"><span>incrby key <span style="color:#ae81ff">20</span>
+</span></span></code></pre></div><h4 id="incrbyfloat">
+  incrbyfloat
+  <a class="anchor" href="#incrbyfloat">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 已存储的value，加上数字浮点数</span>
+</span></span><span style="display:flex;"><span>incrby key <span style="color:#ae81ff">20</span>
+</span></span></code></pre></div><h4 id="getrange">
+  getrange
+  <a class="anchor" href="#getrange">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回字符串字串，两边都包含，-1：最后一个字符，-2倒数第二</span>
+</span></span><span style="display:flex;"><span>getrange key <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">4</span>
+</span></span></code></pre></div><h4 id="getset">
+  getset
+  <a class="anchor" href="#getset">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 覆盖旧字符串，返回旧字符串，value不是字符串-&gt;err,key不存在-&gt;nil</span>
+</span></span><span style="display:flex;"><span>getset key value
+</span></span></code></pre></div><h4 id="mget">
+  mget
+  <a class="anchor" href="#mget">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回所有key的value,不存在对应value-&gt;nil</span>
+</span></span><span style="display:flex;"><span>mget key1 key2
+</span></span></code></pre></div><h4 id="mset">
+  mset
+  <a class="anchor" href="#mset">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 设置多个key-value对,会覆盖旧值</span>
+</span></span><span style="display:flex;"><span>mset key1 value1 key2 value2
+</span></span></code></pre></div><h4 id="psetex">
+  psetex
+  <a class="anchor" href="#psetex">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 设置key的生存时间，毫秒</span>
+</span></span><span style="display:flex;"><span>psetex key time value
+</span></span></code></pre></div><h4 id="setrange">
+  setrange
+  <a class="anchor" href="#setrange">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 从offset开始覆盖字符串</span>
+</span></span><span style="display:flex;"><span>setrange key <span style="color:#ae81ff">6</span> value
+</span></span></code></pre></div><h3 id="hash">
+  Hash
+  <a class="anchor" href="#hash">#</a>
+</h3>
+<p>key ckey1 cvalue ckey2 cvalue2</p>
+<h4 id="hget">
+  hget
+  <a class="anchor" href="#hget">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回value,不存再-&gt;nil</span>
+</span></span><span style="display:flex;"><span>hget key value
+</span></span></code></pre></div><h4 id="hset">
+  hset
+  <a class="anchor" href="#hset">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 设置key-values</span>
+</span></span><span style="display:flex;"><span>hset key ckey1 cvalue1
+</span></span></code></pre></div><h4 id="hmget">
+  hmget
+  <a class="anchor" href="#hmget">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回多个key-value,不存在-&gt;nil</span>
+</span></span><span style="display:flex;"><span>hmget key1 key2
+</span></span></code></pre></div><h4 id="hmset">
+  hmset
+  <a class="anchor" href="#hmset">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 设置多个key-value</span>
+</span></span><span style="display:flex;"><span>hmset key ckey1 cvalue1 ckey2 cvalue2
+</span></span></code></pre></div><h4 id="hdel">
+  hdel
+  <a class="anchor" href="#hdel">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回删除的数量</span>
+</span></span><span style="display:flex;"><span>hdel key value
+</span></span></code></pre></div><h4 id="hexists">
+  hexists
+  <a class="anchor" href="#hexists">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 查看value是否存在，存在-&gt;1,不存在返回-&gt;0</span>
+</span></span><span style="display:flex;"><span>hexists key value
+</span></span></code></pre></div><h4 id="hgetall">
+  hgetall
+  <a class="anchor" href="#hgetall">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回所有value</span>
+</span></span><span style="display:flex;"><span>hgetall key
+</span></span></code></pre></div><h4 id="hincrby">
+  hincrby
+  <a class="anchor" href="#hincrby">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># value 加增量，非数字-&gt;err</span>
+</span></span><span style="display:flex;"><span>hincrby key value 增量
+</span></span></code></pre></div><h4 id="hincrbyfloat">
+  hincrbyfloat
+  <a class="anchor" href="#hincrbyfloat">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># value 加浮点增量，不能解析为浮点-&gt;err</span>
+</span></span><span style="display:flex;"><span>hincrbyfloat key value 浮点增量
+</span></span></code></pre></div><h4 id="hkeys">
+  hkeys
+  <a class="anchor" href="#hkeys">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回所有的key</span>
+</span></span><span style="display:flex;"><span>hkeys key
+</span></span></code></pre></div><h4 id="hlen">
+  hlen
+  <a class="anchor" href="#hlen">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回key的数量</span>
+</span></span><span style="display:flex;"><span>hlen key
+</span></span></code></pre></div><h4 id="hsetnx">
+  hsetnx
+  <a class="anchor" href="#hsetnx">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># key-value,当key不存在时</span>
+</span></span><span style="display:flex;"><span>hsetnx key ckey1 cvalue1
+</span></span></code></pre></div><h4 id="hvals">
+  hvals
+  <a class="anchor" href="#hvals">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回key所有的values</span>
+</span></span><span style="display:flex;"><span>hvals key
+</span></span></code></pre></div><h3 id="list-key-value1value2">
+  List (key-value1,value2)
+  <a class="anchor" href="#list-key-value1value2">#</a>
+</h3>
+<h4 id="lpop">
+  lpop
+  <a class="anchor" href="#lpop">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 移除并返回该元素</span>
+</span></span><span style="display:flex;"><span>lpop key
+</span></span></code></pre></div><h4 id="lpush">
+  lpush
+  <a class="anchor" href="#lpush">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># key中插入多个value</span>
+</span></span><span style="display:flex;"><span>lpush key value1 value2 value3
+</span></span></code></pre></div><h4 id="llen">
+  llen
+  <a class="anchor" href="#llen">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回key的values长度，不存在-&gt;0;非列表-&gt;err</span>
+</span></span><span style="display:flex;"><span>llen key
+</span></span></code></pre></div><h4 id="lindex">
+  lindex
+  <a class="anchor" href="#lindex">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回下标为index的元素</span>
+</span></span><span style="display:flex;"><span>lindex key index
+</span></span></code></pre></div><h4 id="linsert">
+  linsert
+  <a class="anchor" href="#linsert">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 将value插入到某个value之前/之后</span>
+</span></span><span style="display:flex;"><span>linsert key before|after pivot value
+</span></span></code></pre></div><h4 id="lpushx">
+  lpushx
+  <a class="anchor" href="#lpushx">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 当key存在且列表，才插入</span>
+</span></span><span style="display:flex;"><span>lpushx key value1 value2 value3
+</span></span></code></pre></div><h4 id="lrange">
+  lrange
+  <a class="anchor" href="#lrange">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回包含区间的元素</span>
+</span></span><span style="display:flex;"><span>lrange key start stop
+</span></span></code></pre></div><h4 id="lrem">
+  lrem
+  <a class="anchor" href="#lrem">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 移除一定数据的value</span>
+</span></span><span style="display:flex;"><span>lrem key count value
+</span></span></code></pre></div><h4 id="lset">
+  lset
+  <a class="anchor" href="#lset">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 将key的下标值设置为value</span>
+</span></span><span style="display:flex;"><span>lset key index value
+</span></span></code></pre></div><h3 id="set-key1key2">
+  Set (key1,key2)
+  <a class="anchor" href="#set-key1key2">#</a>
+</h3>
+<h4 id="sadd">
+  sadd
+  <a class="anchor" href="#sadd">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 将一个多个元素加入key，存在即忽略,返回添加数量</span>
+</span></span><span style="display:flex;"><span>sadd key value
+</span></span></code></pre></div><h4 id="sismember">
+  sismember
+  <a class="anchor" href="#sismember">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 判断value是否在集合key内，1：是，0非</span>
+</span></span><span style="display:flex;"><span>sismember key value
+</span></span></code></pre></div><h4 id="smembers">
+  smembers
+  <a class="anchor" href="#smembers">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回key的所有元素</span>
+</span></span><span style="display:flex;"><span>smembers key
+</span></span></code></pre></div><h4 id="srem">
+  srem
+  <a class="anchor" href="#srem">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 移除一个、多个元素</span>
+</span></span><span style="display:flex;"><span>spop key value1 value2 value3
+</span></span></code></pre></div><h4 id="scard">
+  scard
+  <a class="anchor" href="#scard">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回key的所有value数量</span>
+</span></span><span style="display:flex;"><span>scard key
+</span></span></code></pre></div><h4 id="sdiff">
+  sdiff
+  <a class="anchor" href="#sdiff">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回第一个集合再第二个集合不存在的值</span>
+</span></span><span style="display:flex;"><span>sdiff key1 key2
+</span></span></code></pre></div><h4 id="sdiffstore">
+  sdiffstore
+  <a class="anchor" href="#sdiffstore">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 和sdiff一样，但保存在一个集合内</span>
+</span></span><span style="display:flex;"><span>sdiffstore newKey key1 key2
+</span></span></code></pre></div><h4 id="sinter">
+  sinter
+  <a class="anchor" href="#sinter">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回两个集合的交集</span>
+</span></span><span style="display:flex;"><span>sinter key1 key2
+</span></span></code></pre></div><h4 id="sinterstore">
+  sinterstore
+  <a class="anchor" href="#sinterstore">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 和sinter一样，但保存在一个集合内</span>
+</span></span><span style="display:flex;"><span>sinterstore newKey key1 key2
+</span></span></code></pre></div><h4 id="smove">
+  smove
+  <a class="anchor" href="#smove">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 将key的value移动到key2内</span>
+</span></span><span style="display:flex;"><span>smove key key2 value
+</span></span></code></pre></div><h4 id="spop">
+  spop
+  <a class="anchor" href="#spop">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 随机移除一个元素</span>
+</span></span><span style="display:flex;"><span>spop key
+</span></span></code></pre></div><h3 id="sortedset有序集合">
+  SortedSet(有序集合)
+  <a class="anchor" href="#sortedset%e6%9c%89%e5%ba%8f%e9%9b%86%e5%90%88">#</a>
+</h3>
+<h4 id="zadd">
+  zadd
+  <a class="anchor" href="#zadd">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 将一个多个元素加入到有序key中,根据设置的score</span>
+</span></span><span style="display:flex;"><span>zadd key score value1 score value2 score value3
+</span></span></code></pre></div><h4 id="zcard">
+  zcard
+  <a class="anchor" href="#zcard">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回key的value数量</span>
+</span></span><span style="display:flex;"><span>zcard key
+</span></span></code></pre></div><h4 id="zcount">
+  zcount
+  <a class="anchor" href="#zcount">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回区间的数量</span>
+</span></span><span style="display:flex;"><span>zcount key min max
+</span></span></code></pre></div><h4 id="zincrby">
+  zincrby
+  <a class="anchor" href="#zincrby">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 为key的value的score增量</span>
+</span></span><span style="display:flex;"><span>zincrby key 增量 value
+</span></span></code></pre></div><h4 id="zrange">
+  zrange
+  <a class="anchor" href="#zrange">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回区间的元素</span>
+</span></span><span style="display:flex;"><span>zrange key min max <span style="color:#75715e"># 显示区间元素</span>
+</span></span><span style="display:flex;"><span>zrange key min max <span style="color:#75715e"># 显示score和对应元素</span>
+</span></span></code></pre></div><h4 id="zrank">
+  zrank
+  <a class="anchor" href="#zrank">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回value的排名,从大到小</span>
+</span></span><span style="display:flex;"><span>zrank key value
+</span></span></code></pre></div><h4 id="zrem">
+  zrem
+  <a class="anchor" href="#zrem">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 移除一个、多个元素</span>
+</span></span><span style="display:flex;"><span>zrem key value1 value2 value3
+</span></span></code></pre></div><h4 id="zscore">
+  zscore
+  <a class="anchor" href="#zscore">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 返回value的score值</span>
+</span></span><span style="display:flex;"><span>zscore key value
+</span></span></code></pre></div><h2 id="持久化">
+  持久化
+  <a class="anchor" href="#%e6%8c%81%e4%b9%85%e5%8c%96">#</a>
+</h2>
+<h3 id="rdb">
+  RDB
+  <a class="anchor" href="#rdb">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>某段时间间隔数据快照存储在磁盘，父进程判断需要save时，fork（父进程阻塞）一个子进程生成rdb文件，写入。
+</span></span></code></pre></div><h3 id="aof">
+  AOF
+  <a class="anchor" href="#aof">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>以追加的方式记录每一次redis写的操作，当服务器重启时,重新执行这些命令恢复原始数据
+</span></span></code></pre></div><h2 id="redis和mysql-数据一致">
+  redis和mysql 数据一致
+  <a class="anchor" href="#redis%e5%92%8cmysql-%e6%95%b0%e6%8d%ae%e4%b8%80%e8%87%b4">#</a>
+</h2>
+<h3 id="先更新mysql-再删除redis">
+  先更新mysql 再删除redis
+  <a class="anchor" href="#%e5%85%88%e6%9b%b4%e6%96%b0mysql-%e5%86%8d%e5%88%a0%e9%99%a4redis">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>更新时，先更新mysql,然后删除redis,查询时 no cache,查询mysql,然后更新redis
+</span></span><span style="display:flex;"><span>1.问题：c1更新mysql,删除 redis,c3查询redis,查询mysql,c2更新mysql,删除redis,c3同步redis结论是redis保存的是c1的数据，
+</span></span><span style="display:flex;"><span>不是最新的
+</span></span><span style="display:flex;"><span>2.在删除redis时，其他请求拿到的还是旧数据
+</span></span></code></pre></div><h3 id="延时双删">
+  延时双删
+  <a class="anchor" href="#%e5%bb%b6%e6%97%b6%e5%8f%8c%e5%88%a0">#</a>
+</h3>
+<pre tabindex="0"><code>为了保证最终redis是最新的数据
+更新时，先删除redis,再更新mysql,延迟删除redis
+</code></pre><h2 id="缓存击穿某热点数据失效">
+  缓存击穿（某热点数据失效）
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e5%87%bb%e7%a9%bf%e6%9f%90%e7%83%ad%e7%82%b9%e6%95%b0%e6%8d%ae%e5%a4%b1%e6%95%88">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 原因</span>
+</span></span><span style="display:flex;"><span>高并发流量，访问的这个数据是热点数据，请求的数据在 DB 中存在，但是 Redis 存的那一份已经过期，后端需要从 DB 从加载数据并写到 Redis。
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 解决</span>
+</span></span><span style="display:flex;"><span>过期时间 + 随机值（过期时间<span style="color:#f92672">=</span>baes 时间+随机时间）：让数据在未来一段时间内慢慢过期，避免瞬时全部过期，对 DB 造成过大压力
+</span></span><span style="display:flex;"><span>预先把热门数据提前存入 Redis 中，并设热门数据的过期时间超大值。
+</span></span><span style="display:flex;"><span>使用锁，先获取分布式锁，获取锁成功才执行数据库查询和写数据到缓存的操作，获取锁失败，则说明当前有线程在执行数据库查询操作，当前线程睡眠一段时间在重试。
+</span></span><span style="display:flex;"><span>这样只让一个请求去数据库读取数据。
+</span></span></code></pre></div><h2 id="缓存穿透redis-mysql都不存在数据">
+  缓存穿透(redis mysql都不存在数据)
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e7%a9%bf%e9%80%8fredis-mysql%e9%83%bd%e4%b8%8d%e5%ad%98%e5%9c%a8%e6%95%b0%e6%8d%ae">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 原因</span>
+</span></span><span style="display:flex;"><span>意味着有特殊请求在查询一个不存在的数据，即数据不存在 Redis 也不存在于数据库。
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 解决</span>
+</span></span><span style="display:flex;"><span>缓存空值：当请求的数据不存在 Redis 也不存在数据库的时候，设置一个缺省值（比如：None）。当后续再次进行查询则直接返回空值或者缺省值。
+</span></span><span style="display:flex;"><span>布隆过滤器：在数据写入数据库的同时将这个 ID 同步到到布隆过滤器中，当请求的 id 不存在布隆过滤器中则说明该请求查询的数据一定没有在数据库中保存，就不要去数据库查询了。
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>布隆过滤器：分配一块内存空间做 bit 数组，数组的 bit 位初始值全部设为 0。添加：key经过多个hash组函数计算，的k位置置为1.判断key是否存在时，计算多个hansh组函数的k位置是否都是1<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h2 id="缓存雪崩大量数据同时失效">
+  缓存雪崩（大量数据同时失效）
+  <a class="anchor" href="#%e7%bc%93%e5%ad%98%e9%9b%aa%e5%b4%a9%e5%a4%a7%e9%87%8f%e6%95%b0%e6%8d%ae%e5%90%8c%e6%97%b6%e5%a4%b1%e6%95%88">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 原因</span>
+</span></span><span style="display:flex;"><span>缓存雪崩指的是大量的请求无法在 Redis 缓存系统中处理，请求全部打到数据库，导致数据库压力激增，甚至宕机。
+</span></span><span style="display:flex;"><span>大量数据同时过期，导致大量请求需要查询数据库并写到缓存；
+</span></span><span style="display:flex;"><span>Redis 故障宕机，缓存系统异常。
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 解决</span>
+</span></span><span style="display:flex;"><span>过期时间添加随机值，要避免给大量的数据设置一样的过期时间，过期时间 <span style="color:#f92672">=</span> baes 时间+ 随机时间（较小的随机数，比如随机增加 1~5 分钟）
+</span></span><span style="display:flex;"><span>接口限流
+</span></span><span style="display:flex;"><span>一个 Redis 实例能支撑 <span style="color:#ae81ff">10</span> 万的 QPS，而一个数据库实例只有 <span style="color:#ae81ff">1000</span> QPS。
+</span></span><span style="display:flex;"><span>服务熔断就是当从缓存获取数据发现异常，则直接返回错误数据给前端，防止所有流量打到数据库导致宕机。
+</span></span></code></pre></div><h2 id="redis分布式锁问题">
+  redis分布式锁问题
+  <a class="anchor" href="#redis%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<pre tabindex="0"><code>redis是单线程执行，当处理请求A时，请求B也可以得到响应，并被添加到队列中等待执行。
+
+加锁问题：A加锁+过期时间，但是A在内部执行过长或者其他问题，在redis过期时间后，还没执行完毕，redis会自动删除key。这时B发现没锁，申请加锁+过期时间，B在内部执行中，A完毕后要释放锁会释放B的锁的问题：这时就需要使用luaScript脚本，找到key和对应的A设置的value,匹配才能删除。否则不能删除。
+
+A在加锁后的过期时间后，redis删除了key,此时A还在处理共享资源，B加锁也进入共享资源内，资源不能互斥问题：此时需要第一个加锁的在过期时间要删除时，用守护进程自动延期时间。相关代码github.com/jefferyjob/go-redislock
+</code></pre></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#基础操作">基础操作</a>
+      <ul>
+        <li><a href="#stringkey-value">String（key-value）</a></li>
+        <li><a href="#hash">Hash</a></li>
+        <li><a href="#list-key-value1value2">List (key-value1,value2)</a></li>
+        <li><a href="#set-key1key2">Set (key1,key2)</a></li>
+        <li><a href="#sortedset有序集合">SortedSet(有序集合)</a></li>
+      </ul>
+    </li>
+    <li><a href="#持久化">持久化</a>
+      <ul>
+        <li><a href="#rdb">RDB</a></li>
+        <li><a href="#aof">AOF</a></li>
+      </ul>
+    </li>
+    <li><a href="#redis和mysql-数据一致">redis和mysql 数据一致</a>
+      <ul>
+        <li><a href="#先更新mysql-再删除redis">先更新mysql 再删除redis</a></li>
+        <li><a href="#延时双删">延时双删</a></li>
+      </ul>
+    </li>
+    <li><a href="#缓存击穿某热点数据失效">缓存击穿（某热点数据失效）</a></li>
+    <li><a href="#缓存穿透redis-mysql都不存在数据">缓存穿透(redis mysql都不存在数据)</a></li>
+    <li><a href="#缓存雪崩大量数据同时失效">缓存雪崩（大量数据同时失效）</a></li>
+    <li><a href="#redis分布式锁问题">redis分布式锁问题</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

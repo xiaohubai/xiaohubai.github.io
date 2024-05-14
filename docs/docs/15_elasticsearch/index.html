@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="常用名称 # 索引（index）：数据库,一个可检索的文档对象的集合 类型（type):表,不常用，一般一个index下建一个type，默认为_doc 文档（document):一条记录 映射关系 （mapping），设置字段类型。如何索引数据 字段（Field）：doc组成部分 分片(shard)：索引的数据量太大时，需要水平拆分，分片在创建索引时创建，之后不能更改 副本(replica)：分片的 Copy，每个主分片都有一个或多个副本分片，当主分片异常时，副本可以提供数据的查询等操作。 脑裂现象 # // 原因 网络问题： 集群间的网络延迟导致一些节点访问不到 Master，认为 Master 挂掉了从而选举出新的 Master，并对 Master 上的分片和副本标红，分配新的主分片。 节点负载： 主节点的角色既为 Master 又为 Data，访问量较大时可能会导致 ES 停止响应（假死状态）造成大面积延迟，此时其他节点得不到主节点的响应认为主节点挂掉了，会重新选取主节点。 内存回收： 主节点的角色既为 Master 又为 Data，当 Data 节点上的 ES 进程占用的内存较大，引发 JVM 的大规模内存回收，造成 ES 进程失去响应。 // 解决 适当调大响应时间：减少误判。 通过参数 discovery.zen.ping_timeout 设置节点状态的响应时间，默认为 3s，可以适当调大。 选举触发：我们需要在候选集群中的节点的配置文件中设置参数 discovery.zen.munimum_master_nodes 的值。这个参数表示在选举主节点时需要参与选举的候选主节点的节点数，默认值是 1，官方建议取值(master_eligibel_nodes2)&#43;1，其中 master_eligibel_nodes 为候选主节点的个数。 角色分离：即是上面我们提到的候选主节点和数据节点进行角色分离，这样可以减轻主节点的负担，防止主节点的假死状态发生，减少对主节点“已死”的误判。 mapping # //long, integer, short, byte, double, float, half_float, scaled_float（需配合scaling_factor（缩放因子）使用，存的是*缩放因子的整数；57.34的字段缩放因子为100，存起来就是5734） PUT my_index { &#34;settings&#34;: { &#34;number_of_shards&#34;: &#34;1&#34;, &#34;number_of_replicas&#34;: &#34;0&#34;, &#34;analysis&#34;: { &#34;analyzer&#34;: { &#34;ik&#34;: { &#34;tokenizer&#34;: &#34;ik_max_word&#34; } } } }, &#34;mappings&#34;: { &#34;properties&#34;: { &#34;name&#34;: { &#34;type&#34;: &#34;text&#34;, &#34;analyzer&#34;: &#34;ik&#34; }, &#34;path&#34;: { &#34;type&#34;: &#34;text&#34;, &#34;analyzer&#34;: &#34;ik&#34; } } } } { &#34;settings&#34;: { &#34;number_of_shards&#34;: 1, //分片数量 &#34;number_of_replicas&#34;: 0 //副本数量 }, &#34;mappings&#34;: { &#34;properties&#34;: { //字符串类型 &#34;key1&#34;: { &#34;type&#34;: &#34;text&#34; //会分词、模糊搜索 }, &#34;key2&#34;: { &#34;type&#34;: &#34;keyword&#34;,//不分词、作为整体进行搜索 &#34;index&#34;: true, //字段是否可被搜索，true(默认)或false &#34;store&#34;: false //字段值是否应与_source字段分开存储和检索。 true或false(默认) }, //数值型 &#34;key3&#34;: { &#34;type&#34;: &#34;byte&#34; //-127到128 }, &#34;key4&#34;: { &#34;type&#34;: &#34;short&#34; //-32768到32767 }, &#34;key5&#34;: { &#34;type&#34;: &#34;integer&#34; //有符号的32位整数 }, &#34;key6&#34;: { &#34;type&#34;: &#34;float&#34; //32位单精度 }, &#34;key7&#34;: { &#34;type&#34;: &#34;double&#34; //双精度64位 }, &#34;key8&#34;: { &#34;type&#34;: &#34;long&#34; //有符号的64位整数 }, //日期类型 &#34;key9&#34;: { &#34;type&#34;: &#34;date&#34;, &#34;format&#34;: &#34;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&#34;, //日期格式，epoch_second(秒时间戳)，epoch_millis（毫秒时间戳），日期字符串 &#34;ignore_malformed&#34;: false //true:格式错误的数字将被忽略(默认)；false:格式错误的数字会引发异常并拒绝整个文档。 }, //布尔类型 &#34;key10&#34;: { &#34;type&#34;: &#34;boolean&#34; //false:(false,&#34;false&#34;,&#34;off&#34;,&#34;no&#34;,&#34;0&#34;,&#34;&#34;,0,&#34;0.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="elasticsearch" />
+<meta property="og:description" content="常用名称 # 索引（index）：数据库,一个可检索的文档对象的集合 类型（type):表,不常用，一般一个index下建一个type，默认为_doc 文档（document):一条记录 映射关系 （mapping），设置字段类型。如何索引数据 字段（Field）：doc组成部分 分片(shard)：索引的数据量太大时，需要水平拆分，分片在创建索引时创建，之后不能更改 副本(replica)：分片的 Copy，每个主分片都有一个或多个副本分片，当主分片异常时，副本可以提供数据的查询等操作。 脑裂现象 # // 原因 网络问题： 集群间的网络延迟导致一些节点访问不到 Master，认为 Master 挂掉了从而选举出新的 Master，并对 Master 上的分片和副本标红，分配新的主分片。 节点负载： 主节点的角色既为 Master 又为 Data，访问量较大时可能会导致 ES 停止响应（假死状态）造成大面积延迟，此时其他节点得不到主节点的响应认为主节点挂掉了，会重新选取主节点。 内存回收： 主节点的角色既为 Master 又为 Data，当 Data 节点上的 ES 进程占用的内存较大，引发 JVM 的大规模内存回收，造成 ES 进程失去响应。 // 解决 适当调大响应时间：减少误判。 通过参数 discovery.zen.ping_timeout 设置节点状态的响应时间，默认为 3s，可以适当调大。 选举触发：我们需要在候选集群中的节点的配置文件中设置参数 discovery.zen.munimum_master_nodes 的值。这个参数表示在选举主节点时需要参与选举的候选主节点的节点数，默认值是 1，官方建议取值(master_eligibel_nodes2)&#43;1，其中 master_eligibel_nodes 为候选主节点的个数。 角色分离：即是上面我们提到的候选主节点和数据节点进行角色分离，这样可以减轻主节点的负担，防止主节点的假死状态发生，减少对主节点“已死”的误判。 mapping # //long, integer, short, byte, double, float, half_float, scaled_float（需配合scaling_factor（缩放因子）使用，存的是*缩放因子的整数；57.34的字段缩放因子为100，存起来就是5734） PUT my_index { &#34;settings&#34;: { &#34;number_of_shards&#34;: &#34;1&#34;, &#34;number_of_replicas&#34;: &#34;0&#34;, &#34;analysis&#34;: { &#34;analyzer&#34;: { &#34;ik&#34;: { &#34;tokenizer&#34;: &#34;ik_max_word&#34; } } } }, &#34;mappings&#34;: { &#34;properties&#34;: { &#34;name&#34;: { &#34;type&#34;: &#34;text&#34;, &#34;analyzer&#34;: &#34;ik&#34; }, &#34;path&#34;: { &#34;type&#34;: &#34;text&#34;, &#34;analyzer&#34;: &#34;ik&#34; } } } } { &#34;settings&#34;: { &#34;number_of_shards&#34;: 1, //分片数量 &#34;number_of_replicas&#34;: 0 //副本数量 }, &#34;mappings&#34;: { &#34;properties&#34;: { //字符串类型 &#34;key1&#34;: { &#34;type&#34;: &#34;text&#34; //会分词、模糊搜索 }, &#34;key2&#34;: { &#34;type&#34;: &#34;keyword&#34;,//不分词、作为整体进行搜索 &#34;index&#34;: true, //字段是否可被搜索，true(默认)或false &#34;store&#34;: false //字段值是否应与_source字段分开存储和检索。 true或false(默认) }, //数值型 &#34;key3&#34;: { &#34;type&#34;: &#34;byte&#34; //-127到128 }, &#34;key4&#34;: { &#34;type&#34;: &#34;short&#34; //-32768到32767 }, &#34;key5&#34;: { &#34;type&#34;: &#34;integer&#34; //有符号的32位整数 }, &#34;key6&#34;: { &#34;type&#34;: &#34;float&#34; //32位单精度 }, &#34;key7&#34;: { &#34;type&#34;: &#34;double&#34; //双精度64位 }, &#34;key8&#34;: { &#34;type&#34;: &#34;long&#34; //有符号的64位整数 }, //日期类型 &#34;key9&#34;: { &#34;type&#34;: &#34;date&#34;, &#34;format&#34;: &#34;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&#34;, //日期格式，epoch_second(秒时间戳)，epoch_millis（毫秒时间戳），日期字符串 &#34;ignore_malformed&#34;: false //true:格式错误的数字将被忽略(默认)；false:格式错误的数字会引发异常并拒绝整个文档。 }, //布尔类型 &#34;key10&#34;: { &#34;type&#34;: &#34;boolean&#34; //false:(false,&#34;false&#34;,&#34;off&#34;,&#34;no&#34;,&#34;0&#34;,&#34;&#34;,0,&#34;0." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/15_elasticsearch/" /><meta property="article:section" content="docs" />
+
+
+
+<title>elasticsearch | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/15_elasticsearch/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="active">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>elasticsearch</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#常用名称">常用名称</a></li>
+    <li><a href="#脑裂现象">脑裂现象</a></li>
+    <li><a href="#mapping">mapping</a></li>
+    <li><a href="#查询返回结果字段解析">查询返回结果字段解析</a></li>
+    <li><a href="#基础命令">基础命令</a>
+      <ul>
+        <li><a href="#查看版本信息">查看版本信息</a></li>
+        <li><a href="#检查集群">检查集群</a></li>
+        <li><a href="#创建索引">创建索引</a></li>
+        <li><a href="#查看索引">查看索引</a></li>
+        <li><a href="#增加字段">增加字段</a></li>
+        <li><a href="#插入数据">插入数据</a></li>
+        <li><a href="#删除索引">删除索引</a></li>
+        <li><a href="#清空doc数据">清空doc数据</a></li>
+        <li><a href="#删除一条记录">删除一条记录</a></li>
+        <li><a href="#更新一条记录">更新一条记录</a></li>
+        <li><a href="#制定日期发现规则">制定日期发现规则</a></li>
+      </ul>
+    </li>
+    <li><a href="#基础查询">基础查询</a>
+      <ul>
+        <li><a href="#and">and</a></li>
+        <li><a href="#or">or</a></li>
+        <li><a href="#查询关键词在多个字段中指定显示字段">查询关键词在多个字段中,指定显示字段</a></li>
+        <li><a href="#模糊查询">模糊查询</a></li>
+        <li><a href="#精准100值匹配">精准100%值匹配</a></li>
+        <li><a href="#前缀匹配">前缀匹配</a></li>
+        <li><a href="#通配符匹配">通配符匹配</a></li>
+        <li><a href="#正则匹配">正则匹配</a></li>
+        <li><a href="#预览搜索">预览搜索</a></li>
+        <li><a href="#查询my_index下全部doc">查询my_index下全部doc</a></li>
+        <li><a href="#查询命中率多少才返回">查询命中率多少才返回</a></li>
+        <li><a href="#分页搜索">分页搜索</a></li>
+        <li><a href="#模糊查询中取出所有match中得分最高的数据">模糊查询中取出所有match中得分最高的数据</a></li>
+        <li><a href="#terms-精准匹配相当于inab">terms 精准匹配，相当于in(&ldquo;a&rdquo;,&ldquo;b&rdquo;)</a></li>
+      </ul>
+    </li>
+    <li><a href="#高级查询">高级查询</a>
+      <ul>
+        <li><a href="#聚合桶bucket和度量">聚合（桶bucket和度量）</a></li>
+        <li><a href="#percentile_ranks-统计值小于等于指定值的文档占比">percentile_ranks 统计值小于等于指定值的文档占比</a></li>
+        <li><a href="#top_hits用于分桶后获取该桶内最匹配的顶部文档列表即详情数据">top_hits：用于分桶后获取该桶内最匹配的顶部文档列表，即详情数据</a></li>
+        <li><a href="#分组">分组</a></li>
+        <li><a href="#range按照指定字段的值的范围进行分桶">Range：按照指定字段的值的范围进行分桶</a></li>
+        <li><a href="#date_range按照日期字段的日期范围进行分桶">date_range按照日期字段的日期范围进行分桶</a></li>
+        <li><a href="#按照不同年龄段分桶求每个年龄段的工资平均值">按照不同年龄段分桶，求每个年龄段的工资平均值</a></li>
+        <li><a href="#分桶再分桶先根据job分桶再按照不同年龄划分">分桶再分桶：先根据job分桶，再按照不同年龄划分</a></li>
+        <li><a href="#分桶后进行数据分析">分桶后进行数据分析</a></li>
+        <li><a href="#相同值分一组每组的某一项的min-max-avg等">相同值分一组，每组的某一项的min max avg等</a></li>
+        <li><a href="#统计不同年龄段有多少人男女多少">统计不同年龄段有多少人，男女多少</a></li>
+        <li><a href="#每个年龄段每个性别的平均账户余额">每个年龄段，每个性别的平均账户余额</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三方包">第三方包</a>
+      <ul>
+        <li><a href="#query-语法">query 语法</a></li>
+        <li><a href="#curd">CURD</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="常用名称">
+  常用名称
+  <a class="anchor" href="#%e5%b8%b8%e7%94%a8%e5%90%8d%e7%a7%b0">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>索引（index）：数据库,一个可检索的文档对象的集合
+</span></span><span style="display:flex;"><span>类型（type):表,不常用，一般一个index下建一个type，默认为_doc
+</span></span><span style="display:flex;"><span>文档（document):一条记录
+</span></span><span style="display:flex;"><span>映射关系 （mapping），设置字段类型。如何索引数据
+</span></span><span style="display:flex;"><span>字段（Field）：doc组成部分
+</span></span><span style="display:flex;"><span>分片(shard)：索引的数据量太大时，需要水平拆分，分片在创建索引时创建，之后不能更改
+</span></span><span style="display:flex;"><span>副本(replica)：分片的 Copy，每个主分片都有一个或多个副本分片，当主分片异常时，副本可以提供数据的查询等操作。
+</span></span></code></pre></div><h2 id="脑裂现象">
+  脑裂现象
+  <a class="anchor" href="#%e8%84%91%e8%a3%82%e7%8e%b0%e8%b1%a1">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// 原因
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">网络问题</span><span style="color:#960050;background-color:#1e0010">：</span> <span style="color:#a6e22e">集群间的网络延迟导致一些节点访问不到</span> <span style="color:#a6e22e">Master</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">认为</span> <span style="color:#a6e22e">Master</span> <span style="color:#a6e22e">挂掉了从而选举出新的</span> <span style="color:#a6e22e">Master</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">并对</span> <span style="color:#a6e22e">Master</span> <span style="color:#a6e22e">上的分片和副本标红</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">分配新的主分片</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">节点负载</span><span style="color:#960050;background-color:#1e0010">：</span> <span style="color:#a6e22e">主节点的角色既为</span> <span style="color:#a6e22e">Master</span> <span style="color:#a6e22e">又为</span> <span style="color:#a6e22e">Data</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">访问量较大时可能会导致</span> <span style="color:#a6e22e">ES</span> <span style="color:#a6e22e">停止响应</span><span style="color:#960050;background-color:#1e0010">（</span><span style="color:#a6e22e">假死状态</span><span style="color:#960050;background-color:#1e0010">）</span><span style="color:#a6e22e">造成大面积延迟</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">此时其他节点得不到主节点的响应认为主节点挂掉了</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">会重新选取主节点</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">内存回收</span><span style="color:#960050;background-color:#1e0010">：</span> <span style="color:#a6e22e">主节点的角色既为</span> <span style="color:#a6e22e">Master</span> <span style="color:#a6e22e">又为</span> <span style="color:#a6e22e">Data</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">当</span> <span style="color:#a6e22e">Data</span> <span style="color:#a6e22e">节点上的</span> <span style="color:#a6e22e">ES</span> <span style="color:#a6e22e">进程占用的内存较大</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">引发</span> <span style="color:#a6e22e">JVM</span> <span style="color:#a6e22e">的大规模内存回收</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">造成</span> <span style="color:#a6e22e">ES</span> <span style="color:#a6e22e">进程失去响应</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 解决
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">适当调大响应时间</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">减少误判</span><span style="color:#960050;background-color:#1e0010">。</span> <span style="color:#a6e22e">通过参数</span> <span style="color:#a6e22e">discovery</span>.<span style="color:#a6e22e">zen</span>.<span style="color:#a6e22e">ping_timeout</span> <span style="color:#a6e22e">设置节点状态的响应时间</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">默认为</span> <span style="color:#ae81ff">3</span><span style="color:#a6e22e">s</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">可以适当调大</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">选举触发</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">我们需要在候选集群中的节点的配置文件中设置参数</span> <span style="color:#a6e22e">discovery</span>.<span style="color:#a6e22e">zen</span>.<span style="color:#a6e22e">munimum_master_nodes</span> <span style="color:#a6e22e">的值</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">这个参数表示在选举主节点时需要参与选举的候选主节点的节点数</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">默认值是</span> <span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">官方建议取值</span>(<span style="color:#a6e22e">master_eligibel_nodes2</span>)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">其中</span> <span style="color:#a6e22e">master_eligibel_nodes</span> <span style="color:#a6e22e">为候选主节点的个数</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">角色分离</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">即是上面我们提到的候选主节点和数据节点进行角色分离</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样可以减轻主节点的负担</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">防止主节点的假死状态发生</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">减少对主节点</span><span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">已死</span><span style="color:#960050;background-color:#1e0010">”</span><span style="color:#a6e22e">的误判</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h2 id="mapping">
+  mapping
+  <a class="anchor" href="#mapping">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//long, integer, short, byte, double, float, half_float, scaled_float（需配合scaling_factor（缩放因子）使用，存的是*缩放因子的整数；57.34的字段缩放因子为100，存起来就是5734）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">PUT</span> <span style="color:#a6e22e">my_index</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;settings&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;number_of_shards&#34;</span>: <span style="color:#e6db74">&#34;1&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;number_of_replicas&#34;</span>: <span style="color:#e6db74">&#34;0&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;analysis&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;analyzer&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;ik&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;tokenizer&#34;</span>: <span style="color:#e6db74">&#34;ik_max_word&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;mappings&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;name&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;text&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;ik&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;path&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;text&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;ik&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;settings&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;number_of_shards&#34;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#75715e">//分片数量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;number_of_replicas&#34;</span>: <span style="color:#ae81ff">0</span> <span style="color:#75715e">//副本数量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;mappings&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//字符串类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;key1&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;text&#34;</span> <span style="color:#75715e">//会分词、模糊搜索
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;key2&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>,<span style="color:#75715e">//不分词、作为整体进行搜索
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#e6db74">&#34;index&#34;</span>: <span style="color:#66d9ef">true</span>, <span style="color:#75715e">//字段是否可被搜索，true(默认)或false
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#e6db74">&#34;store&#34;</span>: <span style="color:#66d9ef">false</span> <span style="color:#75715e">//字段值是否应与_source字段分开存储和检索。 true或false(默认)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//数值型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;key3&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;byte&#34;</span> <span style="color:#75715e">//-127到128
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;key4&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;short&#34;</span> <span style="color:#75715e">//-32768到32767
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;key5&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;integer&#34;</span> <span style="color:#75715e">//有符号的32位整数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;key6&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;float&#34;</span> <span style="color:#75715e">//32位单精度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;key7&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;double&#34;</span> <span style="color:#75715e">//双精度64位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;key8&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;long&#34;</span> <span style="color:#75715e">//有符号的64位整数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//日期类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;key9&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;date&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&#34;</span>, <span style="color:#75715e">//日期格式，epoch_second(秒时间戳)，epoch_millis（毫秒时间戳），日期字符串
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#e6db74">&#34;ignore_malformed&#34;</span>: <span style="color:#66d9ef">false</span> <span style="color:#75715e">//true:格式错误的数字将被忽略(默认)；false:格式错误的数字会引发异常并拒绝整个文档。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//布尔类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;key10&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;boolean&#34;</span> <span style="color:#75715e">//false:(false,&#34;false&#34;,&#34;off&#34;,&#34;no&#34;,&#34;0&#34;,&#34;&#34;,0,&#34;0.0&#34;);true:非false值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;key11&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;binary&#34;</span> <span style="color:#75715e">//存储Base64编码字符串的二进制，不可搜索
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//range范围
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;key12&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;date_range&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&#34;</span> <span style="color:#75715e">//gte:开始位置，lte:结束位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;expected_attendees&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;integer_range&#34;</span>
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;time_frame&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;date_range&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//对象类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;log_1&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;key1&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>
+</span></span><span style="display:flex;"><span>          },
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;key2&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;float&#34;</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">//地理坐标类型
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;key13&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;geo_point&#34;</span> <span style="color:#75715e">//纬度/经度坐标 eg &#34;41.12,-71.34&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// ip地址
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#e6db74">&#34;key14&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;ip&#34;</span>, <span style="color:#75715e">//索引、存储ipv4和ipv6
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#e6db74">&#34;ignore_malformed&#34;</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="查询返回结果字段解析">
+  查询返回结果字段解析
+  <a class="anchor" href="#%e6%9f%a5%e8%af%a2%e8%bf%94%e5%9b%9e%e7%bb%93%e6%9e%9c%e5%ad%97%e6%ae%b5%e8%a7%a3%e6%9e%90">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;took&#34;</span> : <span style="color:#ae81ff">1</span>,                 <span style="color:#f92672">----</span><span style="color:#a6e22e">花费时长</span>,<span style="color:#a6e22e">单位毫秒</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;timed_out&#34;</span> : <span style="color:#66d9ef">false</span>,             <span style="color:#f92672">----</span><span style="color:#a6e22e">是否超时</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;_shards&#34;</span> : {                  <span style="color:#f92672">---</span> <span style="color:#a6e22e">分片信息</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 你的搜索请求打到了几个shard上面去。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// Primary Shard可以承接读、写流量。Replica Shard会承接读流量。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;total&#34;</span> : <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;successful&#34;</span> : <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;skipped&#34;</span> : <span style="color:#ae81ff">0</span>,<span style="color:#75715e">// 跳过了0个
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;failed&#34;</span> : <span style="color:#ae81ff">0</span><span style="color:#75715e">//失败了0个
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;hits&#34;</span> : {                            <span style="color:#f92672">---</span> <span style="color:#a6e22e">命中的结果</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;total&#34;</span> : {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;value&#34;</span> : <span style="color:#ae81ff">100</span>,                    <span style="color:#f92672">---</span> <span style="color:#a6e22e">结果总数</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;relation&#34;</span> : <span style="color:#e6db74">&#34;eq&#34;</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;max_score&#34;</span> : <span style="color:#ae81ff">3.8400407</span>,            <span style="color:#f92672">---</span><span style="color:#a6e22e">相关性的最高得分</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;hits&#34;</span> : [                         <span style="color:#f92672">---</span> <span style="color:#a6e22e">搜索结果的对象数组</span>
+</span></span><span style="display:flex;"><span>      {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;kibana_sample_data_ecommerce&#34;</span>,     <span style="color:#f92672">---</span>  <span style="color:#a6e22e">索引</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;_type&#34;</span> : <span style="color:#e6db74">&#34;_doc&#34;</span>,                                 <span style="color:#f92672">---</span> <span style="color:#a6e22e">类型</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;vU35438BS6ggFfJcdbsp&#34;</span>,              <span style="color:#f92672">---</span>  <span style="color:#a6e22e">唯一id</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;_score&#34;</span> : <span style="color:#ae81ff">3.8400407</span>,                        <span style="color:#f92672">---</span><span style="color:#a6e22e">文档得分</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;_source&#34;</span> : {                                 <span style="color:#f92672">---</span> <span style="color:#a6e22e">文档的数据源</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#e6db74">&#34;email&#34;</span> : <span style="color:#e6db74">&#34;eddie@underwood-family.zzz&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="基础命令">
+  基础命令
+  <a class="anchor" href="#%e5%9f%ba%e7%a1%80%e5%91%bd%e4%bb%a4">#</a>
+</h2>
+<h3 id="查看版本信息">
+  查看版本信息
+  <a class="anchor" href="#%e6%9f%a5%e7%9c%8b%e7%89%88%e6%9c%ac%e4%bf%a1%e6%81%af">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> <span style="color:#f92672">/</span>
+</span></span></code></pre></div><h3 id="检查集群">
+  检查集群
+  <a class="anchor" href="#%e6%a3%80%e6%9f%a5%e9%9b%86%e7%be%a4">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> <span style="color:#a6e22e">_cluster</span><span style="color:#f92672">/</span><span style="color:#a6e22e">health</span>  <span style="color:#75715e">//green:主分片和副本都正常分配；yellow：主分片正常分配，有副本分片未能正常分配；red:有主分片未能分配
+</span></span></span></code></pre></div><h3 id="创建索引">
+  创建索引
+  <a class="anchor" href="#%e5%88%9b%e5%bb%ba%e7%b4%a2%e5%bc%95">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">PUT</span> <span style="color:#a6e22e">my_index</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;settings&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;number_of_shards&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;number_of_replicas&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;mappings&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;action&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;request_time&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;date&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;yyyy-MM-dd HH:mm:ss||yyyyMMdd||epoch_millis&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;request_id&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;register_time&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;date&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;format&#34;</span>: <span style="color:#e6db74">&#34;yyyy-MM-dd HH:mm:ss||yyyyMMdd||epoch_millis&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;ip&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;ip&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;ignore_malformed&#34;</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;uid&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;yean_res&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;beat_desc&#34;</span>: {
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>
+</span></span><span style="display:flex;"><span>                    },
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;evil_level&#34;</span>: {
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>
+</span></span><span style="display:flex;"><span>                    },
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;evil_type&#34;</span>: {
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;keyword&#34;</span>
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="查看索引">
+  查看索引
+  <a class="anchor" href="#%e6%9f%a5%e7%9c%8b%e7%b4%a2%e5%bc%95">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">my_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_mapping</span>
+</span></span></code></pre></div><h3 id="增加字段">
+  增加字段
+  <a class="anchor" href="#%e5%a2%9e%e5%8a%a0%e5%ad%97%e6%ae%b5">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">PUT</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">my_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_mapping</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;extras&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;text&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="插入数据">
+  插入数据
+  <a class="anchor" href="#%e6%8f%92%e5%85%a5%e6%95%b0%e6%8d%ae">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">POST</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">my_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_doc</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;action&#34;</span>:<span style="color:#e6db74">&#34;afada&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="删除索引">
+  删除索引
+  <a class="anchor" href="#%e5%88%a0%e9%99%a4%e7%b4%a2%e5%bc%95">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">DELETE</span> <span style="color:#a6e22e">my_index</span>
+</span></span></code></pre></div><h3 id="清空doc数据">
+  清空doc数据
+  <a class="anchor" href="#%e6%b8%85%e7%a9%badoc%e6%95%b0%e6%8d%ae">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">post</span> <span style="color:#a6e22e">my_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_doc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_delete_by_query</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;match_all&#34;</span>:{}
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="删除一条记录">
+  删除一条记录
+  <a class="anchor" href="#%e5%88%a0%e9%99%a4%e4%b8%80%e6%9d%a1%e8%ae%b0%e5%bd%95">#</a>
+</h3>
+<pre tabindex="0"><code>//全量替换时，原来的document是没有被删除的！而是被标记为deleted，被标记成的deleted是不会被检索出来的，当ES中数据越来越多时，才会删除它。
+PUT /my_index/_doc/1?pretty
+{
+  &#34;name&#34;: &#34;John Doe&#34;
+}
+
+// 原来的document是没有被删除的！而是被标记为deleted，被标记成的deleted是不会被检索出来的，当ES中数据越来越多时，才会删除它。
+DELETE /customer/_doc/1
+</code></pre><h3 id="更新一条记录">
+  更新一条记录
+  <a class="anchor" href="#%e6%9b%b4%e6%96%b0%e4%b8%80%e6%9d%a1%e8%ae%b0%e5%bd%95">#</a>
+</h3>
+<pre tabindex="0"><code>POST /my_index/_doc/1/_update?pretty
+{
+  &#34;doc&#34;: { &#34;name&#34;: &#34;changwu&#34; }
+}
+</code></pre><h3 id="制定日期发现规则">
+  制定日期发现规则
+  <a class="anchor" href="#%e5%88%b6%e5%ae%9a%e6%97%a5%e6%9c%9f%e5%8f%91%e7%8e%b0%e8%a7%84%e5%88%99">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">PUT</span> <span style="color:#a6e22e">my_index</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;mappings&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;_doc&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;dynamic_date_formats&#34;</span>: [<span style="color:#e6db74">&#34;MM/dd/yyyy&#34;</span>]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">PUT</span> <span style="color:#a6e22e">my_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_doc</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;create_date&#34;</span>: <span style="color:#e6db74">&#34;09/25/2015&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="基础查询">
+  基础查询
+  <a class="anchor" href="#%e5%9f%ba%e7%a1%80%e6%9f%a5%e8%af%a2">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>filter(不参与得分，只是条件过滤)、must（参与得分） ——&gt;and
+</span></span><span style="display:flex;"><span>should ——&gt; or
+</span></span><span style="display:flex;"><span>must_not ——&gt;非
+</span></span><span style="display:flex;"><span>match 分词（模糊匹配）
+</span></span><span style="display:flex;"><span>term 关键词（精准匹配）
+</span></span><span style="display:flex;"><span>&#34;_source&#34;: [&#34;过滤字段&#34;]：只显示自己需要的字段
+</span></span><span style="display:flex;"><span>gte	大于等于
+</span></span><span style="display:flex;"><span>lte	小于等于
+</span></span><span style="display:flex;"><span>gt	大于
+</span></span><span style="display:flex;"><span>lt	小于
+</span></span><span style="display:flex;"><span>fuzzy 模糊查询
+</span></span><span style="display:flex;"><span>multi_match 多个字段中查询
+</span></span><span style="display:flex;"><span>minimum_should_match：去尾
+</span></span><span style="display:flex;"><span>match_phrase ：doc中的字段值和给定的值完全相同
+</span></span><span style="display:flex;"><span>match_phrase_prefix:实现的效果类似于百度搜索,输入时，会发起一个搜索。
+</span></span></code></pre></div><h3 id="and">
+  and
+  <a class="anchor" href="#and">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// and 关系
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">GET</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">my_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_search</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;bool&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;must&#34;</span>: [
+</span></span><span style="display:flex;"><span>        { <span style="color:#e6db74">&#34;match&#34;</span>: { <span style="color:#e6db74">&#34;activity&#34;</span>:  <span style="color:#e6db74">&#34;point_push&#34;</span> }},
+</span></span><span style="display:flex;"><span>        { <span style="color:#e6db74">&#34;match&#34;</span>: { <span style="color:#e6db74">&#34;action&#34;</span>: <span style="color:#e6db74">&#34;1&#34;</span>   }}
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">renaissance</span><span style="color:#f92672">-</span><span style="color:#a6e22e">risk</span><span style="color:#f92672">-</span><span style="color:#a6e22e">data</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_search</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;bool&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;filter&#34;</span>: [
+</span></span><span style="display:flex;"><span>        {<span style="color:#e6db74">&#34;term&#34;</span>: {<span style="color:#e6db74">&#34;activity&#34;</span> : <span style="color:#e6db74">&#34;post_weibo&#34;</span>}},
+</span></span><span style="display:flex;"><span>        {<span style="color:#e6db74">&#34;term&#34;</span>: {<span style="color:#e6db74">&#34;action&#34;</span> : <span style="color:#e6db74">&#34;1&#34;</span>}},
+</span></span><span style="display:flex;"><span>        {<span style="color:#e6db74">&#34;range&#34;</span>: {<span style="color:#e6db74">&#34;request_time&#34;</span>: {<span style="color:#e6db74">&#34;gte&#34;</span>: <span style="color:#e6db74">&#34;2022-03-31 00:00:00&#34;</span>,<span style="color:#e6db74">&#34;lte&#34;</span>: <span style="color:#e6db74">&#34;2022-03-31 23:59:59&#34;</span>}}}
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;sort&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {<span style="color:#e6db74">&#34;request_time&#34;</span>: {<span style="color:#e6db74">&#34;order&#34;</span>: <span style="color:#e6db74">&#34;desc&#34;</span>}}
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;from&#34;</span>: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;size&#34;</span>: <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="or">
+  or
+  <a class="anchor" href="#or">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// or 关系
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">GET</span> <span style="color:#a6e22e">risk_engine_action</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_doc</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_search</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;bool&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;should&#34;</span>: [
+</span></span><span style="display:flex;"><span>        { <span style="color:#e6db74">&#34;match&#34;</span>: { <span style="color:#e6db74">&#34;activity&#34;</span>:  <span style="color:#e6db74">&#34;point_push&#34;</span> }},
+</span></span><span style="display:flex;"><span>        { <span style="color:#e6db74">&#34;match&#34;</span>: { <span style="color:#e6db74">&#34;action&#34;</span>: <span style="color:#e6db74">&#34;1&#34;</span>   }}
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="查询关键词在多个字段中指定显示字段">
+  查询关键词在多个字段中,指定显示字段
+  <a class="anchor" href="#%e6%9f%a5%e8%af%a2%e5%85%b3%e9%94%ae%e8%af%8d%e5%9c%a8%e5%a4%9a%e4%b8%aa%e5%ad%97%e6%ae%b5%e4%b8%ad%e6%8c%87%e5%ae%9a%e6%98%be%e7%a4%ba%e5%ad%97%e6%ae%b5">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">my_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_search</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#34;_source&#34;</span>: {
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;includes:  [&#34;</span><span style="color:#a6e22e">过滤字段</span><span style="color:#e6db74">&#34;],  //includes只显示自己需要的字段  ,excludes：来指定不想要显示的字段
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">     },
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">     &#34;</span><span style="color:#a6e22e">query</span><span style="color:#e6db74">&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">       &#34;</span><span style="color:#a6e22e">multi_match</span><span style="color:#e6db74">&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;</span><span style="color:#a6e22e">query</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#a6e22e">米</span><span style="color:#e6db74">&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;</span><span style="color:#a6e22e">fields</span><span style="color:#e6db74">&#34;:[&#34;</span><span style="color:#a6e22e">title</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#a6e22e">name</span><span style="color:#e6db74">&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">       }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">     }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    //most_fields策略、优先返回命中更多关键词的doc;如下从title、name、content中搜索包含“赐我白日梦”的doc
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    //best_fields优先返回某个field完全匹配你给定关键字的doc
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;</span><span style="color:#a6e22e">query</span><span style="color:#e6db74">&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">       &#34;</span><span style="color:#a6e22e">multi_match</span><span style="color:#e6db74">&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           &#34;</span><span style="color:#a6e22e">query</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#a6e22e">赐我白日梦</span><span style="color:#e6db74">&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"> 					  # 指定检索的策略most_fields
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           &#34;</span><span style="color:#66d9ef">type</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#a6e22e">most_fields</span><span style="color:#e6db74">&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           &#34;</span><span style="color:#a6e22e">fields</span><span style="color:#e6db74">&#34;:[&#34;</span><span style="color:#a6e22e">title</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#a6e22e">name</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#a6e22e">content</span><span style="color:#e6db74">&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">       }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;</span><span style="color:#a6e22e">query</span><span style="color:#e6db74">&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">       &#34;</span><span style="color:#a6e22e">multi_match</span><span style="color:#e6db74">&#34;:{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           &#34;</span><span style="color:#a6e22e">query</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#a6e22e">golang</span> <span style="color:#a6e22e">java</span><span style="color:#e6db74">&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">         	# cross_fields 要求golang：必须在title或者在content中出现
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            # cross_fields 要求java：必须在title或者在content中出现
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           &#34;</span><span style="color:#66d9ef">type</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#a6e22e">cross_fields</span><span style="color:#e6db74">&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           &#34;</span><span style="color:#a6e22e">fields</span><span style="color:#e6db74">&#34;:[&#34;</span><span style="color:#a6e22e">title</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#a6e22e">content</span><span style="color:#960050;background-color:#1e0010">&#34;</span>]
+</span></span><span style="display:flex;"><span>       }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="模糊查询">
+  模糊查询
+  <a class="anchor" href="#%e6%a8%a1%e7%b3%8a%e6%9f%a5%e8%af%a2">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">xiaowu</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_search</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;fuzzy&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;title&#34;</span>: {
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;value&#34;</span>: <span style="color:#e6db74">&#34;appla&#34;</span>,
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">&#34;fuzziness&#34;</span>: <span style="color:#ae81ff">1</span>   <span style="color:#75715e">//差距不得超过2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>       }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="精准100值匹配">
+  精准100%值匹配
+  <a class="anchor" href="#%e7%b2%be%e5%87%86100%e5%80%bc%e5%8c%b9%e9%85%8d">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;query&#34;: {
+            &#34;match_phrase&#34;: {
+            &#34;name&#34;: &#34;白日梦&#34;
+        }
+    }
+}
+</code></pre><h3 id="前缀匹配">
+  前缀匹配
+  <a class="anchor" href="#%e5%89%8d%e7%bc%80%e5%8c%b9%e9%85%8d">#</a>
+</h3>
+<pre tabindex="0"><code>{
+  前缀匹配，相对于全文检索，前缀匹配是不会对前缀进行分词的。
+  而且每次匹配都会扫描整个倒排索引，直到扫描完一遍才会停下来
+  前缀搜索不会计算相关性得分所有的doc的得分都是1
+  前缀越短能匹配到的doc就越多，性能越不好
+  &#34;query&#34;: {
+    &#34;prefix&#34; : { &#34;user&#34; : &#34;白日梦&#34; }
+  }
+}
+
+// 前缀+权重
+{
+    &#34;query&#34;: {
+        &#34;prefix&#34;: {
+            &#34;name&#34;: {
+                &#34;value&#34;: &#34;白日梦&#34;,
+                &#34;boost&#34;: 2.0
+            }
+        }
+    }
+}
+</code></pre><h3 id="通配符匹配">
+  通配符匹配
+  <a class="anchor" href="#%e9%80%9a%e9%85%8d%e7%ac%a6%e5%8c%b9%e9%85%8d">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;query&#34;: {
+        &#34;wildcard&#34;: {
+            &#34;title&#34;: &#34;白日梦的*笔记&#34;
+        }
+    }
+}
+</code></pre><h3 id="正则匹配">
+  正则匹配
+  <a class="anchor" href="#%e6%ad%a3%e5%88%99%e5%8c%b9%e9%85%8d">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;query&#34;: {
+        &#34;regexp&#34;: {
+            &#34;name.first&#34;: {
+                &#34;value&#34;: &#34;s.*y&#34;,
+                &#34;boost&#34;: 1.2 //权重
+            }
+        }
+    }
+}
+</code></pre><h3 id="预览搜索">
+  预览搜索
+  <a class="anchor" href="#%e9%a2%84%e8%a7%88%e6%90%9c%e7%b4%a2">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;query&#34;: {
+       &#34;match_phrase_prefix&#34;: {
+            &#34;message&#34;: {
+                 &#34;query&#34;: &#34;关注白日梦&#34;,
+                 &#34;max_expansions&#34;: 10,
+                 &#34;slop&#34;: 10 //提高召回率，使用slop调整term persition，贡献得分
+            }
+        }
+    }
+}
+</code></pre><h3 id="查询my_index下全部doc">
+  查询my_index下全部doc
+  <a class="anchor" href="#%e6%9f%a5%e8%af%a2my_index%e4%b8%8b%e5%85%a8%e9%83%a8doc">#</a>
+</h3>
+<pre tabindex="0"><code>GET /my_index/_search
+{
+  &#34;query&#34;: { &#34;match_all&#34;: {} }
+}
+</code></pre><h3 id="查询命中率多少才返回">
+  查询命中率多少才返回
+  <a class="anchor" href="#%e6%9f%a5%e8%af%a2%e5%91%bd%e4%b8%ad%e7%8e%87%e5%a4%9a%e5%b0%91%e6%89%8d%e8%bf%94%e5%9b%9e">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> <span style="color:#f92672">/</span><span style="color:#a6e22e">your_index</span><span style="color:#f92672">/</span><span style="color:#a6e22e">your_type</span><span style="color:#f92672">/</span><span style="color:#a6e22e">_search</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>   <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#34;match&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;name&#34;</span>:{
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;query&#34;</span>:<span style="color:#e6db74">&#34;欢迎关注白日梦！&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;operator&#34;</span>:<span style="color:#e6db74">&#34;and&#34;</span>,  <span style="color:#75715e">// 默认是or （命中任何一个词就算）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">上面的query可能被分词成</span><span style="color:#960050;background-color:#1e0010">：</span> <span style="color:#a6e22e">欢迎</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">关注</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">白日梦</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">欢迎关注</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">关注白日梦这五个词</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">默认来说只要命中其中的一个词</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">那个doc就会被返回</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">所以有长尾现象</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">去长尾</span><span style="color:#960050;background-color:#1e0010">：</span><span style="color:#a6e22e">控制至少命中3</span><span style="color:#f92672">/</span><span style="color:#ae81ff">4</span><span style="color:#a6e22e">个词的doc才算是真正命中</span><span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;minimum_should_match&#34;</span>:<span style="color:#e6db74">&#34;75%&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="分页搜索">
+  分页搜索
+  <a class="anchor" href="#%e5%88%86%e9%a1%b5%e6%90%9c%e7%b4%a2">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;match_all&#34;</span>: {}
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;from&#34;</span>: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;size&#34;</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="模糊查询中取出所有match中得分最高的数据">
+  模糊查询中取出所有match中得分最高的数据
+  <a class="anchor" href="#%e6%a8%a1%e7%b3%8a%e6%9f%a5%e8%af%a2%e4%b8%ad%e5%8f%96%e5%87%ba%e6%89%80%e6%9c%89match%e4%b8%ad%e5%be%97%e5%88%86%e6%9c%80%e9%ab%98%e7%9a%84%e6%95%b0%e6%8d%ae">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>   <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>     <span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">这种用法不容忽略</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#960050;background-color:#1e0010">#</span> <span style="color:#a6e22e">直接取下面多个query中得分最高的query当成最终得分</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#34;dis_max&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;queries&#34;</span>:[
+</span></span><span style="display:flex;"><span>           {<span style="color:#e6db74">&#34;match&#34;</span>:{<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;白日梦&#34;</span>}},
+</span></span><span style="display:flex;"><span>           {<span style="color:#e6db74">&#34;match&#34;</span>:{<span style="color:#e6db74">&#34;content&#34;</span>:<span style="color:#e6db74">&#34;关注白日梦！&#34;</span>}}
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>     }
+</span></span><span style="display:flex;"><span>   }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="terms-精准匹配相当于inab">
+  terms 精准匹配，相当于in(&ldquo;a&rdquo;,&ldquo;b&rdquo;)
+  <a class="anchor" href="#terms-%e7%b2%be%e5%87%86%e5%8c%b9%e9%85%8d%e7%9b%b8%e5%bd%93%e4%ba%8einab">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;query&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;constant_score&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;filter&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;terms&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;想搜索的字段名&#34;</span>: [
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;tom&#34;</span>,
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;jerry&#34;</span>
+</span></span><span style="display:flex;"><span>                    ]
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="高级查询">
+  高级查询
+  <a class="anchor" href="#%e9%ab%98%e7%ba%a7%e6%9f%a5%e8%af%a2">#</a>
+</h2>
+<h3 id="聚合桶bucket和度量">
+  聚合（桶bucket和度量）
+  <a class="anchor" href="#%e8%81%9a%e5%90%88%e6%a1%b6bucket%e5%92%8c%e5%ba%a6%e9%87%8f">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>桶就像mysql中的分组查询,比如说学号相同,姓名相同的肯定是同一个人,我们就把它当成一组,在这里就是一个桶。
+</span></span><span style="display:flex;"><span>度量--以每个桶为基础,做运算
+</span></span><span style="display:flex;"><span>下钻：现有的分好组的bucket继续分组，比如可以先按性别分组、下钻再按年龄分组。
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>常用的度量方法:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>avg：求平均值
+</span></span><span style="display:flex;"><span>max：求最大值
+</span></span><span style="display:flex;"><span>min：求最小值
+</span></span><span style="display:flex;"><span>percentiles:占比百分位统计
+</span></span><span style="display:flex;"><span>extended_stats:比stats查询多四个结果：平方和、方差、标准差、平均值加/减两个标准差的区间
+</span></span><span style="display:flex;"><span>stats：同时返回avg、max、min、sum、count等
+</span></span><span style="display:flex;"><span>sum：求和
+</span></span><span style="display:flex;"><span>Top hits Aggregation：求前几
+</span></span><span style="display:flex;"><span>value_count：求总数(统计某字段有值的文档数)
+</span></span><span style="display:flex;"><span>cardinality ：去重（查询文档中字段有多少某个值）
+</span></span><span style="display:flex;"><span>percentile_ranks：统计值小于等于指定值的文档占比
+</span></span><span style="display:flex;"><span>top_hits：用于分桶后获取该桶内最匹配的顶部文档列表，即详情数据
+</span></span><span style="display:flex;"><span>terms：按照指定字段进行分桶
+</span></span><span style="display:flex;"><span>range:按照指定字段的值的范围进行分桶
+</span></span><span style="display:flex;"><span>date_range按照日期字段的日期范围进行分桶
+</span></span><span style="display:flex;"><span>dis_max:取query中得分最高的match得分作为doc的最终得分
+</span></span></code></pre></div><h3 id="percentile_ranks-统计值小于等于指定值的文档占比">
+  percentile_ranks 统计值小于等于指定值的文档占比
+  <a class="anchor" href="#percentile_ranks-%e7%bb%9f%e8%ae%a1%e5%80%bc%e5%b0%8f%e4%ba%8e%e7%ad%89%e4%ba%8e%e6%8c%87%e5%ae%9a%e5%80%bc%e7%9a%84%e6%96%87%e6%a1%a3%e5%8d%a0%e6%af%94">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;aggs&#34;</span>:{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;gge_perc_rank&#34;</span>:{
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;percentile_ranks&#34;</span>:{
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;field&#34;</span>:<span style="color:#e6db74">&#34;price&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;values&#34;</span>:[
+</span></span><span style="display:flex;"><span>                    <span style="color:#ae81ff">100</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#ae81ff">200</span>
+</span></span><span style="display:flex;"><span>                ]
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="top_hits用于分桶后获取该桶内最匹配的顶部文档列表即详情数据">
+  top_hits：用于分桶后获取该桶内最匹配的顶部文档列表，即详情数据
+  <a class="anchor" href="#top_hits%e7%94%a8%e4%ba%8e%e5%88%86%e6%a1%b6%e5%90%8e%e8%8e%b7%e5%8f%96%e8%af%a5%e6%a1%b6%e5%86%85%e6%9c%80%e5%8c%b9%e9%85%8d%e7%9a%84%e9%a1%b6%e9%83%a8%e6%96%87%e6%a1%a3%e5%88%97%e8%a1%a8%e5%8d%b3%e8%af%a6%e6%83%85%e6%95%b0%e6%8d%ae">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;aggs&#34;</span>:{
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;jobs&#34;</span>:{
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;terms&#34;</span>:{
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;field&#34;</span>:<span style="color:#e6db74">&#34;job.keyword&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;size&#34;</span>:<span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#34;aggs&#34;</span>:{
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;top_jobs&#34;</span>:{
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;top_hits&#34;</span>:{
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;size&#34;</span>:<span style="color:#ae81ff">10</span>,
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;sort&#34;</span>:[
+</span></span><span style="display:flex;"><span>                            {
+</span></span><span style="display:flex;"><span>                                <span style="color:#e6db74">&#34;age&#34;</span>:{
+</span></span><span style="display:flex;"><span>                                    <span style="color:#e6db74">&#34;order&#34;</span>:<span style="color:#e6db74">&#34;desc&#34;</span>
+</span></span><span style="display:flex;"><span>                                }
+</span></span><span style="display:flex;"><span>                            }
+</span></span><span style="display:flex;"><span>                        ]
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="分组">
+  分组
+  <a class="anchor" href="#%e5%88%86%e7%bb%84">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    &#34;size&#34;:0,
+</span></span><span style="display:flex;"><span>    &#34;aggs&#34;:{
+</span></span><span style="display:flex;"><span>        &#34;terms_jobs&#34;:{
+</span></span><span style="display:flex;"><span>            &#34;terms&#34;:{
+</span></span><span style="display:flex;"><span>                &#34;field&#34;:{&#34;job.keyword&#34;},
+</span></span><span style="display:flex;"><span>                &#34;size&#34;:5
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>//针对某一个字段分组
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    &#34;size&#34;: 0,
+</span></span><span style="display:flex;"><span>    &#34;aggs&#34;: {
+</span></span><span style="display:flex;"><span>        &#34;group_by_name&#34;: { //自定义的名字
+</span></span><span style="display:flex;"><span>            &#34;term&#34;: {
+</span></span><span style="display:flex;"><span>                &#34;field&#34;: &#34;name&#34; // group by name
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>//有条件的分组
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  # 先查询
+</span></span><span style="display:flex;"><span>  “query”:{
+</span></span><span style="display:flex;"><span>    	&#34;term&#34;:{
+</span></span><span style="display:flex;"><span>        &#34;gender&#34;:&#34;man&#34;
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>   # 再聚合
+</span></span><span style="display:flex;"><span>  &#34;aggs&#34;: {
+</span></span><span style="display:flex;"><span>    &#34;group_by_name&#34;: {
+</span></span><span style="display:flex;"><span>      &#34;term&#34;: {
+</span></span><span style="display:flex;"><span>        &#34;field&#34;: &#34;name&#34; # 指定聚合的字段， 意思是 group by name
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="range按照指定字段的值的范围进行分桶">
+  Range：按照指定字段的值的范围进行分桶
+  <a class="anchor" href="#range%e6%8c%89%e7%85%a7%e6%8c%87%e5%ae%9a%e5%ad%97%e6%ae%b5%e7%9a%84%e5%80%bc%e7%9a%84%e8%8c%83%e5%9b%b4%e8%bf%9b%e8%a1%8c%e5%88%86%e6%a1%b6">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;:0,
+    &#34;aggs&#34;:{
+        &#34;group_by_price&#34;:{
+            &#34;range&#34;:{
+                &#34;field&#34;:&#34;price&#34;,
+                &#34;ranges&#34;:[
+                    {
+                        &#34;key&#34;:&#34;&lt;200&#34;,
+                        &#34;to&#34;:200
+                    },
+                    {
+                        &#34;from&#34;:200,
+                        &#34;to&#34;:400
+                    },
+                    {
+                        &#34;key&#34;:&#34;&gt;400&#34;,
+                        &#34;from&#34;:400
+                    }
+                ]
+            }
+        }
+    }
+}
+</code></pre><h3 id="date_range按照日期字段的日期范围进行分桶">
+  date_range按照日期字段的日期范围进行分桶
+  <a class="anchor" href="#date_range%e6%8c%89%e7%85%a7%e6%97%a5%e6%9c%9f%e5%ad%97%e6%ae%b5%e7%9a%84%e6%97%a5%e6%9c%9f%e8%8c%83%e5%9b%b4%e8%bf%9b%e8%a1%8c%e5%88%86%e6%a1%b6">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;:0,
+    &#34;aggs&#34;:{
+        &#34;group_by_birth&#34;:{
+            &#34;date_range&#34;:{
+                &#34;field&#34;:&#34;birth&#34;,
+                &#34;format&#34;:&#34;yyyy&#34;,
+                &#34;ranges&#34;:[
+                    {
+                        &#34;key&#34;:&#34;2000年以前&#34;,
+                        &#34;to&#34;:&#34;2000&#34;
+                    },
+                    {
+                        &#34;key&#34;:&#34;2000年 - 2020年&#34;,
+                        &#34;from&#34;:&#34;2000&#34;,
+                        &#34;to&#34;:&#34;2020&#34;
+                    },
+                    {
+                        &#34;key&#34;:&#34;2020年以后&#34;,
+                        &#34;from&#34;:&#34;2020&#34;
+                    }
+                ]
+            }
+        }
+    }
+}
+</code></pre><h3 id="按照不同年龄段分桶求每个年龄段的工资平均值">
+  按照不同年龄段分桶，求每个年龄段的工资平均值
+  <a class="anchor" href="#%e6%8c%89%e7%85%a7%e4%b8%8d%e5%90%8c%e5%b9%b4%e9%be%84%e6%ae%b5%e5%88%86%e6%a1%b6%e6%b1%82%e6%af%8f%e4%b8%aa%e5%b9%b4%e9%be%84%e6%ae%b5%e7%9a%84%e5%b7%a5%e8%b5%84%e5%b9%b3%e5%9d%87%e5%80%bc">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;:0,
+    &#34;aggs&#34;:{
+        &#34;group_by_age&#34;:{
+            &#34;range&#34;:{
+                &#34;field&#34;:&#34;age&#34;,
+                &#34;ranges&#34;:[
+                    {
+                        &#34;key&#34;:&#34;&lt;20&#34;,
+                        &#34;to&#34;:20
+                    },
+                    {
+                        &#34;key&#34;:&#34;20 - 50&#34;,
+                        &#34;from&#34;:20,
+                        &#34;to&#34;:50
+                    },
+                    {
+                        &#34;key&#34;:&#34;&gt;50&#34;,
+                        &#34;from&#34;:50
+                    }
+                ]
+            },
+            &#34;aggs&#34;:{
+                &#34;avg_salary&#34;:{
+                    &#34;avg&#34;:{
+                        &#34;field&#34;:&#34;salary&#34;
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre><h3 id="分桶再分桶先根据job分桶再按照不同年龄划分">
+  分桶再分桶：先根据job分桶，再按照不同年龄划分
+  <a class="anchor" href="#%e5%88%86%e6%a1%b6%e5%86%8d%e5%88%86%e6%a1%b6%e5%85%88%e6%a0%b9%e6%8d%aejob%e5%88%86%e6%a1%b6%e5%86%8d%e6%8c%89%e7%85%a7%e4%b8%8d%e5%90%8c%e5%b9%b4%e9%be%84%e5%88%92%e5%88%86">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;:0,
+    &#34;aggs&#34;:{
+        &#34;group_by_job&#34;:{
+            &#34;terms&#34;:{
+                &#34;field&#34;:&#34;job&#34;,
+                &#34;size&#34;:10
+            },
+            &#34;aggs&#34;:{
+                &#34;range_age&#34;:{
+                    &#34;range&#34;:{
+                        &#34;field&#34;:&#34;age&#34;,
+                        &#34;ranges&#34;:[
+                            {
+                                &#34;key&#34;:&#34;&lt;20&#34;,
+                                &#34;to&#34;:20
+                            },
+                            {
+                                &#34;key&#34;:&#34;20 - 50&#34;,
+                                &#34;from&#34;:20,
+                                &#34;to&#34;:50
+                            },
+                            {
+                                &#34;key&#34;:&#34;&gt;50&#34;,
+                                &#34;from&#34;:50
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre><h3 id="分桶后进行数据分析">
+  分桶后进行数据分析
+  <a class="anchor" href="#%e5%88%86%e6%a1%b6%e5%90%8e%e8%bf%9b%e8%a1%8c%e6%95%b0%e6%8d%ae%e5%88%86%e6%9e%90">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;:0,
+    &#34;aggs&#34;:{
+        &#34;group_by_job&#34;:{
+            &#34;terms&#34;:{
+                &#34;field&#34;:&#34;job&#34;,
+                &#34;size&#34;:10
+            },
+            &#34;aggs&#34;:{
+                &#34;avg_salary&#34;:{
+                    &#34;stats&#34;:{
+                        &#34;field&#34;:&#34;salary&#34;
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre><h3 id="相同值分一组每组的某一项的min-max-avg等">
+  相同值分一组，每组的某一项的min max avg等
+  <a class="anchor" href="#%e7%9b%b8%e5%90%8c%e5%80%bc%e5%88%86%e4%b8%80%e7%bb%84%e6%af%8f%e7%bb%84%e7%9a%84%e6%9f%90%e4%b8%80%e9%a1%b9%e7%9a%84min-max-avg%e7%ad%89">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;: 0,
+    &#34;aggs&#34;: {
+        &#34;group_by_name&#34;: {
+            &#34;terms&#34;: {
+                &#34;field&#34;: &#34;name&#34;
+            },
+            &#34;aggs&#34;: {
+                &#34;average_age&#34;: {
+                    &#34;avg&#34;: {   //min  max avg
+                        &#34;field&#34;: &#34;age&#34;
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre><h3 id="统计不同年龄段有多少人男女多少">
+  统计不同年龄段有多少人，男女多少
+  <a class="anchor" href="#%e7%bb%9f%e8%ae%a1%e4%b8%8d%e5%90%8c%e5%b9%b4%e9%be%84%e6%ae%b5%e6%9c%89%e5%a4%9a%e5%b0%91%e4%ba%ba%e7%94%b7%e5%a5%b3%e5%a4%9a%e5%b0%91">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;: 0,
+    &#34;aggs&#34;: {
+        &#34;group_by_age&#34;: {
+            &#34;range&#34;: {
+                &#34;field&#34;: &#34;age&#34;,
+                &#34;ranges&#34;: [
+                    {
+                        &#34;from&#34;: 20,
+                        &#34;to&#34;: 25
+                    },
+                    {
+                        &#34;from&#34;: 25,
+                        &#34;to&#34;: 30
+                    },
+                    {
+                        &#34;from&#34;: 30,
+                        &#34;to&#34;: 35
+                    },
+                    {
+                        &#34;from&#34;: 35,
+                        &#34;to&#34;: 40
+                    }
+                ]
+            },
+            &#34;aggs&#34;: {
+                &#34;group_by_gender&#34;: {
+                    &#34;terms&#34;: {
+                        &#34;field&#34;: &#34;gender.keyword&#34;
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre><h3 id="每个年龄段每个性别的平均账户余额">
+  每个年龄段，每个性别的平均账户余额
+  <a class="anchor" href="#%e6%af%8f%e4%b8%aa%e5%b9%b4%e9%be%84%e6%ae%b5%e6%af%8f%e4%b8%aa%e6%80%a7%e5%88%ab%e7%9a%84%e5%b9%b3%e5%9d%87%e8%b4%a6%e6%88%b7%e4%bd%99%e9%a2%9d">#</a>
+</h3>
+<pre tabindex="0"><code>{
+    &#34;size&#34;: 0,
+    &#34;aggs&#34;: {
+        &#34;group_by_age&#34;: {
+            &#34;range&#34;: {
+                &#34;field&#34;: &#34;age&#34;,
+                &#34;ranges&#34;: [
+                    {
+                        &#34;from&#34;: 20,
+                        &#34;to&#34;: 30
+                    }
+                ]
+            },
+            &#34;aggs&#34;: {
+                &#34;group_by_gender&#34;: {
+                    &#34;term&#34;: {
+                        &#34;field&#34;: &#34;gender.keyword&#34;
+                    },
+                    &#34;aggs&#34;: {
+                        &#34;average_balance&#34;: {
+                            &#34;avg&#34;: {
+                                &#34;field&#34;: &#34;balance&#34;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre><h2 id="第三方包">
+  第三方包
+  <a class="anchor" href="#%e7%ac%ac%e4%b8%89%e6%96%b9%e5%8c%85">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">https</span>:<span style="color:#75715e">//github.com/olivere/elastic/v7
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">https</span>:<span style="color:#75715e">//github.com/elastic/go-elasticsearch
+</span></span></span></code></pre></div><h3 id="query-语法">
+  query 语法
+  <a class="anchor" href="#query-%e8%af%ad%e6%b3%95">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">query</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewBoolQuery</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">Must</span>(<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewTermQuery</span>(<span style="color:#e6db74">&#34;date&#34;</span>, <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">SearchDate</span>))  	<span style="color:#75715e">//must 相当于sql的and
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">Should</span>(<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewTermQuery</span>(<span style="color:#e6db74">&#34;qq&#34;</span>, <span style="color:#a6e22e">request</span>.<span style="color:#a6e22e">QQ</span>))   	 	<span style="color:#75715e">//should 相当于sql的or
+</span></span></span></code></pre></div><h3 id="curd">
+  CURD
+  <a class="anchor" href="#curd">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Es</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">Client</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">client</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">NewClient</span>(
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">SetURL</span>(<span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Cfg</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Path</span>), <span style="color:#75715e">//服务地址，多个服务地址使用逗号分隔
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">SetSniff</span>(<span style="color:#66d9ef">false</span>),
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">SetBasicAuth</span>(<span style="color:#e6db74">&#34;user&#34;</span>, <span style="color:#e6db74">&#34;pwd&#34;</span>), <span style="color:#75715e">//基于http base auth验证机制的账号和密码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">SetHealthcheck</span>(<span style="color:#66d9ef">false</span>),       <span style="color:#75715e">//设置监控检查
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		panic(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">client</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// InsertDoc 插入记录，自动创建id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InsertDoc</span>(<span style="color:#a6e22e">indexName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">data</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Index</span>().<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">BodyJson</span>(<span style="color:#a6e22e">data</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// InsertDocById 插入记录，根据id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InsertDocById</span>(<span style="color:#a6e22e">indexName</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">data</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Index</span>().<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Id</span>(<span style="color:#a6e22e">id</span>).<span style="color:#a6e22e">BodyJson</span>(<span style="color:#a6e22e">data</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ExistsIndex 判断index是否存在
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ExistsIndex</span>(<span style="color:#a6e22e">indexName</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">bool</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">exists</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">IndexExists</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">exists</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ExistsDocByQuery 判断doc是否存在，根据查询条件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ExistsDocByQuery</span>(<span style="color:#a6e22e">indexName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">query</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">Query</span>) (<span style="color:#66d9ef">bool</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">//query=elastic.NewTermQuery(&#34;msgid.keyword&#34;, msgItem.MsgID)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Search</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Query</span>(<span style="color:#a6e22e">query</span>).<span style="color:#a6e22e">Size</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ret</span>.<span style="color:#a6e22e">TotalHits</span>() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// SearchDocList 分页搜索数据，根据查询条件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">/* query := elastic.NewBoolQuery()
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">if len(request.SearchDate)&gt;0 {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">	query.Must(elastic.NewTermQuery(&#34;date&#34;, request.SearchDate))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">offset=(request.Page-1)*request.Size
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">ascending=false
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SearchDocList</span>(<span style="color:#a6e22e">indexName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">query</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">Query</span>, <span style="color:#a6e22e">offset</span>, <span style="color:#a6e22e">size</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">sortField</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">ascending</span> <span style="color:#66d9ef">bool</span>) (
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">*</span><span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">SearchResult</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">op</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Search</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Query</span>(<span style="color:#a6e22e">query</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">sortField</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">op</span> = <span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">Sort</span>(<span style="color:#a6e22e">sortField</span>, <span style="color:#a6e22e">ascending</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">op</span>.<span style="color:#a6e22e">Size</span>(<span style="color:#a6e22e">size</span>).<span style="color:#a6e22e">From</span>(<span style="color:#a6e22e">offset</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// SearchDoc 搜索doc,根据查询条件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SearchDoc</span>(<span style="color:#a6e22e">indexName</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">query</span> <span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">Query</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">SearchResult</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Search</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Query</span>(<span style="color:#a6e22e">query</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// GetDocById 获取doc 根据id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">GetDocById</span>(<span style="color:#a6e22e">indexName</span>, <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">string</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">elastic</span>.<span style="color:#a6e22e">GetResult</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Get</span>().<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Id</span>(<span style="color:#a6e22e">id</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// CreateIndex 创建index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">CreateIndex</span>(<span style="color:#a6e22e">indexName</span>, <span style="color:#a6e22e">mapping</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">CreateIndex</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">BodyString</span>(<span style="color:#a6e22e">mapping</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ret</span>.<span style="color:#a6e22e">Acknowledged</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;create index err&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// DeleteIndex 删除index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">DeleteIndex</span>(<span style="color:#a6e22e">indexName</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">DeleteIndex</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ret</span>.<span style="color:#a6e22e">Acknowledged</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;delete index err&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/* refresh:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">&#34;true&#34;:强制同步(慎用) 节点立即完成刷新(性能最差)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">&#34;false&#34;:异步刷新(默认值) 写入数据一段时间后可见(性能最好)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">&#34;wait_for&#34;:/等待同步 客户端等待, 直到节点自动完成刷新 */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// DeleteDocById 删除doc 根据id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">DeleteDocById</span>(<span style="color:#a6e22e">indexName</span>, <span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">refresh</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Delete</span>().<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Id</span>(<span style="color:#a6e22e">id</span>).<span style="color:#a6e22e">Refresh</span>(<span style="color:#a6e22e">refresh</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ret</span>.<span style="color:#a6e22e">Result</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;deleted&#34;</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;delete id err&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// UpdateDocById 更新doc 根据id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">UpdateDocById</span>(<span style="color:#a6e22e">indexName</span>, <span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">refresh</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">data</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ret</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">configs</span>.<span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">Update</span>().<span style="color:#a6e22e">Index</span>(<span style="color:#a6e22e">indexName</span>).<span style="color:#a6e22e">Id</span>(<span style="color:#a6e22e">id</span>).<span style="color:#a6e22e">Doc</span>(<span style="color:#a6e22e">data</span>).<span style="color:#a6e22e">Refresh</span>(<span style="color:#a6e22e">refresh</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ret</span>.<span style="color:#a6e22e">Result</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;updated&#34;</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;delete id err&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">UpdateByQuery</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">define</span>.<span style="color:#a6e22e">MsgContext</span>, <span style="color:#a6e22e">index</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">query</span> <span style="color:#a6e22e">elasticV7</span>.<span style="color:#a6e22e">Query</span>, <span style="color:#a6e22e">script</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">elasticV7</span>.<span style="color:#a6e22e">Script</span>) (<span style="color:#66d9ef">int64</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">rsp</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Es</span>.<span style="color:#a6e22e">UpdateByQuery</span>(<span style="color:#a6e22e">index</span>).<span style="color:#a6e22e">Query</span>(<span style="color:#a6e22e">query</span>).<span style="color:#a6e22e">Script</span>(<span style="color:#a6e22e">script</span>).<span style="color:#a6e22e">Refresh</span>(<span style="color:#e6db74">&#34;true&#34;</span>).<span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Ctx</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rsp</span>.<span style="color:#a6e22e">Updated</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#常用名称">常用名称</a></li>
+    <li><a href="#脑裂现象">脑裂现象</a></li>
+    <li><a href="#mapping">mapping</a></li>
+    <li><a href="#查询返回结果字段解析">查询返回结果字段解析</a></li>
+    <li><a href="#基础命令">基础命令</a>
+      <ul>
+        <li><a href="#查看版本信息">查看版本信息</a></li>
+        <li><a href="#检查集群">检查集群</a></li>
+        <li><a href="#创建索引">创建索引</a></li>
+        <li><a href="#查看索引">查看索引</a></li>
+        <li><a href="#增加字段">增加字段</a></li>
+        <li><a href="#插入数据">插入数据</a></li>
+        <li><a href="#删除索引">删除索引</a></li>
+        <li><a href="#清空doc数据">清空doc数据</a></li>
+        <li><a href="#删除一条记录">删除一条记录</a></li>
+        <li><a href="#更新一条记录">更新一条记录</a></li>
+        <li><a href="#制定日期发现规则">制定日期发现规则</a></li>
+      </ul>
+    </li>
+    <li><a href="#基础查询">基础查询</a>
+      <ul>
+        <li><a href="#and">and</a></li>
+        <li><a href="#or">or</a></li>
+        <li><a href="#查询关键词在多个字段中指定显示字段">查询关键词在多个字段中,指定显示字段</a></li>
+        <li><a href="#模糊查询">模糊查询</a></li>
+        <li><a href="#精准100值匹配">精准100%值匹配</a></li>
+        <li><a href="#前缀匹配">前缀匹配</a></li>
+        <li><a href="#通配符匹配">通配符匹配</a></li>
+        <li><a href="#正则匹配">正则匹配</a></li>
+        <li><a href="#预览搜索">预览搜索</a></li>
+        <li><a href="#查询my_index下全部doc">查询my_index下全部doc</a></li>
+        <li><a href="#查询命中率多少才返回">查询命中率多少才返回</a></li>
+        <li><a href="#分页搜索">分页搜索</a></li>
+        <li><a href="#模糊查询中取出所有match中得分最高的数据">模糊查询中取出所有match中得分最高的数据</a></li>
+        <li><a href="#terms-精准匹配相当于inab">terms 精准匹配，相当于in(&ldquo;a&rdquo;,&ldquo;b&rdquo;)</a></li>
+      </ul>
+    </li>
+    <li><a href="#高级查询">高级查询</a>
+      <ul>
+        <li><a href="#聚合桶bucket和度量">聚合（桶bucket和度量）</a></li>
+        <li><a href="#percentile_ranks-统计值小于等于指定值的文档占比">percentile_ranks 统计值小于等于指定值的文档占比</a></li>
+        <li><a href="#top_hits用于分桶后获取该桶内最匹配的顶部文档列表即详情数据">top_hits：用于分桶后获取该桶内最匹配的顶部文档列表，即详情数据</a></li>
+        <li><a href="#分组">分组</a></li>
+        <li><a href="#range按照指定字段的值的范围进行分桶">Range：按照指定字段的值的范围进行分桶</a></li>
+        <li><a href="#date_range按照日期字段的日期范围进行分桶">date_range按照日期字段的日期范围进行分桶</a></li>
+        <li><a href="#按照不同年龄段分桶求每个年龄段的工资平均值">按照不同年龄段分桶，求每个年龄段的工资平均值</a></li>
+        <li><a href="#分桶再分桶先根据job分桶再按照不同年龄划分">分桶再分桶：先根据job分桶，再按照不同年龄划分</a></li>
+        <li><a href="#分桶后进行数据分析">分桶后进行数据分析</a></li>
+        <li><a href="#相同值分一组每组的某一项的min-max-avg等">相同值分一组，每组的某一项的min max avg等</a></li>
+        <li><a href="#统计不同年龄段有多少人男女多少">统计不同年龄段有多少人，男女多少</a></li>
+        <li><a href="#每个年龄段每个性别的平均账户余额">每个年龄段，每个性别的平均账户余额</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三方包">第三方包</a>
+      <ul>
+        <li><a href="#query-语法">query 语法</a></li>
+        <li><a href="#curd">CURD</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

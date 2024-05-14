@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="命令 # git remote -v //查看远程管理分支 git remote rm origin //删除关联的origin远程库 git branch //查看分支 git branch -D 分支 //强制删除分支 git push -f origin test:test //强制推送 git checkout -b 分支 //创建分支，并进入分支 git checkout 分支 //切换分支 git merge dev //将分支dev合并到当前分支内(切换到目标分支) git reset --hard 030bfd0393a55ead2c6b9a3dc3312a6932e9d0ae //代码回退到某一个时间戳 git log //查看commit记录 git remote prune origin //远程、本地已经删除分支，本地缓存还有分支名称 git reset --soft HEAD^ //撤销本次commit，不删除git add添加的内容 git reset --soft HEAD~2 //撤销最近两次的commit，不删除git add添加的内容 git commit --amend //修改注释 这时候会进入vim编辑器，修改完成你要的注释后保存即可 git reflog //显示所有发生的commit git branch dev_xhubai_core_unitTest HEAD@{692} // 找回本地删除的分支 git merge --squash 分支 //压缩合并commit git fetch --tags //拉取远程tag git tag v0.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="git" />
+<meta property="og:description" content="命令 # git remote -v //查看远程管理分支 git remote rm origin //删除关联的origin远程库 git branch //查看分支 git branch -D 分支 //强制删除分支 git push -f origin test:test //强制推送 git checkout -b 分支 //创建分支，并进入分支 git checkout 分支 //切换分支 git merge dev //将分支dev合并到当前分支内(切换到目标分支) git reset --hard 030bfd0393a55ead2c6b9a3dc3312a6932e9d0ae //代码回退到某一个时间戳 git log //查看commit记录 git remote prune origin //远程、本地已经删除分支，本地缓存还有分支名称 git reset --soft HEAD^ //撤销本次commit，不删除git add添加的内容 git reset --soft HEAD~2 //撤销最近两次的commit，不删除git add添加的内容 git commit --amend //修改注释 这时候会进入vim编辑器，修改完成你要的注释后保存即可 git reflog //显示所有发生的commit git branch dev_xhubai_core_unitTest HEAD@{692} // 找回本地删除的分支 git merge --squash 分支 //压缩合并commit git fetch --tags //拉取远程tag git tag v0." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://xiaohubai.github.io/docs/docs/11_git/" /><meta property="article:section" content="docs" />
+
+
+
+<title>git | Xiaohu&#39;s Blog</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" >
+<link rel="canonical" href="https://xiaohubai.github.io/docs/docs/11_git/">
+<link rel="stylesheet" href="/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.ca0c141d68b90b15435309e129e7069236a5f0872176b9bcdf8f200a65105697.js" integrity="sha256-ygwUHWi5CxVDUwnhKecGkjal8Ichdrm8348gCmUQVpc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>Xiaohu&#39;s Blog</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="/posts"  target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/xiaohubai"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <span>Docs</span>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-20b699346df1d62104beda9f07c50a02" class="toggle"  />
+    <label for="section-20b699346df1d62104beda9f07c50a02" class="flex justify-between">
+      <a href="/docs/docs/interview/" class="">面试题集</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/docker/" class="">Docker</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/go/" class="">Go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/grpc/" class="">Grpc</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/kafka/" class="">Kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/mysql/" class="">Mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/redis/" class="">Redis</a>
+  
+
+        </li>
+      
+    
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E6%B7%B1%E5%B1%82%E6%8A%80%E6%9C%AF/" class="">深层技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%AE%97%E6%B3%95/" class="">算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/interview/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="">网络编程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/2_%E5%B8%B8%E8%AF%86/" class="">常识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/3_%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85/" class="">各种工具安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/4_linux/" class="">linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/5_regexp/" class="">regexp</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/6_%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">设计模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/7_shell/" class="">shell</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/8_docker/" class="">docker</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/9_dockerfile/" class="">dockerfile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/10_docker-compose/" class="">docker-compose</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/11_git/" class="active">git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/12_go/" class="">go</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/13_mysql/" class="">mysql</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/14_gorm/" class="">gorm</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/15_elasticsearch/" class="">elasticsearch</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/16_grafana/" class="">grafana</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/17_grpc/" class="">grpc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/19_redis/" class="">redis</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/18_kafka/" class="">kafka</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/20_swaggo/" class="">swaggo</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/21_validator/" class="">validator</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/22_vue/" class="">vue</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/23_js/" class="">js</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/docs/docs/24_scss/" class="">scss</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>git</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#命令">命令</a></li>
+    <li><a href="#配置项目到远端">配置项目到远端</a></li>
+    <li><a href="#分支命名">分支命名</a></li>
+    <li><a href="#commit">commit</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="命令">
+  命令
+  <a class="anchor" href="#%e5%91%bd%e4%bb%a4">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git remote -v                   //查看远程管理分支
+</span></span><span style="display:flex;"><span>git remote rm origin            //删除关联的origin远程库
+</span></span><span style="display:flex;"><span>git branch                      //查看分支
+</span></span><span style="display:flex;"><span>git branch -D 分支              //强制删除分支
+</span></span><span style="display:flex;"><span>git push -f origin test:test    //强制推送
+</span></span><span style="display:flex;"><span>git checkout -b 分支            //创建分支，并进入分支
+</span></span><span style="display:flex;"><span>git checkout 分支               //切换分支
+</span></span><span style="display:flex;"><span>git merge dev                  //将分支dev合并到当前分支内<span style="color:#f92672">(</span>切换到目标分支<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>git reset --hard 030bfd0393a55ead2c6b9a3dc3312a6932e9d0ae       //代码回退到某一个时间戳
+</span></span><span style="display:flex;"><span>git log 						//查看commit记录
+</span></span><span style="display:flex;"><span>git remote prune origin         //远程、本地已经删除分支，本地缓存还有分支名称
+</span></span><span style="display:flex;"><span>git reset --soft HEAD^          //撤销本次commit，不删除git add添加的内容
+</span></span><span style="display:flex;"><span>git reset --soft HEAD~2         //撤销最近两次的commit，不删除git add添加的内容
+</span></span><span style="display:flex;"><span>git commit --amend              //修改注释 这时候会进入vim编辑器，修改完成你要的注释后保存即可
+</span></span><span style="display:flex;"><span>git reflog                      //显示所有发生的commit
+</span></span><span style="display:flex;"><span>git branch dev_xhubai_core_unitTest HEAD@<span style="color:#f92672">{</span>692<span style="color:#f92672">}</span>           // 找回本地删除的分支
+</span></span><span style="display:flex;"><span>git merge --squash 分支         //压缩合并commit
+</span></span><span style="display:flex;"><span>git fetch --tags                //拉取远程tag
+</span></span><span style="display:flex;"><span>git tag v0.0.1                  //本地打tag
+</span></span><span style="display:flex;"><span>git push origin v0.0.1          //提交tag
+</span></span><span style="display:flex;"><span>git push origin --tags          //提交所有未提交tag
+</span></span><span style="display:flex;"><span>git tag -d <span style="color:#66d9ef">$(</span>git tag -l<span style="color:#66d9ef">)</span>        //删除本地所有tag
+</span></span><span style="display:flex;"><span>git push origin --delete <span style="color:#66d9ef">$(</span>git tag -l<span style="color:#66d9ef">)</span> //删除远程tag
+</span></span><span style="display:flex;"><span>git stash                       //保存当前未commit的代码
+</span></span><span style="display:flex;"><span>git stash pop                   //应用最近一次的stash，随后删除该记录
+</span></span><span style="display:flex;"><span>git revert 21dcd937fe555f58841b17466a99118deb489212   //还原自己提交的commit代码<span style="color:#f92672">(</span>用于线上bug代码回退，不影响同事提交代码<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>git symbolic-ref --short -q HEAD //获取当前的分支名称
+</span></span></code></pre></div><h2 id="配置项目到远端">
+  配置项目到远端
+  <a class="anchor" href="#%e9%85%8d%e7%bd%ae%e9%a1%b9%e7%9b%ae%e5%88%b0%e8%bf%9c%e7%ab%af">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ git remote add origin git@github.com:xiaohubai/go-grpc-layout.git
+</span></span></code></pre></div><h2 id="分支命名">
+  分支命名
+  <a class="anchor" href="#%e5%88%86%e6%94%af%e5%91%bd%e5%90%8d">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">master</span>:		<span style="color:#a6e22e">主分支</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">develop</span>:	<span style="color:#a6e22e">开发分支</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">feature</span>:	<span style="color:#a6e22e">功能分支</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">release</span><span style="color:#960050;background-color:#1e0010">：</span>	<span style="color:#a6e22e">预发布分支</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">hotfix</span>:		<span style="color:#a6e22e">线上紧急修复分支</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fixbug</span>:		<span style="color:#a6e22e">日常bug修复</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//类型/开发者_几月几号几点_描述
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">feature</span><span style="color:#f92672">/</span><span style="color:#a6e22e">xiaohubai_050112_casbin</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fixbug</span><span style="color:#f92672">/</span><span style="color:#a6e22e">xiaohubai_050115_casbin_role_error</span>
+</span></span></code></pre></div><h2 id="commit">
+  commit
+  <a class="anchor" href="#commit">#</a>
+</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>feat:           新功能
+</span></span><span style="display:flex;"><span>fix:            bug修复
+</span></span><span style="display:flex;"><span>perf:           改进性能
+</span></span><span style="display:flex;"><span>style:          不影响代码含义的更改，比如只是增加了空格，格式化了代码，增加了缺少的分号等
+</span></span><span style="display:flex;"><span>docs:           文档
+</span></span><span style="display:flex;"><span>refactor:       重构
+</span></span><span style="display:flex;"><span>test:           测试
+</span></span><span style="display:flex;"><span>chore:          构建过程或者增加依赖库、工具等
+</span></span><span style="display:flex;"><span>revert:         回滚上一个版本
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>类型(作用范围): 简短描述
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>1.描述点
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ssues号/TAPD号
+</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#命令">命令</a></li>
+    <li><a href="#配置项目到远端">配置项目到远端</a></li>
+    <li><a href="#分支命名">分支命名</a></li>
+    <li><a href="#commit">commit</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
